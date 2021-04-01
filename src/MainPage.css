@@ -1,0 +1,16 @@
+.activity {
+    align-items: left;
+    width: 30%;
+}
+
+.card {
+    text-align: left;
+}
+
+.ratingBTN {
+    float: right;
+}
+
+.newActivity, .Login, .Logout {
+    justify-content: right;
+}
