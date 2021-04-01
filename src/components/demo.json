@@ -1,0 +1,29 @@
+{
+    "activities": [
+        {
+            "name": "Beach Volleyball",
+            "location": "Santa Monica",
+            "rating": 5
+        },
+        {
+            "name": "Concert Hall",
+            "location": "Pasadena",
+            "rating": 4
+        },
+        {
+            "name": "Mini Golf",
+            "location": "Glendale",
+            "rating": 5
+        },
+        {
+            "name": "Soccer",
+            "location": "Jefferson Park",
+            "rating": 2
+        },
+        {
+            "name": "Bookstore",
+            "location": "Downtown",
+            "rating": 3
+        }
+    ]
+}
