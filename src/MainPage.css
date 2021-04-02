@@ -1,6 +1,23 @@
 .activity {
     align-items: left;
-    width: 30%;
+    width: 100%;
+}
+
+.map-div {
+    height: 50rem;
+}
+
+.leaflet-container {
+    height: 40rem;
+}
+
+.searchBar-div {
+    padding: 1rem;
+    background-color: grey;
+}
+
+.searchBar-div input {
+    width: 90%;
 }
 
 .card {
@@ -14,3 +31,11 @@
 .newActivity, .Login, .Logout {
     justify-content: right;
 }
+
+.under {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    position: relative;
+}
+
