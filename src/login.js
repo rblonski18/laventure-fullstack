@@ -5,8 +5,8 @@ import history from './history';
 import React from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import {Grid} from '@material-ui/core';
 // import {BrowserRouter as Router, Switch, Route, Link, NavLink} from 'react-router-dom';
-// import MainPage from "./components/MainPage";
 
 export default class Login extends React.Component {
     state = {
@@ -59,14 +59,15 @@ export default class Login extends React.Component {
                         Login
                     </Button>
 
-                    {/*<Button variant="btn btn-success" className="redirect-btn"*/}
-                    {/*        onClick={() => history.push('/newacc')}>*/}
-                    {/*    Create new account*/}
-                    {/*</Button>*/}
-                    {/*<Button variant="btn btn-success" className="redirect-btn"*/}
-                    {/*        onClick={() => history.push('/home')}>*/}
-                    {/*    Continue as guest*/}
-                    {/*</Button>*/}
+
+                    <Button variant="btn btn-success" className="redirect-btn"
+                            onClick={() => history.push('/newaccount')}>
+                        Create new account
+                    </Button>
+                    <Button variant="btn btn-success" className="redirect-btn"
+                            onClick={() => history.push('/mainpage')}>
+                        Continue as guest
+                    </Button>
                 </Form>
 
                 {/*<Router history={history}>*/}

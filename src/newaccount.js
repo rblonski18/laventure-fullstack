@@ -10,19 +10,59 @@ export default class NewAccount extends React.Component {
         password: "",
     };
 
-    handleSubmit = () => {
+    validateForm() {
+        return this.state.fname.length > 0 && this.state.lname.length > 0 && this.state.email.length > 0 &&
+               this.state.password.length > 0;
+    }
 
+    handleSubmit = (event) => {
+        event.preventDefault();
+        console.log(this.state.fname + " " + this.state.lname + " " + this.state.email + " " + this.state.password);
+    }
+
+    setFname = (val) => {
+        this.setState({fname: val});
+    }
+
+    setLname = (val) => {
+        this.setState({lname: val});
+    }
+
+    setEmail = (val) => {
+        this.setState({email: val});
+    }
+
+    setPassword = (val) => {
+        this.setState({password: val});
     }
 
     render() {
         return (
             <div>
                 <Form onSubmit={this.handleSubmit}>
+                    <Form.Group size="lg" controlId="fname">
+                        <Form.Label>First Name</Form.Label>
+                        <br/>
+                        <Form.Control
+                            autoFocus
+                            type="fname"
+                            value={this.state.fname}
+                            onChange={(e) => this.setFname(e.target.value)}
+                        />
+                    </Form.Group>
+                    <Form.Group size="lg" controlId="lname">
+                        <Form.Label>Last Name</Form.Label>
+                        <br/>
+                        <Form.Control
+                            type="lname"
+                            value={this.state.lname}
+                            onChange={(e) => this.setLname(e.target.value)}
+                        />
+                    </Form.Group>
                     <Form.Group size="lg" controlId="email">
                         <Form.Label>Email</Form.Label>
                         <br/>
                         <Form.Control
-                            autoFocus
                             type="email"
                             value={this.state.email}
                             onChange={(e) => this.setEmail(e.target.value)}
@@ -39,17 +79,8 @@ export default class NewAccount extends React.Component {
                         />
                     </Form.Group>
                     <Button block size="lg" type="submit" disabled={!this.validateForm()} className="login-button">
-                        Login
+                        Create Account
                     </Button>
-
-                    {/*<Button variant="btn btn-success" className="redirect-btn"*/}
-                    {/*        onClick={() => history.push('/newacc')}>*/}
-                    {/*    Create new account*/}
-                    {/*</Button>*/}
-                    {/*<Button variant="btn btn-success" className="redirect-btn"*/}
-                    {/*        onClick={() => history.push('/home')}>*/}
-                    {/*    Continue as guest*/}
-                    {/*</Button>*/}
                 </Form>
             </div>
         );
