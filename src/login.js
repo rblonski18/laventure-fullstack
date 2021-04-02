@@ -5,8 +5,8 @@ import history from './history';
 import React from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import Nav from 'react-bootstrap/Nav';
-import {Router, Switch, Route, Link} from 'react-router-dom';
+// import {BrowserRouter as Router, Switch, Route, Link, NavLink} from 'react-router-dom';
+// import MainPage from "./components/MainPage";
 
 export default class Login extends React.Component {
     state = {
@@ -59,26 +59,27 @@ export default class Login extends React.Component {
                         Login
                     </Button>
 
-                    <Button variant="btn btn-success" className="redirect-btn"
-                            onClick={() => history.push('/NewAccount')}>
-                        Create new account
-                    </Button>
-                    <Button variant="btn btn-success" className="redirect-btn"
-                            onClick={() => history.push('/home')}>
-                        Continue as guest
-                    </Button>
+                    {/*<Button variant="btn btn-success" className="redirect-btn"*/}
+                    {/*        onClick={() => history.push('/newacc')}>*/}
+                    {/*    Create new account*/}
+                    {/*</Button>*/}
+                    {/*<Button variant="btn btn-success" className="redirect-btn"*/}
+                    {/*        onClick={() => history.push('/home')}>*/}
+                    {/*    Continue as guest*/}
+                    {/*</Button>*/}
                 </Form>
 
-                <Router history={history}>
-                    {/*<Link to="./newaccount.js">click me</Link>*/}
-                    {/*<Route exact path="./newaccount.js" component={NewAccount}></Route>*/}
-                    <Switch>
-                        <Route path={"/NewAccount"} exact component={NewAccount}/>
-                    </Switch>
-                    {/*<Switch>*/}
-                    {/*    <Route path={"/home"} exact component={GuestPage}/>*/}
-                    {/*</Switch>*/}
-                </Router>
+                {/*<Router history={history}>*/}
+                {/*    /!*<Link exact={"true"} activeClassName="active" to="/"></Link>*!/*/}
+                {/*    <NavLink exact={true} activeClassName="active" to="/newacc">Create new account</NavLink>*/}
+                {/*    <NavLink exact={true} activeClassName="active" to="/home">Continue as guest</NavLink>*/}
+
+                {/*    <Switch>*/}
+                {/*        <Route exact={true} path="/newacc" component={NewAccount}/>*/}
+                {/*        <Route exact={true} path="/home" component={MainPage}/>*/}
+                {/*        /!*<Route exact={true} path={"/guesthome"} component={GuestPage}/>*!/*/}
+                {/*    </Switch>*/}
+                {/*</Router>*/}
             </div>
         );
     }
