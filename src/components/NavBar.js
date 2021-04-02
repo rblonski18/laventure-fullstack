@@ -15,10 +15,10 @@ class NavBar extends React.Component {
                     <li className="nav-item newActivity">
                     <a className="nav-link" href="#">Create New Activity</a>
                     </li>
-                    <li className="nav-item Login">
+                    <li className="nav-item login-nav">
                     <a className="nav-link" href="#">Login</a>
                     </li>
-                    <li className="nav-item Logout ms-auto">
+                    <li className="nav-item logout-nav ms-auto">
                     <a className="nav-link" href="#">Logout</a>
                     </li>
                 </ul>
