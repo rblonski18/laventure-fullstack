@@ -1,4 +1,4 @@
-import './login.css';
+import './accounts.css';
 import NewAccount from "./newaccount";
 import history from './history';
 
@@ -6,6 +6,7 @@ import React from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import {Grid} from '@material-ui/core';
+import {ButtonGroup} from "react-bootstrap";
 // import {BrowserRouter as Router, Switch, Route, Link, NavLink} from 'react-router-dom';
 
 export default class Login extends React.Component {
@@ -55,19 +56,18 @@ export default class Login extends React.Component {
                             onChange={(e) => this.setPassword(e.target.value)}
                         />
                     </Form.Group>
-                    <Button block size="lg" type="submit" disabled={!this.validateForm()} className="login-button">
+                    <br/>
+                    <Button block size="lg" className="btn btn-primary" id="login-button" type="submit" disabled={!this.validateForm()}>
                         Login
                     </Button>
-
-
-                    <Button variant="btn btn-success" className="redirect-btn"
-                            onClick={() => history.push('/newaccount')}>
-                        Create new account
-                    </Button>
-                    <Button variant="btn btn-success" className="redirect-btn"
-                            onClick={() => history.push('/mainpage')}>
-                        Continue as guest
-                    </Button>
+                    <ButtonGroup variant="container">
+                        <Button className="redirect-btn" onClick={() => history.push('/newaccount')}>
+                            Create new account
+                        </Button>
+                        <Button className="redirect-btn" onClick={() => history.push('/mainpage')}>
+                            Continue as guest
+                        </Button>
+                    </ButtonGroup>
                 </Form>
 
                 {/*<Router history={history}>*/}

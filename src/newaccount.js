@@ -1,3 +1,5 @@
+import "./accounts.css";
+
 import React from 'react';
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
@@ -38,7 +40,7 @@ export default class NewAccount extends React.Component {
 
     render() {
         return (
-            <div>
+            <div className="NewAccount">
                 <Form onSubmit={this.handleSubmit}>
                     <Form.Group size="lg" controlId="fname">
                         <Form.Label>First Name</Form.Label>
@@ -50,6 +52,7 @@ export default class NewAccount extends React.Component {
                             onChange={(e) => this.setFname(e.target.value)}
                         />
                     </Form.Group>
+                    <br/>
                     <Form.Group size="lg" controlId="lname">
                         <Form.Label>Last Name</Form.Label>
                         <br/>
@@ -59,6 +62,7 @@ export default class NewAccount extends React.Component {
                             onChange={(e) => this.setLname(e.target.value)}
                         />
                     </Form.Group>
+                    <br/>
                     <Form.Group size="lg" controlId="email">
                         <Form.Label>Email</Form.Label>
                         <br/>
@@ -78,7 +82,8 @@ export default class NewAccount extends React.Component {
                             onChange={(e) => this.setPassword(e.target.value)}
                         />
                     </Form.Group>
-                    <Button block size="lg" type="submit" disabled={!this.validateForm()} className="login-button">
+                    <br/>
+                    <Button block size="lg" type="submit" disabled={!this.validateForm()} className="create-acc-btn">
                         Create Account
                     </Button>
                 </Form>
