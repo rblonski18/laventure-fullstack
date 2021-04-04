@@ -1,4 +1,4 @@
-.Login, .NewAccount {
+.Login, .NewAccount, .NewActivity {
     padding: 60px 0;
     margin: auto;
     border: 2px solid black;
@@ -17,17 +17,23 @@
     justify-content: center;
 }
 
-.Login, .NewAccount form {
+.Login, .NewAccount, .NewActivity form {
     margin: 0 auto;
     width: 100%;
     max-width: 400px;
     text-align: left;
     /*display: inline-block;*/
     /*align-items: center;*/
-    /*box-sizing: border-box;*/
 }
 
-#login-button, .create-acc-btn {
+.NewActivity form {
+    margin: 0 auto;
+    width: 100%;
+    max-width: 750px;
+    text-align: left;
+}
+
+#login-button, .create-acc-btn, .block-button {
     font-family: sans-serif;
     font-size: 1.3rem;
     border-color: black;
@@ -49,8 +55,16 @@
     margin: 15px;
 }
 
+.optional-fields, .horizontal-alignment {
+    display: flex;
+    flex-direction: row;
+}
+
+.outer-box {
+    border: 1px solid black;
+}
+
 .redirect-btn {
-    /*font-size: 75%;*/
     color: blue;
     border: none;
     background: none;

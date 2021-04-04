@@ -22,22 +22,6 @@ export default class NewAccount extends React.Component {
         console.log(this.state.fname + " " + this.state.lname + " " + this.state.email + " " + this.state.password);
     }
 
-    setFname = (val) => {
-        this.setState({fname: val});
-    }
-
-    setLname = (val) => {
-        this.setState({lname: val});
-    }
-
-    setEmail = (val) => {
-        this.setState({email: val});
-    }
-
-    setPassword = (val) => {
-        this.setState({password: val});
-    }
-
     render() {
         return (
             <div className="NewAccount">
@@ -49,7 +33,7 @@ export default class NewAccount extends React.Component {
                             autoFocus
                             type="fname"
                             value={this.state.fname}
-                            onChange={(e) => this.setFname(e.target.value)}
+                            onChange={(e) => this.setState({fname: e.target.value})}
                         />
                     </Form.Group>
                     <br/>
@@ -59,7 +43,7 @@ export default class NewAccount extends React.Component {
                         <Form.Control
                             type="lname"
                             value={this.state.lname}
-                            onChange={(e) => this.setLname(e.target.value)}
+                            onChange={(e) => this.setState({lname: e.target.value})}
                         />
                     </Form.Group>
                     <br/>
@@ -69,7 +53,7 @@ export default class NewAccount extends React.Component {
                         <Form.Control
                             type="email"
                             value={this.state.email}
-                            onChange={(e) => this.setEmail(e.target.value)}
+                            onChange={(e) => this.setState({email: e.target.value})}
                         />
                     </Form.Group>
                     <br/>
@@ -79,7 +63,7 @@ export default class NewAccount extends React.Component {
                         <Form.Control
                             type="password"
                             value={this.state.password}
-                            onChange={(e) => this.setPassword(e.target.value)}
+                            onChange={(e) => this.setState({password: e.target.value})}
                         />
                     </Form.Group>
                     <br/>

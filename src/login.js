@@ -1,13 +1,10 @@
 import './accounts.css';
-import NewAccount from "./newaccount";
 import history from './history';
 
 import React from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import {Grid} from '@material-ui/core';
 import {ButtonGroup} from "react-bootstrap";
-// import {BrowserRouter as Router, Switch, Route, Link, NavLink} from 'react-router-dom';
 
 export default class Login extends React.Component {
     state = {
@@ -24,14 +21,6 @@ export default class Login extends React.Component {
         console.log(this.state.email + " " + this.state.password);
     }
 
-    setEmail = (val) => {
-        this.setState({email: val});
-    }
-
-    setPassword = (val) => {
-        this.setState({password: val});
-    }
-
     render() {
         return (
             <div className="Login">
@@ -43,7 +32,7 @@ export default class Login extends React.Component {
                             autoFocus
                             type="email"
                             value={this.state.email}
-                            onChange={(e) => this.setEmail(e.target.value)}
+                            onChange={(e) => this.setState({email: e.target.value})}
                         />
                     </Form.Group>
                     <br/>
@@ -53,7 +42,7 @@ export default class Login extends React.Component {
                         <Form.Control
                             type="password"
                             value={this.state.password}
-                            onChange={(e) => this.setPassword(e.target.value)}
+                            onChange={(e) => this.setState({password: e.target.value})}
                         />
                     </Form.Group>
                     <br/>
@@ -69,18 +58,6 @@ export default class Login extends React.Component {
                         </Button>
                     </ButtonGroup>
                 </Form>
-
-                {/*<Router history={history}>*/}
-                {/*    /!*<Link exact={"true"} activeClassName="active" to="/"></Link>*!/*/}
-                {/*    <NavLink exact={true} activeClassName="active" to="/newacc">Create new account</NavLink>*/}
-                {/*    <NavLink exact={true} activeClassName="active" to="/home">Continue as guest</NavLink>*/}
-
-                {/*    <Switch>*/}
-                {/*        <Route exact={true} path="/newacc" component={NewAccount}/>*/}
-                {/*        <Route exact={true} path="/home" component={MainPage}/>*/}
-                {/*        /!*<Route exact={true} path={"/guesthome"} component={GuestPage}/>*!/*/}
-                {/*    </Switch>*/}
-                {/*</Router>*/}
             </div>
         );
     }
