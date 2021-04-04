@@ -27,7 +27,6 @@ export default class Login extends React.Component {
                 <Form onSubmit={this.handleSubmit}>
                     <Form.Group size="lg" controlId="email">
                         <Form.Label>Email</Form.Label>
-                        <br/>
                         <Form.Control
                             autoFocus
                             type="email"
@@ -35,7 +34,6 @@ export default class Login extends React.Component {
                             onChange={(e) => this.setState({email: e.target.value})}
                         />
                     </Form.Group>
-                    <br/>
                     <Form.Group size="lg" controlId="password">
                         <Form.Label>Password</Form.Label>
                         <br/>
@@ -46,9 +44,11 @@ export default class Login extends React.Component {
                         />
                     </Form.Group>
                     <br/>
-                    <Button block size="lg" className="btn btn-primary" id="login-button" type="submit" disabled={!this.validateForm()}>
-                        Login
-                    </Button>
+                    <Form.Group size="lg" controlId="btn">
+                        <Button block size="lg" className="btn btn-primary" id="login-button" type="submit" disabled={!this.validateForm()}>
+                            Login
+                        </Button>
+                    </Form.Group>
                     <ButtonGroup variant="container">
                         <Button className="redirect-btn" onClick={() => history.push('/newaccount')}>
                             Create new account

@@ -50,8 +50,8 @@ export default class NewActivity extends React.Component {
         console.log()
     }
 
-    setImages = () => {
-        const files = document.getElementById('file-upload').files;
+    setImages = (e) => {
+        const files = e.target.files;
         const validImageTypes = ['image/gif', 'image/jpeg', 'image/png'];
         let goodImages = [];
         for (let i = 0; i < files.length; i++) {
@@ -68,7 +68,6 @@ export default class NewActivity extends React.Component {
                 <Form onSubmit={this.handleSubmit}>
                     <Form.Group size="lg" controlId="validationCustom01">
                         <Form.Label>Activity</Form.Label>
-                        <br/>
                         <Form.Control
                             autoFocus
                             type="text"
@@ -76,9 +75,8 @@ export default class NewActivity extends React.Component {
                             onChange={(e) => {this.setState({title: e.target.value})}}
                         />
                     </Form.Group>
-                    <Form.Group size="lg" controlID="exampleFormControlTextarea1">
+                    <Form.Group size="lg" controlId="exampleFormControlTextarea1">
                         <Form.Label>Description</Form.Label>
-                        <br/>
                         <Form.Control
                             as="textarea"
                             type="text"
@@ -87,10 +85,10 @@ export default class NewActivity extends React.Component {
                         />
                     </Form.Group>
                     <div className="horizontal-alignment">
-                        <Form.Group size="lg" controlID="location">
+                        <Form.Group size="lg" controlId="location">
                             <Form.Label>Address</Form.Label>
                         </Form.Group>
-                        <Form.Group size="lg" controlID="categories">
+                        <Form.Group size="lg" controlId="categories">
                             <Form.Label>Categories</Form.Label>
                             {/*<Form.Control*/}
                             {/*    type="select"*/}
@@ -123,25 +121,26 @@ export default class NewActivity extends React.Component {
                             {/*</Select>*/}
                         </Form.Group>
                     </div>
-                    <Form.Group size="lg" controlID="images">
+                    <Form.Group size="lg" controlId="images">
                         <Form.Label>Images</Form.Label>
+                        <br/>
                         <Form.Control
-                            id="file-upload"
+                            controlid="file-upload"
                             type="file"
                             multiple={true}
-                            onChange={this.setImages}
+                            onChange={(e) => this.setImages(e)}
                         />
                     </Form.Group>
                     <div className="outer-box">
                         <label>RSVP (optional)</label>
                         <div className="optional-fields">
-                            <Form.Group size="lg" controlID="date">
+                            <Form.Group size="lg" controlId="date">
                                 <Form.Label>Date</Form.Label>
                             </Form.Group>
-                            <Form.Group size="lg" controlID="time">
+                            <Form.Group size="lg" controlId="time">
                                 <Form.Label>Time</Form.Label>
                             </Form.Group>
-                            <Form.Group size="lg" controlID="cap">
+                            <Form.Group size="lg" controlId="cap">
                                 <Form.Label>Capacity</Form.Label>
                                 <Form.Control
                                     type="number"
