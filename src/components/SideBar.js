@@ -1,17 +1,22 @@
 import React from "react"
-import data from "./demo.json"
 import "../MainPage.css"
 
 class SideBar extends React.Component {
+
+    constructor(props) {
+        super(props)
+    }
 
     render() {
 
         return (
             <div>
-            { data.activities.map((activity, key) => {
-                return <div className="activity">
-                    <div key={key} className="card">
+            { this.props.activityListing.map((activity, key) => {
+                const imgString = activity.img
+                return <div className="activity" key={ activity.name }>
+                    <div className="card">
                         <div className="card-body">
+                        <div className="thumbnail" style={{backgroundImage: "url(" + imgString +")" }}> </div>
                             <h5 className="card-title">{activity.name}</h5>
                             <p className="card-text">{activity.location}</p>
                             <a href="#" className="btn btn-primary ratingBTN">Rating = {activity.rating}/5</a>

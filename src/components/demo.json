@@ -1,29 +1,37 @@
-{
-    "activities": [
-        {
-            "name": "Beach Volleyball",
-            "location": "Santa Monica",
-            "rating": 5
-        },
-        {
-            "name": "Concert Hall",
-            "location": "Pasadena",
-            "rating": 4
-        },
-        {
-            "name": "Mini Golf",
-            "location": "Glendale",
-            "rating": 5
-        },
-        {
-            "name": "Soccer",
-            "location": "Jefferson Park",
-            "rating": 2
-        },
-        {
-            "name": "Bookstore",
-            "location": "Downtown",
-            "rating": 3
-        }
-    ]
-}
+[
+    {
+        "img": "https://img.theculturetrip.com/wp-content/uploads/2016/11/1024px-beach_volley_8143063908.jpg",
+        "name": "Beach Volleyball",
+        "location": "Santa Monica",
+        "coordinates": [34.0129, -118.5017],
+        "rating": 5
+    },
+    {
+        "img": "https://cdn.vox-cdn.com/thumbor/y-GIwaGD2Y-cg-3xwxaLgSmrzT4=/0x0:5665x3777/1200x800/filters:focal(2380x1436:3286x2342)/cdn.vox-cdn.com/uploads/chorus_image/image/67779554/AdobeStock_266551660.0.jpeg",
+        "name": "Concert Hall",
+        "location": "Pasadena",
+        "coordinates": [34.1478, -118.1445],
+        "rating": 4
+    },
+    {
+        "img": "https://idealbeachresort.com/wp-content/uploads/2018/10/Mini-Golf.jpg",
+        "name": "Mini Golf",
+        "location": "Glendale",
+        "coordinates": [34.1425, -118.2551],
+        "rating": 5
+    },
+    {
+        "img": "https://www.inquirer.com/resizer/wQFB2OB2XVjuaaTtLYfoE81QAs0=/760x507/smart/cloudfront-us-east-1.images.arcpublishing.com/pmn/JM23LABIS5H25H3IK6E3UP2YPE.jpg",
+        "name": "Soccer",
+        "location": "Jefferson Park",
+        "coordinates": [34.0325, -118.3140],
+        "rating": 2
+    },
+    {
+        "img": "https://www.michigan.org/sites/default/files/teasers/allisonreadsdc_bookstore_Literati_CR_crop.jpg",
+        "name": "Bookstore",
+        "location": "Downtown",
+        "coordinates": [34.0407, -118.2468],
+        "rating": 3
+    }
+]

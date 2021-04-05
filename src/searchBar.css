@@ -1,0 +1,35 @@
+#cover form {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+input
+{
+    border: 1px solid grey;
+    border-radius: 5px;
+    height: 2rem;
+    width: 100%;
+    padding: 2px 2px 2px 2px;
+    outline: 0;
+    background-color: white;
+}
+
+button {
+    background-color: white;
+    height: 2rem;
+    border-radius: 10px;
+}
+
+.dropdown {
+    margin-left: 1rem;
+}
+
+.dropdown button {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+#reset {
+    margin-left: 1rem;
+}
