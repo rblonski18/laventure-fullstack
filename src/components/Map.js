@@ -1,9 +1,8 @@
 import React from "react"
-import ActivityListing from "./ActivityListing"
 import data from "./demo.json"
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 
-class Map extends React.PureComponent {
+class Map extends React.Component {
 
     position = [34.0224, -118.2851];
 

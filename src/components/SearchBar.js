@@ -1,5 +1,4 @@
 import React from "react"
-import ActivityListing from "./ActivityListing"
 import "../searchBar.css"
 
 class SearchBar extends React.Component {

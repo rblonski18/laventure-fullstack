@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import NavBar from "./NavBar"
 import SideBar from "./SideBar"
 import SearchBar from "./SearchBar"
-import ActivityListing from "./ActivityListing"
 import data from "./demo.json"
 import Map from "./Map"
 

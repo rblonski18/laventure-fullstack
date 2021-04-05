@@ -1,8 +1,7 @@
 import React from "react"
-import ActivityListing from "./ActivityListing"
 import "../MainPage.css"
 
-class SideBar extends ActivityListing {
+class SideBar extends React.Component {
 
     constructor(props) {
         super(props)
