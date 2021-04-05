@@ -7,7 +7,7 @@ class NavBar extends React.Component {
         return(
             <nav className="navbar navbar-expand-lg navbar-light bg-light">
                 <div className="container-fluid">
-                    <a className="navbar-brand" href="#">LAVenture</a>
+                    <a className="navbar-brand">LAVenture</a>
                     <button className="navbar-toggler" type="button" data-bs-toggle="collapse"
                             data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
                             aria-label="Toggle navigation">
@@ -30,7 +30,7 @@ class NavBar extends React.Component {
                                 <Link className="nav-link" to="/login">Login</Link>
                             </li>
                             <li className="nav-item logout-nav ms-auto">
-                                <a className="nav-link" href="#">Logout</a>
+                                <a className="nav-link" >Logout</a>
                             </li>
                         </ul>
                     </div>

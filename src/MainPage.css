@@ -3,17 +3,26 @@
     width: 100%;
 }
 
+.sidebar {
+    width: 33%;
+}
+
+.mp-right {
+    width: 67%;
+}
+
 .map-div {
-    height: 50rem;
+    height: 45rem;
 }
 
 .leaflet-container {
-    height: 40rem;
+    height: 45rem;
 }
 
 .searchBar-div {
+    height: 4rem;
     padding: 1rem;
-    background-color: grey;
+    background-color: white
 }
 
 .searchBar-div input {
@@ -37,5 +46,40 @@
     flex-direction: row;
     justify-content: space-between;
     position: relative;
+}
+
+
+
+@media (max-width: 500px) { 
+
+    .under {
+        flex-direction: column;
+        width: 100% !important;
+    }
+
+    .mp-right {
+        order: 1;
+        width: 100% !important;
+        margin-bottom: none;
+    }
+
+    .sidebar {
+        order: 2;
+        width: 100% !important;
+    }
+
+}
+
+.thumbnail {
+    background-color: black;
+    width: 125px;
+    height: 125px;
+    margin-top: auto;
+    margin-bottom: auto;
+    background-size: cover; /* or contain */
+    background-position: center center;
+    background-repeat: no-repeat;
+    float: left;
+    margin-right: 2rem;
 }
 
