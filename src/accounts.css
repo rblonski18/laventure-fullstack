@@ -33,7 +33,7 @@
     text-align: left;
 }
 
-.Login .form-group, .NewAccount .form-group, .NewActivity .form-group {
+.Login .form-group, .NewAccount .form-group {
     padding: 1%;
 }
 
@@ -59,13 +59,14 @@
     margin: 5%;
 }
 
-.optional-fields, .horizontal-alignment {
+.horizontal-alignment {
     display: flex;
     flex-direction: row;
 }
 
 .outer-box {
     border: 1px solid black;
+    border-radius: 8px;
     padding: 1%;
 }
 

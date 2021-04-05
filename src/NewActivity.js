@@ -1,22 +1,34 @@
 import './accounts.css';
+import './NewActivity.css';
 
 import React from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import {FormControl} from "react-bootstrap";
-
-// let categoriesList = [
-//     { value: 'adventrue', label: 'Adventure' },
-//     { value: 'beach', label: 'Beach' },
-//     { value: 'night-life', label: 'Night Life' },
-//     { value: 'relax', label: 'Relax' }
-// ];
+import Select from 'react-select';
+import { GoogleAddressLookup, DatePicker, TimePicker } from 'react-rainbow-components';
 
 let categoriesList = [
-    'Adventure', 'Beach', 'Night Life', 'Relax'
+    { value: 'adventrue', label: 'Adventure' },
+    { value: 'beach', label: 'Beach' },
+    { value: 'night-life', label: 'Night Life' },
+    { value: 'relax', label: 'Relax' }
 ];
+
+// let categoriesList = [
+//     'Adventure', 'Beach', 'Night Life', 'Relax'
+// ];
+
+const customStyle = {
+    control: (base, state) => ({
+        ...base,
+        border: state.isFocused ? 0 : 0,
+        boxShadow: state.isFocused ? 0 : 0,
+        '&:hover': {
+            border: state.isFocused ? 0 : 0,
+            cursor: 'pointer',
+        }
+    })
+};
 
 export default class NewActivity extends React.Component {
     state = {
@@ -25,7 +37,7 @@ export default class NewActivity extends React.Component {
         location: null,
         categories: [],
         images: [],
-        date: null,
+        date: null, // note: stored in military time with no AM/PM in the format HH:mm (ie. 15:00)
         time: null,
         capacity: 0
     };
@@ -50,6 +62,15 @@ export default class NewActivity extends React.Component {
         console.log()
     }
 
+    setCategories = (e) => {
+        console.log(e);
+        console.log(e.length);
+        for (let i = 0; i < e.length; i++) {
+            console.log(e[i].label);
+            this.setState({categories: e[i].label});
+        }
+    }
+
     setImages = (e) => {
         const files = e.target.files;
         const validImageTypes = ['image/gif', 'image/jpeg', 'image/png'];
@@ -60,6 +81,10 @@ export default class NewActivity extends React.Component {
             }
         }
         this.setState({ images: goodImages });
+    }
+
+    setDate = (e) => {
+        this.setState({date: ((e.getMonth() + 1) + "/" + e.getDate() + "/" + e.getFullYear())});
     }
 
     render() {
@@ -73,6 +98,7 @@ export default class NewActivity extends React.Component {
                             type="text"
                             value={this.state.title}
                             onChange={(e) => {this.setState({title: e.target.value})}}
+                            required={true}
                         />
                     </Form.Group>
                     <Form.Group size="lg" controlId="exampleFormControlTextarea1">
@@ -82,43 +108,39 @@ export default class NewActivity extends React.Component {
                             type="text"
                             value={this.state.description}
                             onChange={(e) => this.setState({description: e.target.value})}
+                            required={true}
                         />
                     </Form.Group>
                     <div className="horizontal-alignment">
-                        <Form.Group size="lg" controlId="location">
+                        <Form.Group size="lg" controlId="location" className={"half"}>
                             <Form.Label>Address</Form.Label>
+                            <GoogleAddressLookup
+                                className="rainbow-m-vertical_x-large rainbow-p-horizontal_medium rainbow-m_auto"
+                                id="gaddresslookup-4"
+                                label="GoogleAddressLookup label"
+                                placeholder="Enter location"
+                                // onChange={value => setState({ value })}
+                                // value={this.state.location}
+                                // apiKey={LIBRARY_GOOGLE_MAPS_APIKEY}
+                                searchOptions={{
+                                    location: {
+                                        latitude: -33.941264,
+                                        longitude: 151.2042969,
+                                    },
+                                    country: 'us',
+                                    radius: 150000,
+                                    types: ['address'],
+                                }}
+                                required={true}
+                            />
                         </Form.Group>
-                        <Form.Group size="lg" controlId="categories">
+                        <Form.Group className="half">
                             <Form.Label>Categories</Form.Label>
-                            {/*<Form.Control*/}
-                            {/*    type="select"*/}
-                            {/*    // multiple*/}
-                            {/*    // options={categoriesList}*/}
-                            {/*>*/}
-                            {/*    <Select*/}
-                            {/*        multiple*/}
-                            {/*        value={null}*/}
-                            {/*        placeholder={null}*/}
-                            {/*    >*/}
-                            {/*        {categoriesList.map((category) => (*/}
-                            {/*            <MenuItem key={category} value={category}>*/}
-                            {/*                {category}*/}
-                            {/*            </MenuItem>*/}
-                            {/*        ))}*/}
-                            {/*    </Select>*/}
-                            {/*</Form.Control>*/}
-
-                            {/*<Select*/}
-                            {/*    multiple*/}
-                            {/*    value={null}*/}
-                            {/*    placeholder={null}*/}
-                            {/*>*/}
-                            {/*    {categoriesList.map((category) => (*/}
-                            {/*        <MenuItem key={category} value={category}>*/}
-                            {/*            {category}*/}
-                            {/*        </MenuItem>*/}
-                            {/*    ))}*/}
-                            {/*</Select>*/}
+                            <Select
+                                isMulti={true} value={this.state.categories} placeholder={null} isSearchable={false}
+                                options={categoriesList} className={'dropdown'} styles={customStyle} required={true}
+                                onChange={(e) => this.setCategories(e)}
+                            />
                         </Form.Group>
                     </div>
                     <Form.Group size="lg" controlId="images">
@@ -134,13 +156,25 @@ export default class NewActivity extends React.Component {
                     <div className="outer-box">
                         <label>RSVP (optional)</label>
                         <div className="optional-fields">
-                            <Form.Group size="lg" controlId="date">
+                            <Form.Group size="lg" controlId="date" className={"optional-options"}>
                                 <Form.Label>Date</Form.Label>
+                                <DatePicker
+                                    className="rainbow-align-content_center rainbow-m-vertical_large rainbow-p-horizontal_small rainbow-m_auto"
+                                    value={this.state.date}
+                                    placeholder={null}
+                                    onChange={(e) => this.setDate(e)}
+                                />
                             </Form.Group>
-                            <Form.Group size="lg" controlId="time">
+                            <Form.Group size="lg" controlId="time" className={"optional-options"}>
                                 <Form.Label>Time</Form.Label>
+                                <TimePicker
+                                    className="rainbow-m-vertical_x-large rainbow-p-horizontal_medium rainbow-m_auto"
+                                    value={this.state.time}
+                                    placeholder={"12:00 AM"}
+                                    onChange={(e) => this.setState({time: e})}
+                                />
                             </Form.Group>
-                            <Form.Group size="lg" controlId="cap">
+                            <Form.Group size="lg" controlId="cap" className={"optional-options"}>
                                 <Form.Label>Capacity</Form.Label>
                                 <Form.Control
                                     type="number"
