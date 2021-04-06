@@ -4,31 +4,17 @@ import './NewActivity.css';
 import React from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import Select from 'react-select';
+import { Multiselect } from 'multiselect-react-dropdown';
+import { FaRegImages } from 'react-icons/fa';
 import { GoogleAddressLookup, DatePicker, TimePicker } from 'react-rainbow-components';
 
+// can change value to a number if desired, the label is what is displayed, value is for internal use
 let categoriesList = [
-    { value: 'adventrue', label: 'Adventure' },
+    { value: 'adventure', label: 'Adventure' },
     { value: 'beach', label: 'Beach' },
     { value: 'night-life', label: 'Night Life' },
     { value: 'relax', label: 'Relax' }
 ];
-
-// let categoriesList = [
-//     'Adventure', 'Beach', 'Night Life', 'Relax'
-// ];
-
-const customStyle = {
-    control: (base, state) => ({
-        ...base,
-        border: state.isFocused ? 0 : 0,
-        boxShadow: state.isFocused ? 0 : 0,
-        '&:hover': {
-            border: state.isFocused ? 0 : 0,
-            cursor: 'pointer',
-        }
-    })
-};
 
 export default class NewActivity extends React.Component {
     state = {
@@ -59,28 +45,51 @@ export default class NewActivity extends React.Component {
 
     handleSubmit = (event) => {
         event.preventDefault();
-        console.log()
     }
 
-    setCategories = (e) => {
-        console.log(e);
-        console.log(e.length);
-        for (let i = 0; i < e.length; i++) {
-            console.log(e[i].label);
-            this.setState({categories: e[i].label});
-        }
+    // new category selected
+    onSelect = (selectedList, selectedItem) => {
+        let list = this.state.categories;
+        list.push(selectedItem.label);
+        this.setState({categories: list});
+    }
+
+    // one of selected categories removed
+    onRemove = (selectedList, selectedItem) => {
+        let list = this.state.categories;
+        const index = list.indexOf(selectedItem.label);
+        list.splice(index, 1);
+        this.setState({categories: list});
     }
 
     setImages = (e) => {
         const files = e.target.files;
         const validImageTypes = ['image/gif', 'image/jpeg', 'image/png'];
-        let goodImages = [];
+        let goodImages = this.state.images;
         for (let i = 0; i < files.length; i++) {
             if (validImageTypes.includes(files[i].type)) {
-                goodImages.push(files[i]);
+
+                // only add file if not already in list
+                if (goodImages.indexOf(files[i]) < 0) {
+                    goodImages.push(files[i]);
+                }
             }
         }
-        this.setState({ images: goodImages });
+        this.setState({images: goodImages});
+        this.getSelectedFiles(goodImages);
+    }
+
+    getSelectedFiles(goodImages) {
+        let list = "";
+        for (let i = 0; i < goodImages.length; i++) {
+            if (goodImages[i].name != null) {
+                list += goodImages[i].name;
+                if (i < goodImages.length - 1) {
+                    list += ", ";
+                }
+            }
+        }
+        document.getElementById('list').innerHTML = "Files added: " + list;
     }
 
     setDate = (e) => {
@@ -117,7 +126,6 @@ export default class NewActivity extends React.Component {
                             <GoogleAddressLookup
                                 className="rainbow-m-vertical_x-large rainbow-p-horizontal_medium rainbow-m_auto"
                                 id="gaddresslookup-4"
-                                label="GoogleAddressLookup label"
                                 placeholder="Enter location"
                                 // onChange={value => setState({ value })}
                                 // value={this.state.location}
@@ -131,27 +139,25 @@ export default class NewActivity extends React.Component {
                                     radius: 150000,
                                     types: ['address'],
                                 }}
-                                required={true}
                             />
                         </Form.Group>
                         <Form.Group className="half">
                             <Form.Label>Categories</Form.Label>
-                            <Select
-                                isMulti={true} value={this.state.categories} placeholder={null} isSearchable={false}
-                                options={categoriesList} className={'dropdown'} styles={customStyle} required={true}
-                                onChange={(e) => this.setCategories(e)}
+                            <Multiselect
+                                id="multi-select" options={categoriesList} showArrow={true} onSelect={this.onSelect}
+                                onRemove={this.onRemove} displayValue={'label'}
                             />
                         </Form.Group>
                     </div>
-                    <Form.Group size="lg" controlId="images">
+                    <Form.Group size="lg" controlId="images" className="form-group-images">
                         <Form.Label>Images</Form.Label>
-                        <br/>
-                        <Form.Control
-                            controlid="file-upload"
-                            type="file"
-                            multiple={true}
-                            onChange={(e) => this.setImages(e)}
+                        <label htmlFor={'file-upload'} className={'custom-file-upload'}>
+                            <FaRegImages/>Upload
+                        </label>
+                        <input id={'file-upload'} type={'file'} multiple={true} required={true}
+                               onChange={(e) => {this.setImages(e)}}
                         />
+                        <label id={"list"}/>
                     </Form.Group>
                     <div className="outer-box">
                         <label>RSVP (optional)</label>

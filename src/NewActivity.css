@@ -24,3 +24,41 @@
     border: 2px solid black;
     border-radius: 5px;
 }
+
+ul {
+    display: flex;
+    flex-direction: row;
+}
+
+input[type="file"] {
+    border: none;
+    display: none;
+}
+
+.custom-file-upload {
+    font-family: sans-serif;
+    padding: 6px 6px;
+    display: block;
+    text-align: center;
+    color: black;
+    cursor: pointer;
+    border: 2px solid black;
+    border-radius: 5px;
+    width: 15%;
+}
+
+.image-upload {
+    width: 15%;
+    border: 1px solid black;
+}
+
+svg {
+    margin: 0 2%;
+}
+
+.outer-box {
+    border: 1px solid black;
+    border-radius: 8px;
+    padding: 1%;
+    margin: 2% 0 0;
+}
