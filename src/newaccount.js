@@ -67,7 +67,7 @@ export default class NewAccount extends React.Component {
                         />
                     </Form.Group>
                     <br/>
-                    <Button block size="lg" type="submit" disabled={!this.validateForm()} className="create-acc-btn">
+                    <Button block size="lg" type="submit" disabled={!this.validateForm()} id="create-acc-btn">
                         Create Account
                     </Button>
                 </Form>

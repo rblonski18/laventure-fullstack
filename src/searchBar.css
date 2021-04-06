@@ -4,8 +4,7 @@
     width: 100%;
 }
 
-input
-{
+input {
     border: 1px solid grey;
     border-radius: 5px;
     height: 2rem;
@@ -15,8 +14,7 @@ input
     background-color: white;
 }
 
-button {
-    background-color: white;
+.search-bar-btn {
     height: 2rem;
     border-radius: 10px;
 }

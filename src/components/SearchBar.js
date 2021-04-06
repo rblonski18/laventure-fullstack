@@ -28,7 +28,7 @@ class SearchBar extends React.Component {
             <div id="cover">
                 <form method="get" action="">
                     <div className="dropdown">
-                        <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                        <button className="btn btn-secondary dropdown-toggle search-bar-btn" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                             Search By: {this.state.filter}
                         </button>
                         <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
@@ -36,13 +36,13 @@ class SearchBar extends React.Component {
                             <li><a key="location" className="dropdown-item" onClick={(e) => this.updateBoth(e, "Location")}>Location</a></li>
                         </ul>
                     </div>
-                    <div className="td"><input type="text" placeholder="Search" required  onChange={(e) => this.setKeyword(e, e.target.value)}/></div>
+                    <div className="td search-bar-btn"><input type="text" placeholder="Search" required  onChange={(e) => this.setKeyword(e, e.target.value)}/></div>
                         <button type="submit" onClick={(e) => this.props.handleSearch(e, this.state.keyword)}>
                             &#x1F50D;
                         </button>
                     {this.props.wf &&
-                        <button id="reset" onClick={this.props.resetListing}>Reset</button>
-                    }   
+                        <button className="search-bar-btn" id="reset" onClick={this.props.resetListing}>Reset</button>
+                    }
                 </form>
             </div>
         );

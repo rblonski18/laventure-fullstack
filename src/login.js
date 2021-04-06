@@ -1,10 +1,9 @@
 import './accounts.css';
-import history from './history';
 
 import React from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import {ButtonGroup} from "react-bootstrap";
+import {Link} from "react-router-dom";
 
 export default class Login extends React.Component {
     state = {
@@ -49,14 +48,14 @@ export default class Login extends React.Component {
                             Login
                         </Button>
                     </Form.Group>
-                    <ButtonGroup variant="container">
-                        <Button className="redirect-btn" onClick={() => history.push('/newaccount')}>
+                    <div className={"btn-group"}>
+                        <Link className="nav-link login-link" to={"/newaccount"}>
                             Create new account
-                        </Button>
-                        <Button className="redirect-btn" onClick={() => history.push('/mainpage')}>
+                        </Link>
+                        <Link className="nav-link login-link" to={"/mainpage"}>
                             Continue as guest
-                        </Button>
-                    </ButtonGroup>
+                        </Link>
+                    </div>
                 </Form>
             </div>
         );
