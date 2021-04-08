@@ -16,11 +16,21 @@ input {
 
 .search-bar-btn {
     height: 2rem;
+    background-color: white;
     border-radius: 10px;
 }
 
 .dropdown {
     margin-left: 1rem;
+}
+
+#dropdown-div {
+    width: auto;
+    border: none;
+}
+
+#dropdownMenuButton1 {
+    height: 2rem;
 }
 
 .dropdown button {
@@ -31,3 +41,5 @@ input {
 #reset {
     margin-left: 1rem;
 }
+
+
