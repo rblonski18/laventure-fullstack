@@ -36,7 +36,6 @@ export default class NewAccount extends React.Component {
                             onChange={(e) => this.setState({fname: e.target.value})}
                         />
                     </Form.Group>
-                    <br/>
                     <Form.Group size="lg" controlId="lname">
                         <Form.Label>Last Name</Form.Label>
                         <br/>
@@ -56,7 +55,6 @@ export default class NewAccount extends React.Component {
                             onChange={(e) => this.setState({email: e.target.value})}
                         />
                     </Form.Group>
-                    <br/>
                     <Form.Group size="lg" controlId="password">
                         <Form.Label>Password</Form.Label>
                         <br/>

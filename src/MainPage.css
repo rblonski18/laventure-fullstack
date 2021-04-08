@@ -1,5 +1,5 @@
 .activity {
-    align-items: left;
+    align-items: start;
     width: 100%;
 }
 
@@ -50,7 +50,7 @@
 
 
 
-@media (max-width: 500px) { 
+@media (max-width: 500px) {
 
     .under {
         flex-direction: column;
@@ -60,7 +60,7 @@
     .mp-right {
         order: 1;
         width: 100% !important;
-        margin-bottom: none;
+        margin-bottom: 0;
     }
 
     .sidebar {
