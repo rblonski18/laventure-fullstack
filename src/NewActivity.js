@@ -64,6 +64,12 @@ export default class NewActivity extends React.Component {
         this.setState({categories: list});
     }
 
+    onDrop = (pictureFiles, pictureDataURLs) => {
+        this.setState({
+            images: this.state.images.concat(pictureFiles)
+        });
+    }
+
     setImages = (e) => {
         const files = e.target.files;
         const validImageTypes = ['image/gif', 'image/jpeg', 'image/png'];
@@ -96,12 +102,6 @@ export default class NewActivity extends React.Component {
 
     setDate = (e) => {
         this.setState({date: ((e.getMonth() + 1) + "/" + e.getDate() + "/" + e.getFullYear())});
-    }
-
-    onDrop = (pictureFiles, pictureDataURLs) => {
-        this.setState({
-            images: this.state.images.concat(pictureFiles)
-        });
     }
 
     render() {
