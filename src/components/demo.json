@@ -4,6 +4,7 @@
         "name": "Beach Volleyball",
         "location": "Santa Monica",
         "coordinates": [34.0129, -118.5017],
+        "categories": ["Beach", "Sports", "Outdoors"],
         "rating": 5
     },
     {
@@ -11,6 +12,7 @@
         "name": "Concert Hall",
         "location": "Pasadena",
         "coordinates": [34.1478, -118.1445],
+        "categories": ["Music", "Night Life", "Outdoors"],
         "rating": 4
     },
     {
@@ -18,6 +20,7 @@
         "name": "Mini Golf",
         "location": "Glendale",
         "coordinates": [34.1425, -118.2551],
+        "categories": ["Games", "Sports", "Outdoors"],
         "rating": 5
     },
     {
@@ -25,6 +28,7 @@
         "name": "Soccer",
         "location": "Jefferson Park",
         "coordinates": [34.0325, -118.3140],
+        "categories": ["Exercise", "Sports", "Outdoors"],
         "rating": 2
     },
     {
@@ -32,6 +36,7 @@
         "name": "Bookstore",
         "location": "Downtown",
         "coordinates": [34.0407, -118.2468],
+        "categories": ["Books", "Shopping"],
         "rating": 3
     }
 ]

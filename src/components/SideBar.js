@@ -7,19 +7,32 @@ class SideBar extends React.Component {
         super(props)
     }
 
+
     render() {
 
         return (
             <div>
-            { this.props.activityListing.map((activity, key) => {
-                const imgString = activity.img
-                return <div className="activity" key={ activity.name }>
+            { this.props.activityListing.map((activity) => {
+                const items = [];
+                for(var i = 0; i < activity.rating; i++) {
+                    items.push(<span className="fa fa-star checked"></span>)
+                }
+                for(var j = 0; j < 5-activity.rating; j++) {
+                    items.push(<span className="fa fa-star"></span>)
+                }
+                const imgString = activity.img;
+                return <div className="activity" key={ activity.name } >
                     <div className="card">
                         <div className="card-body">
                         <div className="thumbnail" style={{backgroundImage: "url(" + imgString +")" }}> </div>
-                            <h5 className="card-title">{activity.name}</h5>
+                            <h5 className="card-title ct-limit">{activity.name}</h5>
+                            <p className="rating-stars">{ items }</p>
+                            <div className="categories"> 
+                                { activity.categories.map((category) => {
+                                    return <span className="badge badge-pill badge-info">{category}</span>
+                                })}
+                            </div>
                             <p className="card-text">{activity.location}</p>
-                            <a href="#" className="btn btn-primary ratingBTN">Rating = {activity.rating}/5</a>
                         </div>
                     </div>
                 </div>

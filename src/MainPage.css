@@ -83,3 +83,25 @@
     margin-right: 2rem;
 }
 
+.checked {
+    color: #29A0B1;
+}
+
+.rating-stars {
+    margin-bottom: 0.25rem;
+}
+
+.categories span {
+    background-color:#29A0B1;
+    color: white;
+    margin-right: 4px; 
+}
+
+.categories {
+    margin-bottom: 0.25rem;
+}
+
+/*
+.activity > .card {
+    background-color: #DDFFE7;
+} */

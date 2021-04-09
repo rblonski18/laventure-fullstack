@@ -1,8 +1,11 @@
 import React from "react"
-import data from "./demo.json"
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 
 class Map extends React.Component {
+
+    constructor(props) {
+        super(props)
+    }
 
     position = [34.0224, -118.2851];
 
@@ -13,9 +16,9 @@ class Map extends React.Component {
                 attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
-                { data.map((activity, key) => {
+                { this.props.activityList.map((activity, key) => {
                     return (
-                        <Marker position={activity.coordinates}>
+                        <Marker key={activity.coordinates} position={activity.coordinates}>
                             <Popup>
                                 {activity.name}
                             </Popup>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import NavBar from "./NavBar"
 import SideBar from "./SideBar"
 import SearchBar from "./SearchBar"
@@ -6,16 +6,16 @@ import data from "./demo.json"
 import Map from "./Map"
 
 const MainPage = (props) => {
-
     
     const [keyword, setKeyword] = useState('');
-    const [activityList, setActivityList] = useState(data);
-    const [filterBy,setFilter] = useState('');
+    const [activityList, setActivityList] = useState([]);
     const [wasFiltered, setWF] = useState(false);
+    const [filterBy,setFilter] = useState('Title');
+    const [ userLoggedIn, setULI ] = useState(false);
 
     const handleSearch = (event, input) => {
         const filteredList = activityList.filter(activity => {
-            if(filterBy == "Title") {
+            if(filterBy === "Title") {
                 return activity.name.toString().toLowerCase().includes(input.toString().toLowerCase());
             } else {
                 return activity.location.toString().toLowerCase().includes(input.toString().toLowerCase());
@@ -25,6 +25,10 @@ const MainPage = (props) => {
         setWF(true)
         setActivityList(filteredList)
     }
+
+    useEffect(() => {
+        setActivityList(data);
+    }, [setActivityList])
 
     const resetListing = (event) => {
         setActivityList(data);
@@ -37,7 +41,7 @@ const MainPage = (props) => {
         // render navbar 
         <div className="content">
             <div>
-                <NavBar />
+                <NavBar userLoggedIn={userLoggedIn} setULI={setULI} />
             </div>
             <div className="under">
                 <div className="sidebar">
@@ -55,7 +59,7 @@ const MainPage = (props) => {
                         />
                     </div>
                     <div className="map-div">
-                        <Map /*activityList={this.activityListing}*/ />
+                        <Map activityList={activityList} />
                     </div>
                 </div>
             </div>
