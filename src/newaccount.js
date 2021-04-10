@@ -18,6 +18,9 @@ export default class NewAccount extends React.Component {
     };
 
     validateForm() {
+        if (this.state.email.length > 0 && this.state.emailColor.length > 0) {
+            this.setState({emailColor: '', emailBorder: '', emailError: 'none'});
+        }
         return this.state.fname.length > 0 && this.state.lname.length > 0 && this.state.email.length > 0 &&
                this.state.password.length > 0;
     }
@@ -75,7 +78,7 @@ export default class NewAccount extends React.Component {
                                 onChange={(e) => this.setState({email: e.target.value})}
                                 style={{backgroundColor: this.state.emailColor, border: this.state.emailBorder}}
                             />
-                            <Form.Text id={"email-exists"} style={{display: this.state.emailError}}>
+                            <Form.Text className={"red-text"} style={{display: this.state.emailError}}>
                                 An account with the email entered already exists.
                             </Form.Text>
                         </Form.Group>

@@ -5,28 +5,36 @@ import NavBar from "./components/NavBar";
 import React from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import { Multiselect } from 'multiselect-react-dropdown';
-import { FaRegImages } from 'react-icons/fa';
+import {Multiselect} from 'multiselect-react-dropdown';
+import {FaRegImages} from 'react-icons/fa';
 import ImageUploader from "react-images-upload";
-import { GoogleAddressLookup, DatePicker, TimePicker } from 'react-rainbow-components';
+import {GoogleAddressLookup, DatePicker, TimePicker} from 'react-rainbow-components';
 
 // can change value to a number if desired, the label is what is displayed, value is for internal use
 let categoriesList = [
-    { value: 'adventure', label: 'Adventure' },
-    { value: 'beach', label: 'Beach' },
-    { value: 'night-life', label: 'Night Life' },
-    { value: 'relax', label: 'Relax' }
+    {value: 'adventure', label: 'Adventure'},
+    {value: 'beach', label: 'Beach'},
+    {value: 'books', label: 'Books'},
+    {value: 'entertainment', label: 'Entertainment'},
+    {value: 'exercise', label: 'Exercise'},
+    {value: 'games', label: 'Games'},
+    {value: 'music', label: 'Music'},
+    {value: 'night-life', label: 'Night Life'},
+    {value: 'outdoors', label: 'Outdoors'},
+    {value: 'relax', label: 'Relax'},
+    {value: 'shopping', label: 'Shopping'},
+    {value: 'sports', label: 'Sports'}
 ];
 
 export default class NewActivity extends React.Component {
     state = {
         title: "",
         description: "",
-        location: null,
+        location: "",
         categories: [],
         images: [],
-        date: null, // note: stored in military time with no AM/PM in the format HH:mm (ie. 15:00)
-        time: null,
+        date: null, // format is MM/dd/yyyy
+        time: null, // note: stored in military time with no AM/PM in the format HH:mm (ie. 15:00)
         capacity: 0
     };
 
@@ -35,18 +43,59 @@ export default class NewActivity extends React.Component {
     }
 
     validateForm() {
-        if (this.state.title.length > 0 && this.state.description.length > 0 && this.state.location !== null &&
-            this.state.categories.length > 0 && this.state.images.length > 0) {
-            if (this.state.date !== null || this.state.time !== null || this.state.capacity !== 0) {
-                return this.state.date !== null && this.state.time !== null && this.state.capacity !== 0;
-            }
-        } else {
-            return false;
+        if (this.state.date != null) {
+            return true;
         }
+
+        // if (this.state.title.length > 0 && this.state.description.length > 0 && this.state.location.length > 0 &&
+        //     this.state.categories.length > 0 && this.state.images.length > 0) {
+        //     if (this.state.date == null && this.state.time == null && this.state.capacity === 0) {
+        //         return true;
+        //     }
+        //
+        //     if (this.state.date != null || this.state.time != null || this.state.capacity !== 0) {
+        //         return this.state.date != null && this.state.time != null && this.state.capacity !== 0;
+        //     }
+        // }
+        // return false;
     }
 
     handleSubmit = (event) => {
         event.preventDefault();
+
+        // verify: address radius, date/time not in past, capacity > 0
+        if (this.state.date != null) {
+            let stateDate = new Date(this.state.date);
+            let now = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+            if (stateDate < now) {
+                // TODO error handling
+                return;
+            } else if (stateDate.getFullYear() === now.getFullYear() && stateDate.getMonth() === now.getMonth() &&
+                       stateDate.getDate() === now.getDate()) {
+                // date is today, time must be later than current time
+                const stateTime = this.state.time.toString().split(':');
+                stateDate.setHours(stateDate.getHours() + parseInt(stateTime[0]));
+                stateDate.setMinutes(stateDate.getMinutes() + parseInt(stateTime[1]));
+
+                now = new Date(); // current date and time
+                if (stateDate.getHours() < now.getHours()) {
+                    // TODO error handling
+                    return;
+                } else if (stateDate.getHours() === now.getHours()) {
+                    if (stateDate.getMinutes() <= now.getMinutes()) {
+                        // TODO error handling
+                        return;
+                    }
+                }
+                console.log('good date/time');
+            }
+
+            if (this.state.capacity <= 0) {
+                // TODO error handling
+                return;
+            }
+        }
+        // enter data into database
     }
 
     // new category selected
@@ -65,9 +114,7 @@ export default class NewActivity extends React.Component {
     }
 
     onDrop = (pictureFiles, pictureDataURLs) => {
-        this.setState({
-            images: this.state.images.concat(pictureFiles)
-        });
+        this.setState({images: this.state.images.concat(pictureFiles)});
     }
 
     setImages = (e) => {
@@ -100,18 +147,27 @@ export default class NewActivity extends React.Component {
         document.getElementById('list').innerHTML = "Files added: " + list;
     }
 
+    addZeros(str) {
+        str = str.toString();
+        if (str.length < 2) {
+            str = '0' + str;
+        }
+        return str;
+    }
+
     setDate = (e) => {
-        this.setState({date: ((e.getMonth() + 1) + "/" + e.getDate() + "/" + e.getFullYear())});
+        this.setState({
+            date: (this.addZeros(e.getMonth() + 1) + "/" + this.addZeros(e.getDate()) + "/" + e.getFullYear())
+        });
     }
 
     render() {
         return (
             <div>
                 <div>
-                    <NavBar />
+                    <NavBar/>
                 </div>
                 <div className="NewActivity">
-
                     <Form onSubmit={this.handleSubmit}>
                         <Form.Group size="lg" controlId="validationCustom01">
                             <Form.Label>Activity</Form.Label>
@@ -119,7 +175,9 @@ export default class NewActivity extends React.Component {
                                 autoFocus
                                 type="text"
                                 value={this.state.title}
-                                onChange={(e) => {this.setState({title: e.target.value})}}
+                                onChange={(e) => {
+                                    this.setState({title: e.target.value})
+                                }}
                                 required={true}
                             />
                         </Form.Group>
@@ -152,13 +210,14 @@ export default class NewActivity extends React.Component {
                                         radius: 150000,
                                         types: ['address'],
                                     }}
+                                    // required={true}
                                 />
                             </Form.Group>
                             <Form.Group className="half" style={{margin: '0 0 0 1%'}}>
                                 <Form.Label>Categories</Form.Label>
                                 <Multiselect
                                     id="multi-select" options={categoriesList} showArrow={true} onSelect={this.onSelect}
-                                    onRemove={this.onRemove} displayValue={'label'}
+                                    onRemove={this.onRemove} displayValue={'label'} required={true}
                                 />
                             </Form.Group>
                         </div>
@@ -172,19 +231,26 @@ export default class NewActivity extends React.Component {
                             {/*/>*/}
                             {/*<label id={"list"}/>*/}
                             <ImageUploader
-                                fileContainerStyle={{width: '100%', border: '2px solid green', padding: '0', margin: '0'}}
+                                fileContainerStyle={{
+                                    width: '100%',
+                                    border: '2px solid green',
+                                    padding: '0',
+                                    margin: '0'
+                                }}
                                 withIcon={false}
                                 withPreview={true}
                                 buttonText="Upload images"
                                 buttonStyles={{backgroundColor: 'green'}}
                                 onChange={this.onDrop}
                                 label={"Max file size: 5 MB, accepted: .jpg, .gif, .png"}
+                                required={true}
                             />
                         </Form.Group>
                         <div className="outer-box">
                             <label>RSVP (optional)</label>
                             <div className="optional-fields">
-                                <Form.Group size="lg" controlId="date" className={"optional-options"} style={{padding: '1%'}}>
+                                <Form.Group size="lg" controlId="date" className={"optional-options"}
+                                            style={{padding: '1%'}}>
                                     <Form.Label>Date</Form.Label>
                                     <DatePicker
                                         className="rainbow-align-content_center rainbow-m-vertical_large rainbow-p-horizontal_small rainbow-m_auto"
@@ -193,7 +259,8 @@ export default class NewActivity extends React.Component {
                                         onChange={(e) => this.setDate(e)}
                                     />
                                 </Form.Group>
-                                <Form.Group size="lg" controlId="time" className={"optional-options"} style={{padding: '1%'}}>
+                                <Form.Group size="lg" controlId="time" className={"optional-options"}
+                                            style={{padding: '1%'}}>
                                     <Form.Label>Time</Form.Label>
                                     <TimePicker
                                         className="rainbow-m-vertical_x-large rainbow-p-horizontal_medium rainbow-m_auto"
@@ -202,7 +269,8 @@ export default class NewActivity extends React.Component {
                                         onChange={(e) => this.setState({time: e})}
                                     />
                                 </Form.Group>
-                                <Form.Group size="lg" controlId="cap" className={"optional-options"} style={{padding: '1%'}}>
+                                <Form.Group size="lg" controlId="cap" className={"optional-options"}
+                                            style={{padding: '1%'}}>
                                     <Form.Label>Capacity</Form.Label>
                                     <Form.Control
                                         type="number"
