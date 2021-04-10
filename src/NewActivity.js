@@ -6,9 +6,11 @@ import React from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import {Multiselect} from 'multiselect-react-dropdown';
-import {FaRegImages} from 'react-icons/fa';
+// import {FaRegImages} from 'react-icons/fa';
 import ImageUploader from "react-images-upload";
 import {GoogleAddressLookup, DatePicker, TimePicker} from 'react-rainbow-components';
+import 'react-toastify/dist/ReactToastify.css';
+import {toast} from 'react-toastify';
 
 // can change value to a number if desired, the label is what is displayed, value is for internal use
 let categoriesList = [
@@ -30,7 +32,7 @@ export default class NewActivity extends React.Component {
     state = {
         title: "",
         description: "",
-        location: "",
+        location: "temp",
         categories: [],
         images: [],
         date: null, // format is MM/dd/yyyy
@@ -43,32 +45,31 @@ export default class NewActivity extends React.Component {
     }
 
     validateForm() {
-        if (this.state.date != null) {
-            return true;
-        }
+        if (this.state.title.length > 0 && this.state.description.length > 0 && this.state.location.length > 0 &&
+            this.state.categories.length > 0 && this.state.images.length > 0) {
+            if (this.state.date == null && this.state.time == null && this.state.capacity === 0) {
+                return true;
+            }
 
-        // if (this.state.title.length > 0 && this.state.description.length > 0 && this.state.location.length > 0 &&
-        //     this.state.categories.length > 0 && this.state.images.length > 0) {
-        //     if (this.state.date == null && this.state.time == null && this.state.capacity === 0) {
-        //         return true;
-        //     }
-        //
-        //     if (this.state.date != null || this.state.time != null || this.state.capacity !== 0) {
-        //         return this.state.date != null && this.state.time != null && this.state.capacity !== 0;
-        //     }
-        // }
-        // return false;
+            if (this.state.date != null || this.state.time != null || this.state.capacity !== 0) {
+                return this.state.date != null && this.state.time != null && this.state.capacity !== 0;
+            }
+        }
+        return false;
     }
 
     handleSubmit = (event) => {
         event.preventDefault();
+        toast.configure();
 
         // verify: address radius, date/time not in past, capacity > 0
         if (this.state.date != null) {
             let stateDate = new Date(this.state.date);
             let now = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
             if (stateDate < now) {
-                // TODO error handling
+                toast.info('ERROR! Date has already occurred.',
+                    {type: 'error', autoClose: 10_000, pauseOnHover: false});
+                this.setState({date: null});
                 return;
             } else if (stateDate.getFullYear() === now.getFullYear() && stateDate.getMonth() === now.getMonth() &&
                        stateDate.getDate() === now.getDate()) {
@@ -79,23 +80,37 @@ export default class NewActivity extends React.Component {
 
                 now = new Date(); // current date and time
                 if (stateDate.getHours() < now.getHours()) {
-                    // TODO error handling
+                    toast.info('ERROR! Time has already occurred today.',
+                        {type: 'error', autoClose: 10_000, pauseOnHover: false});
+                    this.setState({time: null});
                     return;
                 } else if (stateDate.getHours() === now.getHours()) {
                     if (stateDate.getMinutes() <= now.getMinutes()) {
-                        // TODO error handling
+                        toast.info('ERROR! Time has already occurred today.',
+                            {type: 'error', autoClose: 10_000, pauseOnHover: false});
+                        this.setState({time: null});
                         return;
                     }
                 }
-                console.log('good date/time');
             }
 
             if (this.state.capacity <= 0) {
-                // TODO error handling
+                toast.info('ERROR! Capacity is less than or equal to 0.',
+                    {type: 'error', autoClose: 10_000, pauseOnHover: false});
+                this.setState({capacity: 0});
                 return;
             }
         }
         // enter data into database
+
+        const successful = false; // TODO change based on if event was successfully input into database
+        if (successful) {
+            toast.info(this.state.title + ' successfully created.',
+                {type: 'success', pauseOnHover: false});
+        } else {
+            toast.info(this.state.title + ' could not be created.',
+                {type: 'error', pauseOnHover: false});
+        }
     }
 
     // new category selected
@@ -168,6 +183,7 @@ export default class NewActivity extends React.Component {
                     <NavBar/>
                 </div>
                 <div className="NewActivity">
+                    <h1 className="page-title">Create a New Activity</h1>
                     <Form onSubmit={this.handleSubmit}>
                         <Form.Group size="lg" controlId="validationCustom01">
                             <Form.Label>Activity</Form.Label>
@@ -194,24 +210,24 @@ export default class NewActivity extends React.Component {
                         <div className="horizontal-alignment">
                             <Form.Group size="lg" controlId="location" className={"half"} style={{margin: '0 1% 0 0'}}>
                                 <Form.Label>Address</Form.Label>
-                                <GoogleAddressLookup
-                                    className="rainbow-m-vertical_x-large rainbow-p-horizontal_medium rainbow-m_auto"
-                                    id="gaddresslookup-4"
-                                    placeholder="Enter location"
-                                    // onChange={value => setState({ value })}
-                                    // value={this.state.location}
-                                    // apiKey={LIBRARY_GOOGLE_MAPS_APIKEY}
-                                    searchOptions={{
-                                        location: {
-                                            latitude: -33.941264,
-                                            longitude: 151.2042969,
-                                        },
-                                        country: 'us',
-                                        radius: 150000,
-                                        types: ['address'],
-                                    }}
-                                    // required={true}
-                                />
+                                {/*<GoogleAddressLookup*/}
+                                {/*    className="rainbow-m-vertical_x-large rainbow-p-horizontal_medium rainbow-m_auto"*/}
+                                {/*    id="gaddresslookup-4"*/}
+                                {/*    placeholder="Enter location"*/}
+                                {/*    // onChange={value => setState({ value })}*/}
+                                {/*    // value={this.state.location}*/}
+                                {/*    // apiKey={LIBRARY_GOOGLE_MAPS_APIKEY}*/}
+                                {/*    searchOptions={{*/}
+                                {/*        location: {*/}
+                                {/*            latitude: -33.941264,*/}
+                                {/*            longitude: 151.2042969,*/}
+                                {/*        },*/}
+                                {/*        country: 'us',*/}
+                                {/*        radius: 150000,*/}
+                                {/*        types: ['address'],*/}
+                                {/*    }}*/}
+                                {/*    required={true}*/}
+                                {/*/>*/}
                             </Form.Group>
                             <Form.Group className="half" style={{margin: '0 0 0 1%'}}>
                                 <Form.Label>Categories</Form.Label>
@@ -230,6 +246,7 @@ export default class NewActivity extends React.Component {
                             {/*       onChange={(e) => {this.setImages(e)}}*/}
                             {/*/>*/}
                             {/*<label id={"list"}/>*/}
+
                             <ImageUploader
                                 fileContainerStyle={{
                                     width: '100%',
@@ -281,7 +298,10 @@ export default class NewActivity extends React.Component {
                             </div>
                         </div>
                         <br/>
-                        <Button block size="lg" className="block-button" type="submit" disabled={!this.validateForm()}>
+                        <Button
+                            block size="lg" className="btn btn-primary" id="create-activity-btn" type="submit"
+                            disabled={!this.validateForm()}
+                        >
                             Create Activity
                         </Button>
                     </Form>

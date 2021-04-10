@@ -15,20 +15,23 @@ export default class Login extends React.Component {
         redirect: "",
     };
 
-    validateForm() {
-        if (this.state.email.length > 0 || this.state.password.length > 0) {
-            if (this.state.errorColor.length > 0) {
-                this.setState({errorColor: '', errorBorder: '', error: 'none'});
-            }
+    setEmail = (e) => {
+        this.setState({email: e.target.value});
+        if (e.target.value.length > 0 && this.state.errorColor.length > 0) {
+            this.setState({errorColor: '', errorBorder: '', error: 'none'});
         }
-        return this.state.email.length > 0 && this.state.password.length > 0;
+    }
+
+    setPassword = (e) => {
+        this.setState({password: e.target.value});
+        if (e.target.value.length > 0 && this.state.errorColor.length > 0) {
+            this.setState({errorColor: '', errorBorder: '', error: 'none'});
+        }
     }
 
     handleSubmit = (event) => {
         event.preventDefault();
-        // console.log(this.state.email + " " + this.state.password);
-
-        const successful = true; // TODO change depending on if account info is valid or not
+        const successful = false; // TODO change depending on if account info is valid or not
         if (successful) {
             this.setState({redirect: '/mainpage'});
         } else {
@@ -45,14 +48,15 @@ export default class Login extends React.Component {
         } else {
             return (
                 <div className="Login">
+                    <h1>Login <span style={{fontSize: 'large'}}>to LAVenture</span></h1>
                     <Form onSubmit={this.handleSubmit}>
                         <Form.Group size="lg" controlId="email">
                             <Form.Label>Email</Form.Label>
                             <Form.Control
                                 autoFocus
                                 type="email"
-                                value={this.state.email}
-                                onChange={(e) => this.setState({email: e.target.value})}
+                                value={this.state.email} required={true}
+                                onChange={(e) => this.setEmail(e)}
                                 style={{backgroundColor: this.state.errorColor, border: this.state.errorBorder}}
                             />
                             <Form.Text className={"red-text"} style={{display: this.state.error}}>
@@ -64,8 +68,8 @@ export default class Login extends React.Component {
                             <br/>
                             <Form.Control
                                 type="password"
-                                value={this.state.password}
-                                onChange={(e) => this.setState({password: e.target.value})}
+                                value={this.state.password} required={true}
+                                onChange={(e) => this.setPassword(e)}
                                 style={{backgroundColor: this.state.errorColor, border: this.state.errorBorder}}
                             />
                             <Form.Text className={"red-text"} style={{display: this.state.error}}>
@@ -74,7 +78,7 @@ export default class Login extends React.Component {
                         </Form.Group>
                         <br/>
                         <Form.Group size="lg" controlId="btn">
-                            <Button block size="lg" className="btn btn-primary" id="login-button" type="submit" disabled={!this.validateForm()}>
+                            <Button block size="lg" className="btn btn-primary" id="login-button" type="submit">
                                 Login
                             </Button>
                         </Form.Group>
