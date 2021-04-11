@@ -6,7 +6,7 @@ import data from "./demo.json"
 import Map from "./Map"
 
 const MainPage = (props) => {
-    
+
     const [keyword, setKeyword] = useState('');
     const [activityList, setActivityList] = useState([]);
     const [wasFiltered, setWF] = useState(false);
@@ -21,7 +21,7 @@ const MainPage = (props) => {
                 return activity.location.toString().toLowerCase().includes(input.toString().toLowerCase());
             }
         })
-    
+
         setWF(true)
         setActivityList(filteredList)
     }
@@ -38,7 +38,7 @@ const MainPage = (props) => {
     // write function to fetch data from db upon search keyword change
 
     return(
-        // render navbar 
+        // render navbar
         <div className="content">
             <div>
                 <NavBar userLoggedIn={userLoggedIn} setULI={setULI} />
@@ -49,12 +49,12 @@ const MainPage = (props) => {
                 </div>
                 <div className="mp-right">
                     <div className="searchBar-div">
-                        <SearchBar 
-                            keyword={keyword} 
-                            setKeyword={setKeyword} 
-                            setFilter={setFilter} 
-                            handleSearch={handleSearch} 
-                            resetListing={resetListing} 
+                        <SearchBar
+                            keyword={keyword}
+                            setKeyword={setKeyword}
+                            setFilter={setFilter}
+                            handleSearch={handleSearch}
+                            resetListing={resetListing}
                             wf={wasFiltered}
                         />
                     </div>
@@ -64,7 +64,7 @@ const MainPage = (props) => {
                 </div>
             </div>
         </div>
-        
+
     );
 
 }

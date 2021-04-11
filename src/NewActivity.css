@@ -1,5 +1,5 @@
-.page-title {
-    /*background: linear-gradient(to top, SteelBlue, SeaGreen);*/
+.NewActivity {
+    margin: auto;
 }
 
 .NewActivity .form-group {
@@ -61,7 +61,7 @@ svg {
 }
 
 .outer-box {
-    border: 1px solid black;
+    border: 1px solid #98d7c2;
     border-radius: 8px;
     padding: 1%;
     margin: 2% 0 0;

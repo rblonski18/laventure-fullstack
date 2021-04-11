@@ -250,14 +250,14 @@ export default class NewActivity extends React.Component {
                             <ImageUploader
                                 fileContainerStyle={{
                                     width: '100%',
-                                    border: '2px solid green',
+                                    border: '1px solid #98d7c2',
                                     padding: '0',
                                     margin: '0'
                                 }}
                                 withIcon={false}
                                 withPreview={true}
                                 buttonText="Upload images"
-                                buttonStyles={{backgroundColor: 'green'}}
+                                buttonStyles={{backgroundColor: '#98d7c2'}}
                                 onChange={this.onDrop}
                                 label={"Max file size: 5 MB, accepted: .jpg, .gif, .png"}
                                 required={true}

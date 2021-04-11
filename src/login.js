@@ -29,21 +29,39 @@ export default class Login extends React.Component {
         }
     }
 
+    throwError() {
+        this.setState({email: '', password: '',
+                            errorColor: '#ffb6c1', errorBorder: '1px solid red', error: 'block'});
+    }
+
     handleSubmit = (event) => {
         event.preventDefault();
-        const successful = false; // TODO change depending on if account info is valid or not
-        if (successful) {
-            this.setState({redirect: '/mainpage'});
-        } else {
-            this.setState({email: '', password: '',
-                errorColor: '#ffb6c1', errorBorder: '1px solid red', error: 'block'});
-        }
+
+        fetch('/LAVenture/LoginServlet', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({email: this.state.email, password: this.state.password})
+        })
+            .then(response => response.json())
+            .then(response => {
+                // if successful, should have received succcess=true, session ID, email
+                this.setState({redirect: '/mainpage'});
+                // otherwise, call throwError
+            })
+            .catch(err => {
+                this.throwError();
+            });
     }
 
     render() {
         if (this.state.redirect.length > 0) {
             return (
-                <Redirect to={'/mainpage'}/>
+                <Redirect to={"/mainpage"}
+                    // to={{
+                    //     pathname: "/mainpage",
+                    //     state: {email: this.state.email, userLoggedIn: true}
+                    // }}
+                />
             );
         } else {
             return (

@@ -75,7 +75,7 @@ export default class NewAccount extends React.Component {
                     <h1>Welcome to LAVenture!</h1>
                     <Form onSubmit={this.handleSubmit}>
                         <div className="horizontal-alignment">
-                            <Form.Group size="lg" controlId="fname">
+                            <Form.Group className="form-group-half" size="lg" controlId="fname">
                                 <Form.Label>First Name</Form.Label>
                                 <br/>
                                 <Form.Control
@@ -85,7 +85,7 @@ export default class NewAccount extends React.Component {
                                     onChange={(e) => {this.setState({fname: e.target.value})}}
                                 />
                             </Form.Group>
-                            <Form.Group size="lg" controlId="lname">
+                            <Form.Group className="form-group-half" size="lg" controlId="lname">
                                 <Form.Label>Last Name</Form.Label>
                                 <br/>
                                 <Form.Control
@@ -135,9 +135,11 @@ export default class NewAccount extends React.Component {
                             </Form.Text>
                         </Form.Group>
                         <br/>
-                        <Button block size="lg" type="submit" id="create-acc-btn">
-                            Create Account
-                        </Button>
+                        <div className={"form-group"}>
+                            <Button block size="lg" type="submit" id="create-acc-btn">
+                                Create Account
+                            </Button>
+                        </div>
                     </Form>
                 </div>
             );
