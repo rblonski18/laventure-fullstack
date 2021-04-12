@@ -40,15 +40,15 @@ input[type="file"] {
 }
 
 .custom-file-upload {
-    font-family: sans-serif;
+    font-family: "Helvetica Neue";
     padding: 6px 6px;
     display: block;
     text-align: center;
-    color: black;
+    color: #167d7f;
     cursor: pointer;
-    border: 2px solid black;
+    border: 2px solid #167d7f;
     border-radius: 5px;
-    width: 15%;
+    width: 23%;
 }
 
 .image-upload {

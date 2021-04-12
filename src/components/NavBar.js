@@ -5,12 +5,6 @@ class NavBar extends React.Component {
 
     constructor(props) {
         super(props);
-        console.log(this.props);
-    }
-
-    componentDidMount() {
-        console.log(this.props.location.state.userLoggedIn);
-        console.log(this.props.location.state.email);
     }
 
     render() {

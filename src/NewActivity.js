@@ -6,8 +6,7 @@ import React from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import {Multiselect} from 'multiselect-react-dropdown';
-// import {FaRegImages} from 'react-icons/fa';
-import ImageUploader from "react-images-upload";
+import {FaRegImages} from 'react-icons/fa';
 import {GoogleAddressLookup, DatePicker, TimePicker} from 'react-rainbow-components';
 import 'react-toastify/dist/ReactToastify.css';
 import {toast} from 'react-toastify';
@@ -34,7 +33,7 @@ export default class NewActivity extends React.Component {
         description: "",
         location: "temp",
         categories: [],
-        images: [],
+        image: null,
         date: null, // format is MM/dd/yyyy
         time: null, // note: stored in military time with no AM/PM in the format HH:mm (ie. 15:00)
         capacity: 0
@@ -42,11 +41,14 @@ export default class NewActivity extends React.Component {
 
     componentDidMount() {
         // dynamically set values in categories array (fetch data from DB)
+
+        toast.configure();
+
     }
 
     validateForm() {
         if (this.state.title.length > 0 && this.state.description.length > 0 && this.state.location.length > 0 &&
-            this.state.categories.length > 0 && this.state.images.length > 0) {
+            this.state.categories.length > 0 && this.state.image.length != null) {
             if (this.state.date == null && this.state.time == null && this.state.capacity === 0) {
                 return true;
             }
@@ -58,9 +60,12 @@ export default class NewActivity extends React.Component {
         return false;
     }
 
+    toasterError() {
+        toast.info(this.state.title + ' could not be created.', {type: 'error', pauseOnHover: false});
+    }
+
     handleSubmit = (event) => {
         event.preventDefault();
-        toast.configure();
 
         // verify: address radius, date/time not in past, capacity > 0
         if (this.state.date != null) {
@@ -101,16 +106,32 @@ export default class NewActivity extends React.Component {
                 return;
             }
         }
-        // enter data into database
 
-        const successful = false; // TODO change based on if event was successfully input into database
-        if (successful) {
-            toast.info(this.state.title + ' successfully created.',
-                {type: 'success', pauseOnHover: false});
-        } else {
-            toast.info(this.state.title + ' could not be created.',
-                {type: 'error', pauseOnHover: false});
-        }
+        // enter data into database
+        fetch('LAVenture/NewAcitivityServlet', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                title: this.state.title,
+                description: this.state.description,
+                location: this.state.location,
+                categories: this.state.categories,
+                image: this.state.image,
+                date: this.state.date,
+                time: this.state.time,
+                capacity: this.state.capacity
+            })
+        })
+            .then(response => response.json())
+            .then(response => {
+                // if success= true,
+                toast.info(this.state.title + ' successfully created.',
+                    {type: 'success', pauseOnHover: false});
+                // otherwise, toasterError
+            })
+            .catch(err => {
+                this.toasterError();
+            });
     }
 
     // new category selected
@@ -128,38 +149,16 @@ export default class NewActivity extends React.Component {
         this.setState({categories: list});
     }
 
-    onDrop = (pictureFiles, pictureDataURLs) => {
-        this.setState({images: this.state.images.concat(pictureFiles)});
-    }
-
-    setImages = (e) => {
+    setImage = (e) => {
         const files = e.target.files;
-        const validImageTypes = ['image/gif', 'image/jpeg', 'image/png'];
-        let goodImages = this.state.images;
-        for (let i = 0; i < files.length; i++) {
-            if (validImageTypes.includes(files[i].type)) {
-
-                // only add file if not already in list
-                if (goodImages.indexOf(files[i]) < 0) {
-                    goodImages.push(files[i]);
-                }
-            }
+        const validImageTypes = ['image/gif', 'image/jpg', 'image/png'];
+        if (validImageTypes.includes(files[0].type)) {
+            this.setState({image: files[0]});
+            document.getElementById('image-label').innerText = 'Replace ' + files[0].name;
+        } else {
+            toast.info('ERROR! Image must end in .gif, .jpg, or .png.',
+                {type: 'error', pauseOnHover: false});
         }
-        this.setState({images: goodImages});
-        this.getSelectedFiles(goodImages);
-    }
-
-    getSelectedFiles(goodImages) {
-        let list = "";
-        for (let i = 0; i < goodImages.length; i++) {
-            if (goodImages[i].name != null) {
-                list += goodImages[i].name;
-                if (i < goodImages.length - 1) {
-                    list += ", ";
-                }
-            }
-        }
-        document.getElementById('list').innerHTML = "Files added: " + list;
     }
 
     addZeros(str) {
@@ -186,7 +185,7 @@ export default class NewActivity extends React.Component {
                     <h1 className="page-title">Create a New Activity</h1>
                     <Form onSubmit={this.handleSubmit}>
                         <Form.Group size="lg" controlId="validationCustom01">
-                            <Form.Label>Activity</Form.Label>
+                            <Form.Label>Activity Title</Form.Label>
                             <Form.Control
                                 autoFocus
                                 type="text"
@@ -198,10 +197,10 @@ export default class NewActivity extends React.Component {
                             />
                         </Form.Group>
                         <Form.Group size="lg" controlId="exampleFormControlTextarea1">
-                            <Form.Label>Description</Form.Label>
+                            <Form.Label>Description (max 350 characters)</Form.Label>
                             <Form.Control
                                 as="textarea"
-                                type="text"
+                                type="text" maxLength={"350"} rows={"4"}
                                 value={this.state.description}
                                 onChange={(e) => this.setState({description: e.target.value})}
                                 required={true}
@@ -209,7 +208,7 @@ export default class NewActivity extends React.Component {
                         </Form.Group>
                         <div className="horizontal-alignment">
                             <Form.Group size="lg" controlId="location" className={"half"} style={{margin: '0 1% 0 0'}}>
-                                <Form.Label>Address</Form.Label>
+                                <Form.Label>Location</Form.Label>
                                 {/*<GoogleAddressLookup*/}
                                 {/*    className="rainbow-m-vertical_x-large rainbow-p-horizontal_medium rainbow-m_auto"*/}
                                 {/*    id="gaddresslookup-4"*/}
@@ -238,29 +237,12 @@ export default class NewActivity extends React.Component {
                             </Form.Group>
                         </div>
                         <Form.Group size="lg" controlId="images" className="form-group-images">
-                            <Form.Label>Images</Form.Label>
-                            {/*<label htmlFor={'file-upload'} className={'custom-file-upload'}>*/}
-                            {/*    <FaRegImages/>Upload*/}
-                            {/*</label>*/}
-                            {/*<input id={'file-upload'} type={'file'} multiple={true} required={true}*/}
-                            {/*       onChange={(e) => {this.setImages(e)}}*/}
-                            {/*/>*/}
-                            {/*<label id={"list"}/>*/}
-
-                            <ImageUploader
-                                fileContainerStyle={{
-                                    width: '100%',
-                                    border: '1px solid #98d7c2',
-                                    padding: '0',
-                                    margin: '0'
-                                }}
-                                withIcon={false}
-                                withPreview={true}
-                                buttonText="Upload images"
-                                buttonStyles={{backgroundColor: '#98d7c2'}}
-                                onChange={this.onDrop}
-                                label={"Max file size: 5 MB, accepted: .jpg, .gif, .png"}
-                                required={true}
+                            <Form.Label>Image Upload</Form.Label>
+                            <label id={'image-label'} htmlFor={'file-upload'} className={'custom-file-upload'}>
+                                <FaRegImages/>Select an image
+                            </label>
+                            <input id={'file-upload'} type={'file'} required={true}
+                                   onChange={(e) => {this.setImage(e)}}
                             />
                         </Form.Group>
                         <div className="outer-box">

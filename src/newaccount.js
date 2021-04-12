@@ -42,6 +42,11 @@ export default class NewAccount extends React.Component {
         }
     }
 
+    errorMsg() {
+        this.setState({fname: '', lname: '', email: '', emailColor: '#ffb6c1',
+            emailBorder: '1px solid red', emailError: 'block', password: ''});
+    }
+
     handleSubmit = (event) => {
         event.preventDefault();
         if (this.state.password !== this.state.confirmPassword) {
@@ -51,17 +56,25 @@ export default class NewAccount extends React.Component {
         }
 
         // verify with back end that this email does not already exist in database
-
-        const successful = false; // TODO change depending on if account was successfully created or not
-        if (successful) {
-            this.setState({redirect: '/mainpage'});
-        } else {
-            this.setState({fname: '', lname: '', email: '', emailColor: '#ffb6c1',
-                emailBorder: '1px solid red', emailError: 'block', password: ''});
-            return;
-        }
-
-        // successful data up to this point, create an account with information
+        fetch('LAVenture/NewAccountServlet', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                fname: this.state.fname,
+                lname: this.state.lname,
+                email: this.state.email,
+                password: this.state.password
+            })
+        })
+            .then(response => response.json())
+            .then(response => {
+                // if successful, should have received succcess=true, session ID, email
+                this.setState({redirect: '/mainpage'});
+                // otherwise, call errorMsg because email already existed in database
+            })
+            .catch(err => {
+                this.errorMsg();
+            });
     }
 
     render() {
