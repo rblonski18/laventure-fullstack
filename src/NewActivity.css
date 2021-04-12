@@ -48,7 +48,7 @@ input[type="file"] {
     cursor: pointer;
     border: 2px solid #167d7f;
     border-radius: 5px;
-    width: 23%;
+    width: 100%;
 }
 
 .image-upload {

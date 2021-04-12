@@ -7,6 +7,7 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import {Multiselect} from 'multiselect-react-dropdown';
 import {FaRegImages} from 'react-icons/fa';
+import StarBorderIcon from '@material-ui/icons/StarBorder';
 import {GoogleAddressLookup, DatePicker, TimePicker} from 'react-rainbow-components';
 import 'react-toastify/dist/ReactToastify.css';
 import {toast} from 'react-toastify';
@@ -34,27 +35,30 @@ export default class NewActivity extends React.Component {
         location: "temp",
         categories: [],
         image: null,
+        rating: 0,
         date: null, // format is MM/dd/yyyy
         time: null, // note: stored in military time with no AM/PM in the format HH:mm (ie. 15:00)
-        capacity: 0
+        capacity: 0,
+        attending: null
     };
 
     componentDidMount() {
         // dynamically set values in categories array (fetch data from DB)
 
         toast.configure();
-
     }
 
     validateForm() {
         if (this.state.title.length > 0 && this.state.description.length > 0 && this.state.location.length > 0 &&
-            this.state.categories.length > 0 && this.state.image.length != null) {
+            this.state.categories.length > 0 && this.state.image != null && this.state.rating > 0) {
             if (this.state.date == null && this.state.time == null && this.state.capacity === 0) {
                 return true;
             }
 
-            if (this.state.date != null || this.state.time != null || this.state.capacity !== 0) {
-                return this.state.date != null && this.state.time != null && this.state.capacity !== 0;
+            if (this.state.date != null || this.state.time != null || this.state.capacity !== 0 ||
+                this.state.capacity != null) {
+                return (this.state.date != null && this.state.time != null && this.state.capacity !== 0 &&
+                       this.state.capacity != null);
             }
         }
         return false;
@@ -108,7 +112,7 @@ export default class NewActivity extends React.Component {
         }
 
         // enter data into database
-        fetch('LAVenture/NewAcitivityServlet', {
+        fetch('LAVenture/NewActivityServlet', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
@@ -117,9 +121,11 @@ export default class NewActivity extends React.Component {
                 location: this.state.location,
                 categories: this.state.categories,
                 image: this.state.image,
+                rating: this.state.rating,
                 date: this.state.date,
                 time: this.state.time,
-                capacity: this.state.capacity
+                capacity: this.state.capacity,
+                attending: this.state.attending
             })
         })
             .then(response => response.json())
@@ -161,6 +167,38 @@ export default class NewActivity extends React.Component {
         }
     }
 
+    setRating = (e) => {
+        const id = e.target.id, num = id[0];
+        if (id.includes('fill')) {
+            // unstar
+            this.setState({rating: 0});
+            for (let i = 1; i <= 5; i++) {
+                const element = document.getElementById(i + '-fill');
+                if (element != null) {
+                    element.id = i + '-not';
+                    document.getElementById(i + '-not').style.color = 'black';
+                }
+            }
+        } else {
+            // star
+            this.setState({rating: num});
+            for (let i = 1; i <= num; i++) {
+                const element = document.getElementById(i + '-not');
+                if (element != null) {
+                    element.id = i + '-fill';
+                    document.getElementById(i + '-fill').style.color = 'gold';
+                }
+            }
+            for (let i = num + 1; i <= 5; i++) {
+                const element = document.getElementById(i + '-fill');
+                if (element != null) {
+                    element.id = i + '-not';
+                    document.getElementById(i + '-not').style.color = 'black';
+                }
+            }
+        }
+    }
+
     addZeros(str) {
         str = str.toString();
         if (str.length < 2) {
@@ -173,6 +211,14 @@ export default class NewActivity extends React.Component {
         this.setState({
             date: (this.addZeros(e.getMonth() + 1) + "/" + this.addZeros(e.getDate()) + "/" + e.getFullYear())
         });
+    }
+
+    toggleAttending = () => {
+        if (this.state.attending == null) {
+            this.setState({attending: 'true'});
+        } else {
+            this.setState({attending: !this.state.attending});
+        }
     }
 
     render() {
@@ -236,19 +282,31 @@ export default class NewActivity extends React.Component {
                                 />
                             </Form.Group>
                         </div>
-                        <Form.Group size="lg" controlId="images" className="form-group-images">
-                            <Form.Label>Image Upload</Form.Label>
-                            <label id={'image-label'} htmlFor={'file-upload'} className={'custom-file-upload'}>
-                                <FaRegImages/>Select an image
-                            </label>
-                            <input id={'file-upload'} type={'file'} required={true}
-                                   onChange={(e) => {this.setImage(e)}}
-                            />
-                        </Form.Group>
+                        <div className="horizontal-alignment">
+                            <Form.Group size="lg" controlId="images" className="half form-group-images" style={{margin: '0 1% 0 0'}}>
+                                <Form.Label>Image Upload</Form.Label>
+                                <label id={'image-label'} htmlFor={'file-upload'} className={'custom-file-upload'}>
+                                    <FaRegImages/>Select an image
+                                </label>
+                                <input id={'file-upload'} type={'file'} required={true}
+                                       onChange={(e) => {this.setImage(e)}}
+                                />
+                            </Form.Group>
+                            <Form.Group size="lg" className="half" style={{margin: '0 0 0 1%'}}>
+                                <Form.Label>Rate This Activity</Form.Label>
+                                <div id={"star-div"}>
+                                    <StarBorderIcon id={'1-not'} role={'button'} onClick={(e) => this.setRating(e)} fontSize={'large'}/>
+                                    <StarBorderIcon id={'2-not'} role={'button'} onClick={(e) => this.setRating(e)} fontSize={'large'}/>
+                                    <StarBorderIcon id={'3-not'} role={'button'} onClick={(e) => this.setRating(e)} fontSize={'large'}/>
+                                    <StarBorderIcon id={'4-not'} role={'button'} onClick={(e) => this.setRating(e)} fontSize={'large'}/>
+                                    <StarBorderIcon id={'5-not'} role={'button'} onClick={(e) => this.setRating(e)} fontSize={'large'}/>
+                                </div>
+                            </Form.Group>
+                        </div>
                         <div className="outer-box">
                             <label>RSVP (optional)</label>
                             <div className="optional-fields">
-                                <Form.Group size="lg" controlId="date" className={"optional-options"}
+                                <Form.Group size="lg" controlId="date"
                                             style={{padding: '1%'}}>
                                     <Form.Label>Date</Form.Label>
                                     <DatePicker
@@ -258,7 +316,7 @@ export default class NewActivity extends React.Component {
                                         onChange={(e) => this.setDate(e)}
                                     />
                                 </Form.Group>
-                                <Form.Group size="lg" controlId="time" className={"optional-options"}
+                                <Form.Group size="lg" controlId="time"
                                             style={{padding: '1%'}}>
                                     <Form.Label>Time</Form.Label>
                                     <TimePicker
@@ -268,13 +326,21 @@ export default class NewActivity extends React.Component {
                                         onChange={(e) => this.setState({time: e})}
                                     />
                                 </Form.Group>
-                                <Form.Group size="lg" controlId="cap" className={"optional-options"}
+                                <Form.Group size="lg" controlId="cap"
                                             style={{padding: '1%'}}>
                                     <Form.Label>Capacity</Form.Label>
                                     <Form.Control
                                         type="number"
                                         value={this.state.capacity}
                                         onChange={(e) => this.setState({capacity: e.target.value})}
+                                    />
+                                </Form.Group>
+                            </div>
+                            <div className="optional-fields">
+                                <Form.Group size="lg" controlId="attending" style={{padding: '0 1%'}}>
+                                    <Form.Check
+                                        type="checkbox" label="I will be attending this event."
+                                        onChange={this.toggleAttending}
                                     />
                                 </Form.Group>
                             </div>

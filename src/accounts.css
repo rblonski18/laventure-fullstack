@@ -37,9 +37,14 @@ h1 {
     width: 50%;
 }
 
-.form-control:focus, input[type="text"]:focus, input[type="number"]:focus, textarea[type="text"]:focus, .custom-file-upload:focus {
+.form-control:focus, input[type="text"]:focus, input[type="number"]:focus, textarea[type="text"]:focus,
+.custom-file-upload:focus, input[type="checkbox"]:focus {
     border-color: #98d7c2;
     box-shadow: inset 0 1px 1px rgba(152, 215, 194, 0.075), 0 0 8px rgba(22, 125, 127, 0.6);
+}
+
+input[type="checkbox"]:checked {
+    background-color: #29a0b1;
 }
 
 #login-button, #create-acc-btn, #create-activity-btn {
@@ -53,7 +58,7 @@ h1 {
     vertical-align: middle;
     color: white;
     width: 100%;
-    background: #29A0B1;
+    background: #29a0b1;
 }
 
 .btn-group {
@@ -75,7 +80,7 @@ button:hover:not(.dropdown-toggle), .custom-file-upload:hover {
     padding: 2%;
     text-align: center;
     text-decoration: underline;
-    color: #29A0B1;
+    color: #29a0b1;
 }
 
 .login-link:hover {
