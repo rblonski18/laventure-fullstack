@@ -7,7 +7,7 @@ import {Link, Redirect} from "react-router-dom";
 
 export default class Login extends React.Component {
     state = {
-        email: "",
+        username: "",
         password: "",
         error: "none",
         errorColor: "",
@@ -15,8 +15,8 @@ export default class Login extends React.Component {
         redirect: "",
     };
 
-    setEmail = (e) => {
-        this.setState({email: e.target.value});
+    setUsername = (e) => {
+        this.setState({username: e.target.value});
         if (e.target.value.length > 0 && this.state.errorColor.length > 0) {
             this.setState({errorColor: '', errorBorder: '', error: 'none'});
         }
@@ -30,7 +30,7 @@ export default class Login extends React.Component {
     }
 
     throwError() {
-        this.setState({email: '', password: '',
+        this.setState({username: '', password: '',
                             errorColor: '#ffb6c1', errorBorder: '1px solid red', error: 'block'});
     }
 
@@ -40,11 +40,11 @@ export default class Login extends React.Component {
         fetch('/LAVenture/LoginServlet', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({email: this.state.email, password: this.state.password})
+            body: JSON.stringify({username: this.state.username, password: this.state.password})
         })
             .then(response => response.json())
             .then(response => {
-                // if successful, should have received succcess=true, session ID, email
+                // if successful, should have received succcess=true, session ID, username
                 this.setState({redirect: '/mainpage'});
                 // otherwise, call throwError
             })
@@ -59,7 +59,7 @@ export default class Login extends React.Component {
                 <Redirect to={"/mainpage"}
                     // to={{
                     //     pathname: "/mainpage",
-                    //     state: {email: this.state.email, userLoggedIn: true}
+                    //     state: {username: this.state.username, userLoggedIn: true}
                     // }}
                 />
             );
@@ -68,13 +68,13 @@ export default class Login extends React.Component {
                 <div className="Login">
                     <h1>Login <span style={{fontSize: 'large'}}>to LAVenture</span></h1>
                     <Form onSubmit={this.handleSubmit}>
-                        <Form.Group size="lg" controlId="email">
-                            <Form.Label>Email</Form.Label>
+                        <Form.Group size="lg" controlId="username">
+                            <Form.Label>Username</Form.Label>
                             <Form.Control
                                 autoFocus
-                                type="email"
-                                value={this.state.email} required={true}
-                                onChange={(e) => this.setEmail(e)}
+                                type="text"
+                                value={this.state.username} required={true}
+                                onChange={(e) => this.setUsername(e)}
                                 style={{backgroundColor: this.state.errorColor, border: this.state.errorBorder}}
                             />
                             <Form.Text className={"red-text"} style={{display: this.state.error}}>

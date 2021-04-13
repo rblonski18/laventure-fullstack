@@ -9,15 +9,23 @@ export default class NewAccount extends React.Component {
     state = {
         fname: "",
         lname: "",
+
         email: "",
         emailColor: "",
         emailBorder: "",
         emailError: "none",
+
+        username: "",
+        usernameColor: "",
+        usernameBorder: "",
+        usernameError: "none",
+
         password: "",
         passwordColor: "",
         passwordBorder: "",
         passwordError: "none",
         confirmPassword: "",
+
         redirect: "",
     };
 
@@ -25,6 +33,13 @@ export default class NewAccount extends React.Component {
         this.setState({email: e.target.value});
         if (e.target.value.length > 0 && this.state.emailColor.length > 0) {
             this.setState({emailColor: '', emailBorder: '', emailError: 'none'});
+        }
+    }
+
+    setUsername = (e) => {
+        this.setState({username: e.target.value});
+        if (e.target.value.length > 0 && this.state.usernameColor.length > 0) {
+            this.setState({usernameColor: '', usernameBorder: '', usernameError: 'none'});
         }
     }
 
@@ -44,7 +59,8 @@ export default class NewAccount extends React.Component {
 
     errorMsg() {
         this.setState({fname: '', lname: '', email: '', emailColor: '#ffb6c1',
-            emailBorder: '1px solid red', emailError: 'block', password: ''});
+            emailBorder: '1px solid red', emailError: 'block', username: '', usernameColor: '#ffb6c1',
+            usernameBorder: '1px solid red', usernameError: 'block', password: '', confirmPassword: ''});
     }
 
     handleSubmit = (event) => {
@@ -63,6 +79,7 @@ export default class NewAccount extends React.Component {
                 fname: this.state.fname,
                 lname: this.state.lname,
                 email: this.state.email,
+                username: this.state.username,
                 password: this.state.password
             })
         })
@@ -118,7 +135,20 @@ export default class NewAccount extends React.Component {
                                 style={{backgroundColor: this.state.emailColor, border: this.state.emailBorder}}
                             />
                             <Form.Text className={"red-text"} style={{display: this.state.emailError}}>
-                                An account with the email entered already exists.
+                                An account with the email or username entered already exists.
+                            </Form.Text>
+                        </Form.Group>
+                        <Form.Group size="lg" controlId="username">
+                            <Form.Label>Username</Form.Label>
+                            <br/>
+                            <Form.Control
+                                type="text"
+                                value={this.state.username} required={true}
+                                onChange={(e) => this.setUsername(e)}
+                                style={{backgroundColor: this.state.usernameColor, border: this.state.usernameBorder}}
+                            />
+                            <Form.Text className={"red-text"} style={{display: this.state.usernameError}}>
+                                An account with the email or username entered already exists.
                             </Form.Text>
                         </Form.Group>
                         <Form.Group size="lg" controlId="password">
