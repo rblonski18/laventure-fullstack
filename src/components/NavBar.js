@@ -2,7 +2,7 @@ import React from "react"
 import {Link} from "react-router-dom";
 
 class NavBar extends React.Component {
-    
+
     constructor(props) {
         super(props);
     }
@@ -11,7 +11,7 @@ class NavBar extends React.Component {
         return(
             <nav className="navbar navbar-expand-lg navbar-light bg-light">
                 <div className="container-fluid">
-                    <a className="navbar-brand" href="#">LAVenture</a>
+                    <Link className="navbar-brand" to="/mainpage">LAVenture</Link>
                     <button className="navbar-toggler" type="button" data-bs-toggle="collapse"
                             data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
                             aria-label="Toggle navigation">
