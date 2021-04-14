@@ -5,15 +5,18 @@ import NavBar from "./components/NavBar";
 import React from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import PlacesAutocomplete, {
+    geocodeByAddress,
+    getLatLng
+} from 'react-places-autocomplete';
 import {Multiselect} from 'multiselect-react-dropdown';
 import {FaRegImages} from 'react-icons/fa';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
-import {GoogleAddressLookup, DatePicker, TimePicker} from 'react-rainbow-components';
+import {DatePicker, TimePicker} from 'react-rainbow-components';
 import 'react-toastify/dist/ReactToastify.css';
 import {toast} from 'react-toastify';
 
-// can change value to a number if desired, the label is what is displayed, value is for internal use
-let categoriesList = [
+const categoriesList = [
     {value: 'adventure', label: 'Adventure'},
     {value: 'beach', label: 'Beach'},
     {value: 'books', label: 'Books'},
@@ -27,12 +30,15 @@ let categoriesList = [
     {value: 'shopping', label: 'Shopping'},
     {value: 'sports', label: 'Sports'}
 ];
+const centerOfLA = [34.052235, -118.243683];
 
 export default class NewActivity extends React.Component {
     state = {
         title: "",
         description: "",
-        location: "temp",
+        location: "",
+        lat: "",
+        lon: "",
         categories: [],
         image: null,
         rating: 0,
@@ -43,8 +49,6 @@ export default class NewActivity extends React.Component {
     };
 
     componentDidMount() {
-        // dynamically set values in categories array (fetch data from DB)
-
         toast.configure();
     }
 
@@ -71,7 +75,26 @@ export default class NewActivity extends React.Component {
     handleSubmit = (event) => {
         event.preventDefault();
 
-        // verify: address radius, date/time not in past, capacity > 0
+        // verify address radius with haversine formula found at https://www.movable-type.co.uk/scripts/latlong.html
+        const R = 6371e3; // meters
+        const phi1 = centerOfLA[0] * Math.PI/180; // phi, lambda in radians
+        const phi2 = this.state.lat * Math.PI/180;
+        const deltaPhi = (this.state.lat - centerOfLA[0]) * Math.PI/180;
+        const deltaLambda = (this.state.lng - centerOfLA[1]) * Math.PI/180;
+
+        const a = Math.sin(deltaPhi/2) * Math.sin(deltaPhi/2) +
+            Math.cos(phi1) * Math.cos(phi2) *
+            Math.sin(deltaLambda/2) * Math.sin(deltaLambda/2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+        const distance = R * c; // in meters
+        if (distance > 50000) {
+            toast.info('ERROR! Location selected is outside the Los Angeles area.',
+                {type: 'error', autoClose: 10_000, pauseOnHover: false});
+            return;
+        }
+
+        // verify date/time not in past, capacity > 0
         if (this.state.date != null) {
             let stateDate = new Date(this.state.date);
             let now = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
@@ -119,6 +142,8 @@ export default class NewActivity extends React.Component {
                 title: this.state.title,
                 description: this.state.description,
                 location: this.state.location,
+                latitude: this.state.lat,
+                longitude: this.state.lng,
                 categories: this.state.categories,
                 image: this.state.image,
                 rating: this.state.rating,
@@ -138,6 +163,12 @@ export default class NewActivity extends React.Component {
             .catch(err => {
                 this.toasterError();
             });
+    }
+
+    handleLocationSelect = async (value) => {
+        const results = await geocodeByAddress(value);
+        const latlng = await getLatLng(results[0]);
+        this.setState({lat: latlng.lat, lng: latlng.lng, location: value});
     }
 
     // new category selected
@@ -255,30 +286,40 @@ export default class NewActivity extends React.Component {
                         <div className="horizontal-alignment">
                             <Form.Group size="lg" controlId="location" className={"half"} style={{margin: '0 1% 0 0'}}>
                                 <Form.Label>Location</Form.Label>
-                                {/*<GoogleAddressLookup*/}
-                                {/*    className="rainbow-m-vertical_x-large rainbow-p-horizontal_medium rainbow-m_auto"*/}
-                                {/*    id="gaddresslookup-4"*/}
-                                {/*    placeholder="Enter location"*/}
-                                {/*    // onChange={value => setState({ value })}*/}
-                                {/*    // value={this.state.location}*/}
-                                {/*    // apiKey={LIBRARY_GOOGLE_MAPS_APIKEY}*/}
-                                {/*    searchOptions={{*/}
-                                {/*        location: {*/}
-                                {/*            latitude: -33.941264,*/}
-                                {/*            longitude: 151.2042969,*/}
-                                {/*        },*/}
-                                {/*        country: 'us',*/}
-                                {/*        radius: 150000,*/}
-                                {/*        types: ['address'],*/}
-                                {/*    }}*/}
-                                {/*    required={true}*/}
-                                {/*/>*/}
+                                <PlacesAutocomplete value={this.state.location}
+                                                    onChange={(e) => this.setState({location: e})}
+                                                    onSelect={(e) => this.handleLocationSelect(e)}
+                                >
+                                    {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
+                                        <div>
+                                            <input {...getInputProps({placeholder: "Enter location"})} type="search"/>
+                                            <div className={"location-finder"}>
+                                                {loading ? <div>Loading</div> : null}
+                                                {suggestions.map(suggestion => {
+                                                    const style = {
+                                                        backgroundColor: suggestion.active ? "#98d7c2" : "white"
+                                                    };
+
+                                                    return (
+                                                        <div
+                                                            {...getSuggestionItemProps(suggestion, {style})}
+                                                            key={suggestion.placeId}
+                                                        >
+                                                            {suggestion.description}
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+                                        </div>
+                                    )}
+                                </PlacesAutocomplete>
                             </Form.Group>
                             <Form.Group className="half" style={{margin: '0 0 0 1%'}}>
                                 <Form.Label>Categories</Form.Label>
                                 <Multiselect
                                     id="multi-select" options={categoriesList} showArrow={true} onSelect={this.onSelect}
-                                    onRemove={this.onRemove} displayValue={'label'} required={true}
+                                    avoidHighlightFirstOption={true} onRemove={this.onRemove} displayValue={'label'}
+                                    required={true}
                                 />
                             </Form.Group>
                         </div>

@@ -34,6 +34,17 @@ ul {
     flex-direction: row;
 }
 
+.location-finder {
+    z-index: 1;
+    position: absolute;
+}
+
+input[type="search"] {
+    border: 1px solid #ced4da;
+    height: 3rem;
+    padding: 8px;
+}
+
 input[type="file"] {
     border: none;
     display: none;
