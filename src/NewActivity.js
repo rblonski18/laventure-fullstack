@@ -188,7 +188,7 @@ export default class NewActivity extends React.Component {
 
     setImage = (e) => {
         const files = e.target.files;
-        const validImageTypes = ['image/gif', 'image/jpg', 'image/png'];
+        const validImageTypes = ['image/gif', 'image/jpeg', 'image/png'];
         if (validImageTypes.includes(files[0].type)) {
             this.setState({image: files[0]});
             document.getElementById('image-label').innerText = 'Replace ' + files[0].name;

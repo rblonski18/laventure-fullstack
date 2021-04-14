@@ -4,7 +4,6 @@ import MainPage from "./components/MainPage"
 import Login from './login';
 import NewActivity from "./NewActivity";
 import ActivityPage from "./components/ActivityPage"
-import LocationSearchInput from "./GoogleMaps";
 
 import React from "react";
 import {BrowserRouter, Switch, Route} from 'react-router-dom';
@@ -19,7 +18,6 @@ function App() {
                     <Route exact path="/newaccount" component={NewAccount}/>
                     <Route exact path="/newactivity" component={NewActivity}/>
                     <Route path="/activity/:activityID" component={ActivityPage} />
-                    <Route exact path="/googlemaps" component={LocationSearchInput}/>
                 </Switch>
             </BrowserRouter>
         </div>
