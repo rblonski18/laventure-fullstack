@@ -1,6 +1,52 @@
 .carousel-img {
     width: 100%;
-    max-height: 400px;
+    max-height: 350px;
     height: 80%;
     object-fit: cover;
+}
+
+.activity-page {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.activity-card {
+    margin-right: 2rem;
+}
+
+.category-badges {
+    background-color:#29A0B1;
+    color: white;
+    margin-right: 4px; 
+}
+
+.review-card {
+    margin-bottom: 1rem;
+}
+
+.card-body h5 {
+    text-decoration: none;
+}
+
+@media (max-width: 500px) {
+
+    .activity-page {
+        flex-direction: column;
+    }
+
+    .activity-card {
+        order: 1;
+        width: 100% !important;
+        margin-right: 0;
+    }
+
+    .reviews {
+        order: 2;
+        width: 100% !important;
+    }
+
+
+
+
 }

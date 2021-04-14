@@ -48,6 +48,11 @@
     position: relative;
 }
 
+.sidebar-titles {
+    color: black;
+    text-decoration: none;
+}
+
 
 
 @media (max-width: 500px) {
@@ -99,6 +104,12 @@
 
 .categories {
     margin-bottom: 0.25rem;
+}
+
+.rsvp {
+    float: right;
+    background-color: #29A0B1;
+    color: white;
 }
 
 /*

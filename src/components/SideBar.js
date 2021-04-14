@@ -25,7 +25,9 @@ class SideBar extends React.Component {
                     <div className="card">
                         <div className="card-body">
                         <div className="thumbnail" style={{backgroundImage: "url(" + imgString +")" }}> </div>
-                            <h5 className="card-title ct-limit"><a href={`/activity/${activity.id}`}>{activity.name}</a></h5>
+                            <h5 className="card-title ct-limit"><a className="sidebar-titles" href={`/activity/${activity.id}`}>{activity.name}</a> 
+                            { activity.RSVP && <span className="badge badge-pill badge-primary rsvp">RSVP</span> }
+                            </h5>
                             <p className="rating-stars">{ items }</p>
                             <div className="categories"> 
                                 { activity.categories.map((category) => {
@@ -33,6 +35,7 @@ class SideBar extends React.Component {
                                 })}
                             </div>
                             <p className="card-text">{activity.location}</p>
+                            
                         </div>
                     </div>
                 </div>
