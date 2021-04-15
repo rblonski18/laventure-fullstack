@@ -3,6 +3,7 @@
     max-height: 350px;
     height: 80%;
     object-fit: cover;
+    border-radius: 10px 10px 0 0;
 }
 
 .activity-page {
@@ -13,6 +14,14 @@
 
 .activity-card {
     margin-right: 2rem;
+    margin-bottom: 1rem;
+    border-radius: 0 0 10px 10px;
+    height: min-content;
+    box-shadow: 
+    12px 12px 16px 0 rgba(0, 0, 0, 0.25),
+    -8px -8px 12px 0 rgba(255, 255, 255, 0.3);
+    font-family: 'Heebo', sans-serif;
+    font-weight: 700;
 }
 
 .category-badges {
@@ -23,6 +32,11 @@
 
 .review-card {
     margin-bottom: 1rem;
+    border-radius: 10px;
+    box-shadow: 
+    12px 12px 16px 0 rgba(0, 0, 0, 0.25),
+    -8px -8px 12px 0 rgba(255, 255, 255, 0.3);
+    font-family: 'Heebo', sans-serif;
 }
 
 .card-body h5 {
@@ -50,3 +64,78 @@
 
 
 }
+
+.rating {
+    display: inline-block;
+    position: relative;
+    height: 20px;
+    font-size: 20px;
+  }
+  
+  .rating label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    cursor: pointer;
+  }
+  
+  .rating label:last-child {
+    position: static;
+  }
+  
+  .rating label:nth-child(1) {
+    z-index: 5;
+  }
+  
+  .rating label:nth-child(2) {
+    z-index: 4;
+  }
+  
+  .rating label:nth-child(3) {
+    z-index: 3;
+  }
+  
+  .rating label:nth-child(4) {
+    z-index: 2;
+  }
+  
+  .rating label:nth-child(5) {
+    z-index: 1;
+  }
+  
+  .rating label input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+  }
+  
+  .rating label .icon {
+    float: left;
+    color: transparent;
+  }
+  
+  .rating label:last-child .icon {
+    color: #000;
+  }
+  
+  .rating:not(:hover) label input:checked ~ .icon,
+  .rating:hover label:hover input ~ .icon {
+    color: #29A0B1;
+  }
+  
+  .rating label input:focus:not(:checked) ~ .icon:last-child {
+    color: #000;
+    text-shadow: 0 0 5px #29A0B1;
+  }
+
+  .review-form {
+      font-family: 'Heebo', sans-serif;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    border-radius: 10px;
+    box-shadow: 
+    12px 12px 16px 0 rgba(0, 0, 0, 0.25),
+    -8px -8px 12px 0 rgba(255, 255, 255, 0.3);
+  }

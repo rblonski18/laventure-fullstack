@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react"
 import data from "./demo.json"
 import "../styles/activitypage.css"
+import NavBar from "./NavBar";
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
 
 const ActivityPage = ({ match }) => {
 
@@ -19,6 +22,9 @@ const ActivityPage = ({ match }) => {
     const [ curr, setCurrent ] = useState(0);
     const [ cap, setCapacity ] = useState(0);
     const [ perc, setPercentage] = useState(0);
+    const [ reviewText, setReviewText ] = useState('');
+    const [ reviewRating, setReviewRating ] = useState(0);
+    const [ userLoggedIn, setULI ] = useState(false);
 
     const buildRatingStars = (rating) => {
         const items = [];
@@ -32,6 +38,13 @@ const ActivityPage = ({ match }) => {
     };
 
     useEffect(() => {
+
+        /*
+        // request for activity with the id of activityid
+        fetch('LAVenture/ActivityServlet?isRSVP=false&activityid=${activityID}')
+
+        // request for all reviews associated with the activity with id of activityid
+        fetch(`LAVenture/ReviewsServlet?isRSVP=false&activityid=${activityID}`) */
 
         data.forEach((activity) => {
             if(activity.id == activityID) {
@@ -53,10 +66,50 @@ const ActivityPage = ({ match }) => {
 
     }, []);
 
+    const handleSubmit = (e) => {
+
+        e.preventDefault();
+
+        /* fetch('LAVenture/ReviewsServlet', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                user: username,
+                text: reviewText,
+                rating: reviewRating
+            }) 
+        })*/
+    }
+
+    const handleLogout = () => {
+        // request to handle logout
+        /*
+        fetch('LAVenture/LogoutServlet', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                user: username
+            })
+        })*/
+    }
+
+    const handleRSVP = () => {
+        /* fetch('LAVenture/ActivityServlet', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                isRSVP: true,
+                user: username,
+                activityid: activityID
+            })
+        }) */
+    }
     
 
 
     return (
+        <div>
+        <NavBar userLoggedIn={userLoggedIn} />
         <div className="container mt-4 activity-page">
 
             <div className="col-6 activity-card">
@@ -65,7 +118,7 @@ const ActivityPage = ({ match }) => {
                 </div>
                 <div className="card mb-3">
                     <div className="card-body">
-                        <h5 className="card-title">{ activityName }</h5>
+                        <h5 className="card-title"><b>{ activityName }</b></h5>
                         <p className="card-text">{ activityLocation }</p>
                     </div>
                     <ul className="list-group list-group-flush">
@@ -89,16 +142,71 @@ const ActivityPage = ({ match }) => {
 
             </div>
             <div className="col-6 reviews">
+                { userLoggedIn &&
+                <div className="review-form card">
+                    <div className="card-body">
+                        <Form onSubmit={handleSubmit} >
+                            <Form.Group>
+                                <Form.Label>Been here before? Leave a review! </Form.Label>
+                                <Form.Control
+                                    as="textarea"
+                                    type="text" maxLength={"140"} rows={"2"}
+                                    value={reviewText}
+                                    placeholder={"Enter text here"}
+                                    onChange={(e) => setReviewText(e.target.value)}
+                                    required={true}
+                                />
+                            </Form.Group>
+                            <Form.Group>
+                                <Form.Label>Leave a rating: </Form.Label>
+                                    <div class="rating">
+                                        <label onClick={(e) => setReviewRating(1)}>
+                                            <input type="radio" name="stars" value="1" />
+                                            <span class="icon">★</span>
+                                        </label>
+                                        <label onClick={(e) => setReviewRating(2)}>
+                                            <input type="radio" name="stars" value="2" />
+                                            <span class="icon">★</span>
+                                            <span class="icon">★</span>
+                                        </label>
+                                        <label onClick={(e) => setReviewRating(3)}>
+                                            <input type="radio" name="stars" value="3" />
+                                            <span class="icon">★</span>
+                                            <span class="icon">★</span>
+                                            <span class="icon">★</span>   
+                                        </label>
+                                        <label onClick={(e) => setReviewRating(4)}>
+                                            <input type="radio" name="stars" value="4" />
+                                            <span class="icon">★</span>
+                                            <span class="icon">★</span>
+                                            <span class="icon">★</span>
+                                            <span class="icon">★</span>
+                                        </label>
+                                        <label onClick={(e) => setReviewRating(5)}>
+                                            <input type="radio" name="stars" value="5" />
+                                            <span class="icon">★</span>
+                                            <span class="icon">★</span>
+                                            <span class="icon">★</span>
+                                            <span class="icon">★</span>
+                                            <span class="icon">★</span>
+                                        </label>
+                                        </div>
+                                </Form.Group>
+                        </Form>
+                    </div>
+                </div>
+                }
                 { activityReviews.map((review) => {
                     return <div className="card review-card">
                         <div className="card-body">
                             <p className="card-text">{ review.text }</p>
-                            <p>{ review.author }</p> 
+                            <p><b>{ review.author }</b></p> 
                             <p>{ buildRatingStars(review.rating) }</p> 
                         </div>
                     </div>
                 })}
             </div>
+        </div>
         </div>
     );
 }

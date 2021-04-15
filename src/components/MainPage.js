@@ -27,6 +27,18 @@ const MainPage = (props) => {
     }
 
     useEffect(() => {
+
+        /*
+
+        // request for default list of all activities
+        fetch('LAVenture/ActivityListServlet?sortBy=none&user=${username}')
+
+        // request for list of activities sorted by rating
+        fetch('LAVenture/ActivityListServlet?sortBy=rating&user=${username}')
+
+        // request for recently viewed activities of user w/ username specified
+        fetch(`LAVenture/ActivityListServlet?sortBy=recent&user=${username}`)*/
+
         setActivityList(data);
     }, [setActivityList])
 
