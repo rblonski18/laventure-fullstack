@@ -34,7 +34,7 @@ class NavBar extends React.Component {
                             }
                             { !this.props.userLoggedIn &&
                                 <li className="nav-item login-nav">
-                                    <Link className="nav-link" to="/login">Login</Link>
+                                    <Link className="nav-link" to="/">Login</Link>
                                 </li>
                             }
                             { this.props.userLoggedIn &&

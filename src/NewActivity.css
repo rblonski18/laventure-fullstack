@@ -1,5 +1,17 @@
+.new-activity-outer-div {
+    background-color: #98d7c2;
+
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+}
+
 .NewActivity {
+    border: 2px solid #ddffe7;
     margin: auto;
+    width: 55%;
 }
 
 .NewActivity .form-group {

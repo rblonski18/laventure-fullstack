@@ -7,6 +7,11 @@
     width: 33%;
 }
 
+nav {
+    background: rgb(152,215,194);
+    background: linear-gradient(90deg, rgba(152,215,194,1) 0%, rgba(41,160,177,1) 35%, rgba(221,255,231,1) 100%);
+}
+
 .mp-right {
     width: 67%;
 }
@@ -99,7 +104,7 @@
 .categories span {
     background-color:#29A0B1;
     color: white;
-    margin-right: 4px; 
+    margin-right: 4px;
 }
 
 .categories {

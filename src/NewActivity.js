@@ -256,7 +256,7 @@ export default class NewActivity extends React.Component {
 
     render() {
         return (
-            <div>
+            <div className={'new-activity-outer-div'}>
                 <div>
                     <NavBar/>
                 </div>

@@ -101,89 +101,91 @@ export default class NewAccount extends React.Component {
             );
         } else {
             return (
-                <div className="NewAccount">
-                    <h1>Welcome to LAVenture!</h1>
-                    <Form onSubmit={this.handleSubmit}>
-                        <div className="horizontal-alignment">
-                            <Form.Group className="form-group-half" size="lg" controlId="fname">
-                                <Form.Label>First Name</Form.Label>
+                <div className={"outer-div"}>
+                    <div className="NewAccount">
+                        <h1>Welcome to LAVenture!</h1>
+                        <Form onSubmit={this.handleSubmit}>
+                            <div className="horizontal-alignment">
+                                <Form.Group className="form-group-half" size="lg" controlId="fname">
+                                    <Form.Label>First Name</Form.Label>
+                                    <br/>
+                                    <Form.Control
+                                        autoFocus
+                                        type="fname"
+                                        value={this.state.fname} required={true}
+                                        onChange={(e) => {this.setState({fname: e.target.value})}}
+                                    />
+                                </Form.Group>
+                                <Form.Group className="form-group-half" size="lg" controlId="lname">
+                                    <Form.Label>Last Name</Form.Label>
+                                    <br/>
+                                    <Form.Control
+                                        type="lname"
+                                        value={this.state.lname} required={true}
+                                        onChange={(e) => this.setState({lname: e.target.value})}
+                                    />
+                                </Form.Group>
+                            </div>
+                            <Form.Group size="lg" controlId="email">
+                                <Form.Label>Email</Form.Label>
                                 <br/>
                                 <Form.Control
-                                    autoFocus
-                                    type="fname"
-                                    value={this.state.fname} required={true}
-                                    onChange={(e) => {this.setState({fname: e.target.value})}}
+                                    type="email"
+                                    value={this.state.email} required={true}
+                                    onChange={(e) => this.setEmail(e)}
+                                    style={{backgroundColor: this.state.emailColor, border: this.state.emailBorder}}
                                 />
+                                <Form.Text className={"red-text"} style={{display: this.state.emailError}}>
+                                    An account with the email or username entered already exists.
+                                </Form.Text>
                             </Form.Group>
-                            <Form.Group className="form-group-half" size="lg" controlId="lname">
-                                <Form.Label>Last Name</Form.Label>
+                            <Form.Group size="lg" controlId="username">
+                                <Form.Label>Username</Form.Label>
                                 <br/>
                                 <Form.Control
-                                    type="lname"
-                                    value={this.state.lname} required={true}
-                                    onChange={(e) => this.setState({lname: e.target.value})}
+                                    type="text"
+                                    value={this.state.username} required={true}
+                                    onChange={(e) => this.setUsername(e)}
+                                    style={{backgroundColor: this.state.usernameColor, border: this.state.usernameBorder}}
                                 />
+                                <Form.Text className={"red-text"} style={{display: this.state.usernameError}}>
+                                    An account with the email or username entered already exists.
+                                </Form.Text>
                             </Form.Group>
-                        </div>
-                        <Form.Group size="lg" controlId="email">
-                            <Form.Label>Email</Form.Label>
+                            <Form.Group size="lg" controlId="password">
+                                <Form.Label>Password</Form.Label>
+                                <br/>
+                                <Form.Control
+                                    type="password"
+                                    value={this.state.password} required={true}
+                                    onChange={(e) => this.setPassword(e)}
+                                    style={{backgroundColor: this.state.passwordColor, border: this.state.passwordBorder}}
+                                />
+                                <Form.Text className={"red-text"} style={{display: this.state.passwordError}}>
+                                    The passwords entered do not match.
+                                </Form.Text>
+                            </Form.Group>
+                            <Form.Group size="lg" controlId="confirm-password">
+                                <Form.Label>Confirm Password</Form.Label>
+                                <br/>
+                                <Form.Control
+                                    type="password"
+                                    value={this.state.confirmPassword} required={true}
+                                    onChange={(e) => this.setConfirmPassword(e)}
+                                    style={{backgroundColor: this.state.passwordColor, border: this.state.passwordBorder}}
+                                />
+                                <Form.Text className={"red-text"} style={{display: this.state.passwordError}}>
+                                    The passwords entered do not match.
+                                </Form.Text>
+                            </Form.Group>
                             <br/>
-                            <Form.Control
-                                type="email"
-                                value={this.state.email} required={true}
-                                onChange={(e) => this.setEmail(e)}
-                                style={{backgroundColor: this.state.emailColor, border: this.state.emailBorder}}
-                            />
-                            <Form.Text className={"red-text"} style={{display: this.state.emailError}}>
-                                An account with the email or username entered already exists.
-                            </Form.Text>
-                        </Form.Group>
-                        <Form.Group size="lg" controlId="username">
-                            <Form.Label>Username</Form.Label>
-                            <br/>
-                            <Form.Control
-                                type="text"
-                                value={this.state.username} required={true}
-                                onChange={(e) => this.setUsername(e)}
-                                style={{backgroundColor: this.state.usernameColor, border: this.state.usernameBorder}}
-                            />
-                            <Form.Text className={"red-text"} style={{display: this.state.usernameError}}>
-                                An account with the email or username entered already exists.
-                            </Form.Text>
-                        </Form.Group>
-                        <Form.Group size="lg" controlId="password">
-                            <Form.Label>Password</Form.Label>
-                            <br/>
-                            <Form.Control
-                                type="password"
-                                value={this.state.password} required={true}
-                                onChange={(e) => this.setPassword(e)}
-                                style={{backgroundColor: this.state.passwordColor, border: this.state.passwordBorder}}
-                            />
-                            <Form.Text className={"red-text"} style={{display: this.state.passwordError}}>
-                                The passwords entered do not match.
-                            </Form.Text>
-                        </Form.Group>
-                        <Form.Group size="lg" controlId="confirm-password">
-                            <Form.Label>Confirm Password</Form.Label>
-                            <br/>
-                            <Form.Control
-                                type="password"
-                                value={this.state.confirmPassword} required={true}
-                                onChange={(e) => this.setConfirmPassword(e)}
-                                style={{backgroundColor: this.state.passwordColor, border: this.state.passwordBorder}}
-                            />
-                            <Form.Text className={"red-text"} style={{display: this.state.passwordError}}>
-                                The passwords entered do not match.
-                            </Form.Text>
-                        </Form.Group>
-                        <br/>
-                        <div className={"form-group"}>
-                            <Button block size="lg" type="submit" id="create-acc-btn">
-                                Create Account
-                            </Button>
-                        </div>
-                    </Form>
+                            <div className={"form-group"}>
+                                <Button block size="lg" type="submit" id="create-acc-btn">
+                                    Create Account
+                                </Button>
+                            </div>
+                        </Form>
+                    </div>
                 </div>
             );
         }
