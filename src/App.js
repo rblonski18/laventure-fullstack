@@ -1,7 +1,7 @@
 import './App.css';
-import NewAccount from "./newaccount";
+import NewAccount from "./NewAccount";
 import MainPage from "./components/MainPage"
-import Login from './login';
+import Login from './Login';
 import NewActivity from "./NewActivity";
 import ActivityPage from "./components/ActivityPage"
 
@@ -13,7 +13,7 @@ function App() {
         <div className="App">
             <BrowserRouter>
                 <Switch>
-                    <Route exact path="/login" component={Login}/>
+                    <Route exact path="/" component={Login}/>
                     <Route exact path="/mainpage" component={MainPage}/>
                     <Route exact path="/newaccount" component={NewAccount}/>
                     <Route exact path="/newactivity" component={NewActivity}/>

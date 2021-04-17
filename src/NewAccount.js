@@ -75,13 +75,13 @@ export default class NewAccount extends React.Component {
         fetch('LAVenture/NewAccountServlet', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
+            body: {
                 fname: this.state.fname,
                 lname: this.state.lname,
                 email: this.state.email,
                 username: this.state.username,
                 password: this.state.password
-            })
+            }
         })
             .then(response => response.json())
             .then(response => {

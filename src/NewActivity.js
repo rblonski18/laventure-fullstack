@@ -135,10 +135,10 @@ export default class NewActivity extends React.Component {
         }
 
         // enter data into database
-        fetch('LAVenture/NewActivityServlet', {
+        fetch('LAVenture/ActivityServlet', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
+            body: {
                 title: this.state.title,
                 description: this.state.description,
                 location: this.state.location,
@@ -146,19 +146,21 @@ export default class NewActivity extends React.Component {
                 longitude: this.state.lng,
                 categories: this.state.categories,
                 image: this.state.image,
-                rating: this.state.rating,
+                rating: parseFloat(this.state.rating),
                 date: this.state.date,
                 time: this.state.time,
-                capacity: this.state.capacity,
-                attending: this.state.attending
-            })
+                capacity: parseInt(this.state.capacity),
+                attending: (this.state.attending === 'true')
+            }
         })
             .then(response => response.json())
             .then(response => {
-                // if success= true,
-                toast.info(this.state.title + ' successfully created.',
-                    {type: 'success', pauseOnHover: false});
-                // otherwise, toasterError
+                if (response.status !== 200) {
+                    this.toasterError();
+                } else {
+                    toast.info(this.state.title + ' successfully created.',
+                        {type: 'success', pauseOnHover: false});
+                }
             })
             .catch(err => {
                 this.toasterError();
@@ -217,7 +219,7 @@ export default class NewActivity extends React.Component {
                 const element = document.getElementById(i + '-not');
                 if (element != null) {
                     element.id = i + '-fill';
-                    document.getElementById(i + '-fill').style.color = 'gold';
+                    document.getElementById(i + '-fill').style.color = '#29a0b1';
                 }
             }
             for (let i = num + 1; i <= 5; i++) {
@@ -265,7 +267,7 @@ export default class NewActivity extends React.Component {
                             <Form.Label>Activity Title</Form.Label>
                             <Form.Control
                                 autoFocus
-                                type="text"
+                                type="text" maxLength={"50"}
                                 value={this.state.title}
                                 onChange={(e) => {
                                     this.setState({title: e.target.value})
