@@ -20,7 +20,7 @@ class Map extends React.Component {
                     return (
                         <Marker key={activity.coordinates} position={activity.coordinates}>
                             <Popup>
-                                {activity.name}
+                                <a href={`/activity/${activity.id}`}>{activity.name}</a>
                             </Popup>
                         </Marker>
                     );
