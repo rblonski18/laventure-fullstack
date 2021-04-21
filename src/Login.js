@@ -18,6 +18,30 @@ export default class Login extends React.Component {
         redirect: "",
     };
 
+    /*
+    getCookie() {
+        var name = "user=";
+        var decodedCookie = decodeURIComponent(document.cookie);
+        var ca = decodedCookie.split(';');
+        for(var i = 0; i <ca.length; i++) {
+          var c = ca[i];
+          while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+          }
+          if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+          }
+        }
+        return "";
+    }
+
+    componentDidMount() {
+        var user = getCookie();
+        if(user.length > 1) { // if no user, getCookie should return empty string
+            this.setState({username: user, redirect: '/mainpage'});
+        }
+    } */
+
     setUsername = (e) => {
         this.setState({username: e.target.value});
         if (e.target.value.length > 0 && this.state.errorColor.length > 0) {
@@ -37,6 +61,14 @@ export default class Login extends React.Component {
                             errorColor: '#ffb6c1', errorBorder: '1px solid red', error: 'block'});
     }
 
+    /*
+    setCookie(user) {
+        var d = new Date();
+        d.setTime(d.getTime() + (24*60*60*1000));
+        var expires = "expires="+ d.toUTCString();
+        document.cookie = "user=" + user + ";" + expires + ";path=/";
+    }*/
+
     handleSubmit = (event) => {
         event.preventDefault();
 
@@ -49,6 +81,7 @@ export default class Login extends React.Component {
             .then(response => {
                 // if successful, should have received succcess=true, session ID, username
                 this.setState({redirect: '/mainpage'});
+                //setCookie(this.state.username);
                 // otherwise, call throwError
             })
             .catch(err => {
