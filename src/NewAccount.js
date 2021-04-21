@@ -4,6 +4,7 @@ import React from 'react';
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import {Redirect} from "react-router";
+import {sha256} from "js-sha256";
 
 export default class NewAccount extends React.Component {
     state = {
@@ -71,7 +72,7 @@ export default class NewAccount extends React.Component {
             return;
         }
 
-        // verify with back end that this email does not already exist in database
+        const hashedPassword = sha256(this.state.password);
         fetch('LAVenture/NewAccountServlet', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
@@ -80,13 +81,14 @@ export default class NewAccount extends React.Component {
                 lname: this.state.lname,
                 email: this.state.email,
                 username: this.state.username,
-                password: this.state.password
+                password: hashedPassword
             }
         })
             .then(response => response.json())
             .then(response => {
                 // if successful, should have received succcess=true, session ID, email
                 this.setState({redirect: '/mainpage'});
+                // verify with back end that this email does not already exist in database
                 // otherwise, call errorMsg because email already existed in database
             })
             .catch(err => {

@@ -4,9 +4,8 @@ import React from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import {Link, Redirect} from "react-router-dom";
+import {sha256} from "js-sha256";
 import GoogleLogin from 'react-google-login';
-// import { faGoogle } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 export default class Login extends React.Component {
     state = {
@@ -40,10 +39,11 @@ export default class Login extends React.Component {
     handleSubmit = (event) => {
         event.preventDefault();
 
+        const hashedPassword = sha256(this.state.password);
         fetch('/LAVenture/LoginServlet', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: {username: this.state.username, password: this.state.password}
+            body: {username: this.state.username, password: hashedPassword}
         })
             .then(response => response.json())
             .then(response => {
@@ -63,12 +63,7 @@ export default class Login extends React.Component {
     render() {
         if (this.state.redirect.length > 0) {
             return (
-                <Redirect to={"/mainpage"}
-                    // to={{
-                    //     pathname: "/mainpage",
-                    //     state: {username: this.state.username, userLoggedIn: true}
-                    // }}
-                />
+                <Redirect to={this.state.redirect}/>
             );
         } else {
             return (
@@ -126,7 +121,7 @@ export default class Login extends React.Component {
                             )}
                             clientId="333741736612-67il7uuvsssus89p7a1v7215go5ecvla.apps.googleusercontent.com"
                             onSuccess={(response) => this.responseGoogle(response)}
-                            onFailure={console.log('Unable to sign in with Google.')}
+                            // onFailure={console.log('Unable to sign in with Google.')}
                             cookiePolicy={'single_host_origin'}
                         />
                     </div>
