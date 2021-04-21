@@ -34,6 +34,29 @@ h1 {
     text-align: left;
 }
 
+/* referenced https://stackoverflow.com/questions/2812770/add-centered-text-to-the-middle-of-a-hr-like-line */
+.separator {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 5%;
+}
+
+.separator::before,
+.separator::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #000;
+}
+
+.separator:not(:empty)::before {
+    margin-right: .25em;
+}
+
+.separator:not(:empty)::after {
+    margin-left: .25em;
+}
+
 .NewActivity form {
     margin: 0 auto;
     width: 100%;
@@ -60,7 +83,7 @@ input[type="checkbox"]:checked {
     background-color: #29a0b1;
 }
 
-#login-button, #create-acc-btn, #create-activity-btn {
+#login-button, #create-acc-btn, #create-activity-btn, #google-btn {
     font-family: "Helvetica Neue";
     border: 2px solid #29a0b1;
     padding: 7px 7px;
@@ -72,6 +95,22 @@ input[type="checkbox"]:checked {
     color: white;
     width: 100%;
     background: #29a0b1;
+    border-radius: 25px;
+}
+
+#google-btn {
+    background-color: white;
+    border: 2px solid black;
+    color: black;
+    height: 43px;
+}
+
+/* referenced https://stackoverflow.com/questions/52578726/fontawesome-5-multi-color-icon */
+.fa-google {
+    background: conic-gradient(from -45deg, #ea4335 110deg, #4285f4 90deg 180deg, #34a853 180deg 270deg, #fbbc05 270deg) 73% 55%/150% 150% no-repeat;
+    -webkit-background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
 }
 
 .btn-group {

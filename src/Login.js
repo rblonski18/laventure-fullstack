@@ -4,6 +4,9 @@ import React from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import {Link, Redirect} from "react-router-dom";
+import GoogleLogin from 'react-google-login';
+// import { faGoogle } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 export default class Login extends React.Component {
     state = {
@@ -51,6 +54,10 @@ export default class Login extends React.Component {
             .catch(err => {
                 this.throwError();
             });
+    }
+
+    responseGoogle = (response) => {
+        console.log(response.tokenId);
     }
 
     render() {
@@ -101,15 +108,27 @@ export default class Login extends React.Component {
                                     Login
                                 </Button>
                             </Form.Group>
-                            <div className={"btn-group"}>
-                                <Link className="nav-link login-link" to={"/newaccount"}>
-                                    Create new account
-                                </Link>
-                                <Link className="nav-link login-link" to={"/mainpage"}>
-                                    Continue as guest
-                                </Link>
-                            </div>
                         </Form>
+                        <div className={"btn-group"}>
+                            <Link className="nav-link login-link" to={"/newaccount"}>
+                                Create new account
+                            </Link>
+                            <Link className="nav-link login-link" to={"/mainpage"}>
+                                Continue as guest
+                            </Link>
+                        </div>
+                        <div className="separator">OR</div>
+                        <GoogleLogin
+                            render={(renderProps) => (
+                                <button id={"google-btn"} onClick={renderProps.onClick}>
+                                    <i className={"fa fa-google"}/> Continue with Google
+                                </button>
+                            )}
+                            clientId="333741736612-67il7uuvsssus89p7a1v7215go5ecvla.apps.googleusercontent.com"
+                            onSuccess={(response) => this.responseGoogle(response)}
+                            onFailure={console.log('Unable to sign in with Google.')}
+                            cookiePolicy={'single_host_origin'}
+                        />
                     </div>
                 </div>
             );
