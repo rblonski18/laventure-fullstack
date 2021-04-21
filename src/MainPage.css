@@ -117,7 +117,20 @@ nav {
     color: white;
 }
 
-/*
-.activity > .card {
-    background-color: #DDFFE7;
-} */
+.weatherbit-api-styling {
+    align-self: right;
+}
+
+.weatherbit-api-styling img {
+    height: 2rem;
+    width: 2rem;
+}
+
+.sort-by-card > .card {
+    height: 4rem;
+    align-items: center;
+}
+
+.sidebar-dropdown {
+    margin: auto;
+}

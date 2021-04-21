@@ -56,6 +56,7 @@ const ActivityPage = ({ match }) => {
                 setActivityIMG(activity.img);
                 setActivityReviews(activity.reviews);
                 setRSVPBool(activity.RSVP);
+                console.log(rsvpBool);
                 if(rsvpBool) {
                     setCurrent(activity.currentRSVPed);
                     setCapacity(activity.RSVPcapacity);
@@ -105,8 +106,6 @@ const ActivityPage = ({ match }) => {
         }) */
     }
     
-
-
     return (
         <div>
         <NavBar userLoggedIn={userLoggedIn} />

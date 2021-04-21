@@ -1,7 +1,14 @@
 #cover form {
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
     width: 100%;
+}
+
+.cover-left {
+    display: flex;
+    flex-direction: row;
+    width: 70%;
 }
 
 input {
@@ -40,6 +47,16 @@ input {
 
 #reset {
     margin-left: 1rem;
+}
+
+@media (max-width: 500px) {
+    .weatherbit-api-styling {
+        display: none;
+    }
+
+    .cover-left {
+        width: 100%;
+    }
 }
 
 
