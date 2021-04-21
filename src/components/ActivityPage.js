@@ -24,7 +24,8 @@ const ActivityPage = ({ match }) => {
     const [ perc, setPercentage] = useState(0);
     const [ reviewText, setReviewText ] = useState('');
     const [ reviewRating, setReviewRating ] = useState(0);
-    const [ userLoggedIn, setULI ] = useState(false);
+    const [ userLoggedIn, setULI ] = useState(true);
+    const [ rsvpButton, setRSVPButton] = useState(true);
 
     const buildRatingStars = (rating) => {
         const items = [];
@@ -56,8 +57,7 @@ const ActivityPage = ({ match }) => {
                 setActivityIMG(activity.img);
                 setActivityReviews(activity.reviews);
                 setRSVPBool(activity.RSVP);
-                console.log(rsvpBool);
-                if(rsvpBool) {
+                if(activity.RSVP) {
                     setCurrent(activity.currentRSVPed);
                     setCapacity(activity.RSVPcapacity);
                     setPercentage((activity.currentRSVPed/activity.RSVPcapacity)*100);
@@ -94,7 +94,10 @@ const ActivityPage = ({ match }) => {
         })*/
     }
 
-    const handleRSVP = () => {
+    const handleRSVP = (event) => {
+        setCurrent(curr+1);
+        setPercentage((curr/cap)*100);
+        setRSVPButton(false);
         /* fetch('LAVenture/ActivityServlet', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
@@ -136,6 +139,9 @@ const ActivityPage = ({ match }) => {
                         <div className="progress">
                             <div className="progress-bar bg-info" style={{width:  perc + '%'}}></div>
                         </div>
+                        { userLoggedIn && rsvpButton &&
+                            <button className="btn btn-info RSVP-btn" onClick={(e) => handleRSVP(e)}>RSVP</button> 
+                        }
                     </div>
                 }
 
