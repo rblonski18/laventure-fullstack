@@ -14,6 +14,7 @@ const MainPage = (props) => {
     const [wasFiltered, setWF] = useState(false);
     const [filterBy,setFilter] = useState('Title');
     const [ userLoggedIn, setULI ] = useState(false);
+    const [ username, setUsername ] = useState('');
 
     const handleSearch = (input) => {
         console.log(keyword + ", " + activityList + ", " + wasFiltered + ", " + filterBy + ", " + userLoggedIn);
@@ -29,8 +30,29 @@ const MainPage = (props) => {
         setActivityList(filteredList) 
     }
 
+    const getCookie = () => {
+        var name = "user=";
+        var decodedCookie = decodeURIComponent(document.cookie);
+        var ca = decodedCookie.split(';');
+        for(var i = 0; i <ca.length; i++) {
+          var c = ca[i];
+          while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+          }
+          if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+          }
+        }
+        return "";
+    }
+
     useEffect(() => {
         setActivityList(data);
+        let user = getCookie();
+        if(user.length > 0) {
+            setUsername(user);
+            setULI(true);
+        }
     }, [setActivityList])
 
     const resetListing = (event) => {
@@ -44,11 +66,11 @@ const MainPage = (props) => {
         // render navbar
         <div className="content">
             <div>
-                <NavBar userLoggedIn={userLoggedIn} setULI={setULI} />
+                <NavBar username={username} userLoggedIn={userLoggedIn} setULI={setULI} />
             </div>
             <div className="under">
                 <div className="sidebar">
-                    <SideBar activityListing={activityList} />
+                    <SideBar username={username} activityListing={activityList} />
                 </div>
                 <div className="mp-right">
                     <div className="searchBar-div">

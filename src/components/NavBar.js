@@ -7,6 +7,15 @@ class NavBar extends React.Component {
         super(props);
     }
 
+    deleteCookie = () => {
+        document.cookie = "user=" + this.props.username + ";expires=Thu, 01 Jan 1970 00:00:01 GMT";
+    }
+
+    handleLogout = () => {
+        this.deleteCookie();
+        this.props.setULI(false);
+    }
+
     render() {
         return(
             <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -23,9 +32,10 @@ class NavBar extends React.Component {
                                 <li className="nav-item newActivity">
                                     <Link className="nav-link"
                                         to={{
-                                            pathname: "/newactivity"
-                                            // state: "" // pass user information to new activity page so DB knows who to
-                                                        // create new activity for
+                                            pathname: "/newactivity",
+                                            state: { user: this.props.username } 
+                                            // pass user information to new activity page so DB knows who to
+                                            // create new activity for
                                         }}
                                     >
                                         Create New Activity
@@ -39,8 +49,7 @@ class NavBar extends React.Component {
                             }
                             { this.props.userLoggedIn &&
                                 <li className="nav-item logout-nav ms-auto">
-                                    { /* temporary solution for ui purposes*/ }
-                                    <a className="nav-link" onClick={() => this.props.setULI(false)} >Logout</a>
+                                    <a className="nav-link" onClick={() => this.handleLogout()} >Logout</a>
                                 </li>
                             }
                         </ul>

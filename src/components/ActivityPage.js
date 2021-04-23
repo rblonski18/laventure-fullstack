@@ -83,6 +83,7 @@ const ActivityPage = ({ match }) => {
     }
 
     const handleLogout = () => {
+        
         // request to handle logout
         /*
         fetch('LAVenture/LogoutServlet', {
@@ -92,6 +93,7 @@ const ActivityPage = ({ match }) => {
                 user: username
             })
         })*/
+        setULI(false);
     }
 
     const handleRSVP = (event) => {
