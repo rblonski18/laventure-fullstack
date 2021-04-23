@@ -1,15 +1,9 @@
 .new-activity-outer-div {
-    background-color: #98d7c2;
-
-    position: absolute;
-    top: 0px;
-    right: 0px;
-    bottom: 0px;
-    left: 0px;
+    background: linear-gradient(215deg, rgba(152,215,194,1) 0%, rgba(41,160,177,1) 35%, rgba(221,255,231,1) 100%);
 }
 
 .NewActivity {
-    border: 2px solid #ddffe7;
+    border: 2px solid #98d7c2;
     margin: auto;
     width: 55%;
 }

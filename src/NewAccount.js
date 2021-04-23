@@ -64,6 +64,14 @@ export default class NewAccount extends React.Component {
             usernameBorder: '1px solid red', usernameError: 'block', password: '', confirmPassword: ''});
     }
 
+    setCookie(user) {
+        this.setState({redirect: '/mainpage'});
+        const d = new Date();
+        d.setTime(d.getTime() + (24*60*60*1000));
+        const expires = "expires="+ d.toUTCString();
+        document.cookie = "user=" + user + ";" + expires + ";path=/";
+    }
+
     handleSubmit = (event) => {
         event.preventDefault();
         if (this.state.password !== this.state.confirmPassword) {
@@ -86,7 +94,7 @@ export default class NewAccount extends React.Component {
             .then(response => response.json())
             .then(response => {
                 if (response.status === 200) {
-                    this.setState({redirect: '/mainpage'});
+                    this.setCookie(this.state.username);
                 } else {
                     this.errorMsg();
                 }

@@ -1,6 +1,7 @@
 import './accounts.css';
 import './NewActivity.css';
 import NavBar from "./components/NavBar";
+import getCookie from "./components/Cookie";
 
 import React from 'react';
 import Form from 'react-bootstrap/Form';
@@ -9,13 +10,13 @@ import PlacesAutocomplete, {
     geocodeByAddress,
     getLatLng
 } from 'react-places-autocomplete';
-import Multiselect from 'multiselect-react-dropdown';
+import {Multiselect} from 'multiselect-react-dropdown';
 import {FaRegImages} from 'react-icons/fa';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
 import {DatePicker, TimePicker} from 'react-rainbow-components';
 import 'react-toastify/dist/ReactToastify.css';
 import {toast} from 'react-toastify';
-import getCookie from "./components/Cookie";
+import {Redirect} from "react-router";
 
 const categoriesList = [
     {value: 'adventure', label: 'Adventure'},
@@ -46,11 +47,19 @@ export default class NewActivity extends React.Component {
         date: null, // format is MM/dd/yyyy
         time: null, // note: stored in military time with no AM/PM in the format HH:mm (ie. 15:00)
         capacity: 0,
-        attending: null
+        attending: null,
+        redirect: ''
     };
 
     componentDidMount() {
         toast.configure();
+
+        if (getCookie().length === 0) {
+            toast.info('ERROR! Cookie has expired.',
+                {type: 'error', autoClose: 10_000, pauseOnHover: false});
+            document.cookie = "user=;expires=Thu, 01 Jan 1970 00:00:01 GMT";
+            this.setState({redirect: '/mainpage'});
+        }
     }
 
     validateForm() {
@@ -265,149 +274,155 @@ export default class NewActivity extends React.Component {
     }
 
     render() {
-        return (
-            <div className={'new-activity-outer-div'}>
-                <div>
-                    <NavBar/>
-                </div>
-                <div className="NewActivity">
-                    <h1 className="page-title">Create a New Activity</h1>
-                    <Form onSubmit={this.handleSubmit}>
-                        <Form.Group size="lg" controlId="validationCustom01">
-                            <Form.Label>Activity Title</Form.Label>
-                            <Form.Control
-                                autoFocus
-                                type="text" maxLength={"50"}
-                                value={this.state.title}
-                                onChange={(e) => {
-                                    this.setState({title: e.target.value})
-                                }}
-                                required={true}
-                            />
-                        </Form.Group>
-                        <Form.Group size="lg" controlId="exampleFormControlTextarea1">
-                            <Form.Label>Description (max 350 characters)</Form.Label>
-                            <Form.Control
-                                as="textarea"
-                                type="text" maxLength={"350"} rows={"4"}
-                                value={this.state.description}
-                                onChange={(e) => this.setState({description: e.target.value})}
-                                required={true}
-                            />
-                        </Form.Group>
-                        <div className="horizontal-alignment">
-                            <Form.Group size="lg" controlId="location" className={"half"} style={{margin: '0 1% 0 0'}}>
-                                <Form.Label>Location</Form.Label>
-                                <PlacesAutocomplete value={this.state.location}
-                                                    onChange={(e) => this.setState({location: e})}
-                                                    onSelect={(e) => this.handleLocationSelect(e)}
-                                >
-                                    {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
-                                        <div>
-                                            <input {...getInputProps({placeholder: "Enter location"})} type="search"/>
-                                            <div className={"location-finder"}>
-                                                {loading ? <div>Loading</div> : null}
-                                                {suggestions.map(suggestion => {
-                                                    const style = {
-                                                        backgroundColor: suggestion.active ? "#98d7c2" : "white"
-                                                    };
-
-                                                    return (
-                                                        <div
-                                                            {...getSuggestionItemProps(suggestion, {style})}
-                                                            key={suggestion.placeId}
-                                                        >
-                                                            {suggestion.description}
-                                                        </div>
-                                                    );
-                                                })}
-                                            </div>
-                                        </div>
-                                    )}
-                                </PlacesAutocomplete>
-                            </Form.Group>
-                            <Form.Group className="half" style={{margin: '0 0 0 1%'}}>
-                                <Form.Label>Categories</Form.Label>
-                                <Multiselect
-                                    id="multi-select" options={categoriesList} showArrow={true} onSelect={this.onSelect}
-                                    avoidHighlightFirstOption={true} onRemove={this.onRemove} displayValue={'label'}
+        if (this.state.redirect.length > 0) {
+            return (
+                <Redirect to={this.state.redirect}/>
+            );
+        } else {
+            return (
+                <div className={'outer-div new-activity-outer-div'}>
+                    <div>
+                        <NavBar/>
+                    </div>
+                    <div className="NewActivity">
+                        <h1 className="page-title">Create a New Activity</h1>
+                        <Form onSubmit={this.handleSubmit}>
+                            <Form.Group size="lg" controlId="validationCustom01">
+                                <Form.Label>Activity Title</Form.Label>
+                                <Form.Control
+                                    autoFocus
+                                    type="text" maxLength={"50"}
+                                    value={this.state.title}
+                                    onChange={(e) => {
+                                        this.setState({title: e.target.value})
+                                    }}
                                     required={true}
                                 />
                             </Form.Group>
-                        </div>
-                        <div className="horizontal-alignment">
-                            <Form.Group size="lg" controlId="images" className="half form-group-images" style={{margin: '0 1% 0 0'}}>
-                                <Form.Label>Image Upload</Form.Label>
-                                <label id={'image-label'} htmlFor={'file-upload'} className={'custom-file-upload'}>
-                                    <FaRegImages/>Select an image
-                                </label>
-                                <input id={'file-upload'} type={'file'} required={true}
-                                       onChange={(e) => {this.setImage(e)}}
+                            <Form.Group size="lg" controlId="exampleFormControlTextarea1">
+                                <Form.Label>Description (max 350 characters)</Form.Label>
+                                <Form.Control
+                                    as="textarea"
+                                    type="text" maxLength={"350"} rows={"4"}
+                                    value={this.state.description}
+                                    onChange={(e) => this.setState({description: e.target.value})}
+                                    required={true}
                                 />
                             </Form.Group>
-                            <Form.Group size="lg" className="half" style={{margin: '0 0 0 1%'}}>
-                                <Form.Label>Rate This Activity</Form.Label>
-                                <div id={"star-div"}>
-                                    <StarBorderIcon id={'1-not'} role={'button'} onClick={(e) => this.setRating(e)} fontSize={'large'}/>
-                                    <StarBorderIcon id={'2-not'} role={'button'} onClick={(e) => this.setRating(e)} fontSize={'large'}/>
-                                    <StarBorderIcon id={'3-not'} role={'button'} onClick={(e) => this.setRating(e)} fontSize={'large'}/>
-                                    <StarBorderIcon id={'4-not'} role={'button'} onClick={(e) => this.setRating(e)} fontSize={'large'}/>
-                                    <StarBorderIcon id={'5-not'} role={'button'} onClick={(e) => this.setRating(e)} fontSize={'large'}/>
+                            <div className="horizontal-alignment">
+                                <Form.Group size="lg" controlId="location" className={"half"} style={{margin: '0 1% 0 0'}}>
+                                    <Form.Label>Location</Form.Label>
+                                    <PlacesAutocomplete value={this.state.location}
+                                                        onChange={(e) => this.setState({location: e})}
+                                                        onSelect={(e) => this.handleLocationSelect(e)}
+                                    >
+                                        {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
+                                            <div>
+                                                <input {...getInputProps({placeholder: "Enter location"})} type="search"/>
+                                                <div className={"location-finder"}>
+                                                    {loading ? <div>Loading</div> : null}
+                                                    {suggestions.map(suggestion => {
+                                                        const style = {
+                                                            backgroundColor: suggestion.active ? "#98d7c2" : "white"
+                                                        };
+
+                                                        return (
+                                                            <div
+                                                                {...getSuggestionItemProps(suggestion, {style})}
+                                                                key={suggestion.placeId}
+                                                            >
+                                                                {suggestion.description}
+                                                            </div>
+                                                        );
+                                                    })}
+                                                </div>
+                                            </div>
+                                        )}
+                                    </PlacesAutocomplete>
+                                </Form.Group>
+                                <Form.Group className="half" style={{margin: '0 0 0 1%'}}>
+                                    <Form.Label>Categories</Form.Label>
+                                    <Multiselect
+                                        id="multi-select" options={categoriesList} showArrow={true} onSelect={this.onSelect}
+                                        avoidHighlightFirstOption={true} onRemove={this.onRemove} displayValue={'label'}
+                                        required={true}
+                                    />
+                                </Form.Group>
+                            </div>
+                            <div className="horizontal-alignment">
+                                <Form.Group size="lg" controlId="images" className="half form-group-images" style={{margin: '0 1% 0 0'}}>
+                                    <Form.Label>Image Upload</Form.Label>
+                                    <label id={'image-label'} htmlFor={'file-upload'} className={'custom-file-upload'}>
+                                        <FaRegImages/>Select an image
+                                    </label>
+                                    <input id={'file-upload'} type={'file'} required={true}
+                                           onChange={(e) => {this.setImage(e)}}
+                                    />
+                                </Form.Group>
+                                <Form.Group size="lg" className="half" style={{margin: '0 0 0 1%'}}>
+                                    <Form.Label>Rate This Activity</Form.Label>
+                                    <div id={"star-div"}>
+                                        <StarBorderIcon id={'1-not'} role={'button'} onClick={(e) => this.setRating(e)} fontSize={'large'}/>
+                                        <StarBorderIcon id={'2-not'} role={'button'} onClick={(e) => this.setRating(e)} fontSize={'large'}/>
+                                        <StarBorderIcon id={'3-not'} role={'button'} onClick={(e) => this.setRating(e)} fontSize={'large'}/>
+                                        <StarBorderIcon id={'4-not'} role={'button'} onClick={(e) => this.setRating(e)} fontSize={'large'}/>
+                                        <StarBorderIcon id={'5-not'} role={'button'} onClick={(e) => this.setRating(e)} fontSize={'large'}/>
+                                    </div>
+                                </Form.Group>
+                            </div>
+                            <div className="outer-box">
+                                <label>RSVP (optional)</label>
+                                <div className="optional-fields">
+                                    <Form.Group size="lg" controlId="date"
+                                                style={{padding: '1%'}}>
+                                        <Form.Label>Date</Form.Label>
+                                        <DatePicker
+                                            className="rainbow-align-content_center rainbow-m-vertical_large rainbow-p-horizontal_small rainbow-m_auto"
+                                            value={this.state.date}
+                                            placeholder={null}
+                                            onChange={(e) => this.setDate(e)}
+                                        />
+                                    </Form.Group>
+                                    <Form.Group size="lg" controlId="time"
+                                                style={{padding: '1%'}}>
+                                        <Form.Label>Time</Form.Label>
+                                        <TimePicker
+                                            className="rainbow-m-vertical_x-large rainbow-p-horizontal_medium rainbow-m_auto"
+                                            value={this.state.time}
+                                            placeholder={"12:00 AM"}
+                                            onChange={(e) => this.setState({time: e})}
+                                        />
+                                    </Form.Group>
+                                    <Form.Group size="lg" controlId="cap"
+                                                style={{padding: '1%'}}>
+                                        <Form.Label>Capacity</Form.Label>
+                                        <Form.Control
+                                            type="number"
+                                            value={this.state.capacity}
+                                            onChange={(e) => this.setState({capacity: e.target.value})}
+                                        />
+                                    </Form.Group>
                                 </div>
-                            </Form.Group>
-                        </div>
-                        <div className="outer-box">
-                            <label>RSVP (optional)</label>
-                            <div className="optional-fields">
-                                <Form.Group size="lg" controlId="date"
-                                            style={{padding: '1%'}}>
-                                    <Form.Label>Date</Form.Label>
-                                    <DatePicker
-                                        className="rainbow-align-content_center rainbow-m-vertical_large rainbow-p-horizontal_small rainbow-m_auto"
-                                        value={this.state.date}
-                                        placeholder={null}
-                                        onChange={(e) => this.setDate(e)}
-                                    />
-                                </Form.Group>
-                                <Form.Group size="lg" controlId="time"
-                                            style={{padding: '1%'}}>
-                                    <Form.Label>Time</Form.Label>
-                                    <TimePicker
-                                        className="rainbow-m-vertical_x-large rainbow-p-horizontal_medium rainbow-m_auto"
-                                        value={this.state.time}
-                                        placeholder={"12:00 AM"}
-                                        onChange={(e) => this.setState({time: e})}
-                                    />
-                                </Form.Group>
-                                <Form.Group size="lg" controlId="cap"
-                                            style={{padding: '1%'}}>
-                                    <Form.Label>Capacity</Form.Label>
-                                    <Form.Control
-                                        type="number"
-                                        value={this.state.capacity}
-                                        onChange={(e) => this.setState({capacity: e.target.value})}
-                                    />
-                                </Form.Group>
+                                <div className="optional-fields">
+                                    <Form.Group size="lg" controlId="attending" style={{padding: '0 1%'}}>
+                                        <Form.Check
+                                            type="checkbox" label="I will be attending this event."
+                                            onChange={this.toggleAttending}
+                                        />
+                                    </Form.Group>
+                                </div>
                             </div>
-                            <div className="optional-fields">
-                                <Form.Group size="lg" controlId="attending" style={{padding: '0 1%'}}>
-                                    <Form.Check
-                                        type="checkbox" label="I will be attending this event."
-                                        onChange={this.toggleAttending}
-                                    />
-                                </Form.Group>
-                            </div>
-                        </div>
-                        <br/>
-                        <Button
-                            block size="lg" className="btn btn-primary" id="create-activity-btn" type="submit"
-                            disabled={!this.validateForm()}
-                        >
-                            Create Activity
-                        </Button>
-                    </Form>
+                            <br/>
+                            <Button
+                                block size="lg" className="btn btn-primary" id="create-activity-btn" type="submit"
+                                disabled={!this.validateForm()}
+                            >
+                                Create Activity
+                            </Button>
+                        </Form>
+                    </div>
                 </div>
-            </div>
-        );
+            );
+        }
     }
 }

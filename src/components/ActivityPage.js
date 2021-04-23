@@ -78,12 +78,12 @@ const ActivityPage = ({ match }) => {
                 user: username,
                 text: reviewText,
                 rating: reviewRating
-            }) 
+            })
         })*/
     }
 
     const handleLogout = () => {
-        
+
         // request to handle logout
         /*
         fetch('LAVenture/LogoutServlet', {
@@ -110,7 +110,7 @@ const ActivityPage = ({ match }) => {
             })
         }) */
     }
-    
+
     return (
         <div>
         <NavBar userLoggedIn={userLoggedIn} />
@@ -135,14 +135,14 @@ const ActivityPage = ({ match }) => {
                         <li key={"rating"} className="list-group-item">{ buildRatingStars(activityRating) }</li>
                     </ul>
                 </div>
-                { rsvpBool && 
+                { rsvpBool &&
                     <div>
                         <p>Number of people RSVPed: { curr } out of { cap } </p>
                         <div className="progress">
                             <div className="progress-bar bg-info" style={{width:  perc + '%'}}></div>
                         </div>
                         { userLoggedIn && rsvpButton &&
-                            <button className="btn btn-info RSVP-btn" onClick={(e) => handleRSVP(e)}>RSVP</button> 
+                            <button className="btn btn-info RSVP-btn" onClick={(e) => handleRSVP(e)}>RSVP</button>
                         }
                     </div>
                 }
@@ -180,7 +180,7 @@ const ActivityPage = ({ match }) => {
                                             <input type="radio" name="stars" value="3" />
                                             <span class="icon">★</span>
                                             <span class="icon">★</span>
-                                            <span class="icon">★</span>   
+                                            <span class="icon">★</span>
                                         </label>
                                         <label onClick={(e) => setReviewRating(4)}>
                                             <input type="radio" name="stars" value="4" />
@@ -207,8 +207,8 @@ const ActivityPage = ({ match }) => {
                     return <div className="card review-card">
                         <div className="card-body">
                             <p className="card-text">{ review.text }</p>
-                            <p><b>{ review.author }</b></p> 
-                            <p>{ buildRatingStars(review.rating) }</p> 
+                            <p><b>{ review.author }</b></p>
+                            <p>{ buildRatingStars(review.rating) }</p>
                         </div>
                     </div>
                 })}

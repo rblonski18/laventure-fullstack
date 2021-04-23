@@ -6,6 +6,7 @@ import Button from 'react-bootstrap/Button';
 import {Link, Redirect} from "react-router-dom";
 import {sha256} from "js-sha256";
 import GoogleLogin from 'react-google-login';
+import getCookie from "./components/Cookie";
 
 export default class Login extends React.Component {
     state = {
@@ -17,12 +18,12 @@ export default class Login extends React.Component {
         redirect: "",
     };
 
-    componentDidMount() {
-        const user = getCookie();
-        if (user.length > 1) { // if no user, getCookie should return empty string
-            this.setState({username: user, redirect: '/mainpage'});
-        }
-    }
+    // componentDidMount() {
+    //     const user = getCookie();
+    //     if (user.length > 1) { // if no user, getCookie should return empty string
+    //         this.setState({username: user, redirect: '/mainpage'});
+    //     }
+    // }
 
     setUsername = (e) => {
         this.setState({username: e.target.value});
@@ -44,8 +45,10 @@ export default class Login extends React.Component {
     }
 
     setCookie(user) {
+        this.setState({redirect: '/mainpage'});
         const d = new Date();
-        d.setTime(d.getTime() + (24*60*60*1000));
+        // d.setTime(d.getTime() + (24*60*60*1000));
+        d.setTime(d.getTime() + 10000);
         const expires = "expires="+ d.toUTCString();
         document.cookie = "user=" + user + ";" + expires + ";path=/";
     }
@@ -53,26 +56,24 @@ export default class Login extends React.Component {
     handleSubmit = (event) => {
         event.preventDefault();
 
-        this.setState({redirect: '/mainpage'});
-        this.setCookie(this.state.username);
+        // this.setCookie(this.state.username);
         const hashedPassword = sha256(this.state.password);
-        // fetch('/LAVenture/LoginServlet', {
-        //     method: 'POST',
-        //     headers: {'Content-Type': 'application/json'},
-        //     body: {username: this.state.username, password: hashedPassword, type: 'normal'}
-        // })
-        //     .then(response => response.json())
-        //     .then(response => {
-        //         if (response.status === 200) {
-        //             this.setState({redirect: '/mainpage'});
-        //             this.setCookie(this.state.username);
-        //         } else {
-        //
-        //         }
-        //     })
-        //     .catch(err => {
-        //         this.throwError();
-        //     });
+        fetch('/LAVenture/LoginServlet', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: {username: this.state.username, password: hashedPassword, type: 'normal'}
+        })
+            .then(response => response.json())
+            .then(response => {
+                if (response.status === 200) {
+                    this.setCookie(this.state.username);
+                } else {
+                     this.throwError();
+                }
+            })
+            .catch(err => {
+                this.throwError();
+            });
     }
 
     responseGoogle = (response) => {
