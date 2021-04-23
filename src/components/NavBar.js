@@ -24,19 +24,14 @@ class NavBar extends React.Component {
                     <button className="navbar-toggler" type="button" data-bs-toggle="collapse"
                             data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
                             aria-label="Toggle navigation">
-                        <span className="navbar-toggler-icon"></span>
+                        <span className="navbar-toggler-icon"/>
                     </button>
                     <div className="collapse navbar-collapse" id="navbarNav">
                         <ul className="navbar-nav ms-auto">
                             { this.props.userLoggedIn &&
                                 <li className="nav-item newActivity">
                                     <Link className="nav-link"
-                                        to={{
-                                            pathname: "/newactivity",
-                                            state: { user: this.props.username } 
-                                            // pass user information to new activity page so DB knows who to
-                                            // create new activity for
-                                        }}
+                                          to={{pathname: "/newactivity"}}
                                     >
                                         Create New Activity
                                     </Link>
@@ -49,7 +44,7 @@ class NavBar extends React.Component {
                             }
                             { this.props.userLoggedIn &&
                                 <li className="nav-item logout-nav ms-auto">
-                                    <a className="nav-link" onClick={() => this.handleLogout()} >Logout</a>
+                                    <a className="nav-link" onClick={this.handleLogout} >Logout</a>
                                 </li>
                             }
                         </ul>

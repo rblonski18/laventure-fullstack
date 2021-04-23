@@ -77,8 +77,7 @@ export default class NewAccount extends React.Component {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: {
-                fname: this.state.fname,
-                lname: this.state.lname,
+                name: this.state.fname + ' ' + this.state.lname,
                 email: this.state.email,
                 username: this.state.username,
                 password: hashedPassword
@@ -86,10 +85,11 @@ export default class NewAccount extends React.Component {
         })
             .then(response => response.json())
             .then(response => {
-                // if successful, should have received succcess=true, session ID, email
-                this.setState({redirect: '/mainpage'});
-                // verify with back end that this email does not already exist in database
-                // otherwise, call errorMsg because email already existed in database
+                if (response.status === 200) {
+                    this.setState({redirect: '/mainpage'});
+                } else {
+                    this.errorMsg();
+                }
             })
             .catch(err => {
                 this.errorMsg();

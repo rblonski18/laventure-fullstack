@@ -9,12 +9,13 @@ import PlacesAutocomplete, {
     geocodeByAddress,
     getLatLng
 } from 'react-places-autocomplete';
-import {Multiselect} from 'multiselect-react-dropdown';
+import Multiselect from 'multiselect-react-dropdown';
 import {FaRegImages} from 'react-icons/fa';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
 import {DatePicker, TimePicker} from 'react-rainbow-components';
 import 'react-toastify/dist/ReactToastify.css';
 import {toast} from 'react-toastify';
+import getCookie from "./components/Cookie";
 
 const categoriesList = [
     {value: 'adventure', label: 'Adventure'},
@@ -134,11 +135,20 @@ export default class NewActivity extends React.Component {
             }
         }
 
+        const username = getCookie();
+        if (username.length === 0) {
+            toast.info('ERROR! Cookie has expired.',
+                {type: 'error', autoClose: 10_000, pauseOnHover: false});
+            document.cookie = "user=;expires=Thu, 01 Jan 1970 00:00:01 GMT";
+            return;
+        }
+
         // enter data into database
         fetch('LAVenture/ActivityServlet', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: {
+                username: username,
                 title: this.state.title,
                 description: this.state.description,
                 location: this.state.location,
