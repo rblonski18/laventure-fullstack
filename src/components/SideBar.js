@@ -62,6 +62,7 @@ class SideBar extends React.Component {
                         </div>
                     </div>
                 </div>
+            <div className="activities-sidebar">
             { this.props.activityListing.map((activity) => {
                 const items = [];
                 for(var i = 0; i < activity.rating; i++) {
@@ -90,6 +91,7 @@ class SideBar extends React.Component {
                     </div>
                 </div>
             })}
+            </div>
             </div>
         );
     }

@@ -148,5 +148,155 @@
         "RSVP": false,
         "currentRSVPed": 0,
         "RSVPcapacity": 0
+    },
+    {
+        "id": 1,
+        "img": "https://img.theculturetrip.com/wp-content/uploads/2016/11/1024px-beach_volley_8143063908.jpg",
+        "name": "Beach Volleyball",
+        "author": "Rory Blonski",
+        "location": "Santa Monica",
+        "coordinates": [34.0129, -118.5017],
+        "categories": ["Beach", "Sports", "Outdoors"],
+        "rating": 5,
+        "reviews": [
+            {
+                "text": "A great place to play some volleyball with friends",
+                "rating": "5",
+                "author": "Matthew Leslie"
+            },
+            {
+                "text": "Really crowded and the people wouldn't leave",
+                "rating": "2",
+                "author": "Rory Blonski"
+            },
+            {
+                "text": "There shouldn't be this many volleyball courts on a beach",
+                "rating": "5",
+                "author": "Grace Kim"
+            }
+        ],
+        "RSVP": false,
+        "currentRSVPed": 0,
+        "RSVPcapacity": 0
+    },
+    {
+        "id": 2,
+        "img": "https://cdn.vox-cdn.com/thumbor/y-GIwaGD2Y-cg-3xwxaLgSmrzT4=/0x0:5665x3777/1200x800/filters:focal(2380x1436:3286x2342)/cdn.vox-cdn.com/uploads/chorus_image/image/67779554/AdobeStock_266551660.0.jpeg",
+        "name": "Concert Hall",
+        "author": "Stephanie Yoshimoto",
+        "location": "Pasadena",
+        "coordinates": [34.1478, -118.1445],
+        "categories": ["Music", "Night Life", "Outdoors"],
+        "rating": 4,
+        "reviews": [
+            {
+                "text": "The concert was slightly below average, but the venue was nice",
+                "rating": "5",
+                "author": "Andrew Klotz"
+            },
+            {
+                "text": "Super great concert! I would love to go again",
+                "rating": "2",
+                "author": "Stephanie Yoshimoto"
+            },
+            {
+                "text": "It got very crowded, but you have to assume it will be for concerts. ",
+                "rating": "4",
+                "author": "Grace Kim"
+            }
+        ],
+        "RSVP": false,
+        "currentRSVPed": 0,
+        "RSVPcapacity": 0
+    },
+    {
+        "id": 3,
+        "img": "https://idealbeachresort.com/wp-content/uploads/2018/10/Mini-Golf.jpg",
+        "name": "Mini Golf",
+        "author": "Grace Kim",
+        "location": "Glendale",
+        "coordinates": [34.1425, -118.2551],
+        "categories": ["Games", "Sports", "Outdoors"],
+        "rating": 5,
+        "reviews": [
+            {
+                "text": "This Mini Golf place was awful, how do they stay in business?",
+                "rating": "1",
+                "author": "Rory Blonski"
+            },
+            {
+                "text": "My ball fell down a hole and they kicked me and my friends out. Why?",
+                "rating": "1",
+                "author": "Andrew Klotz"
+            },
+            {
+                "text": "There was a two hour line and they told us to leave after four holes",
+                "rating": "1",
+                "author": "Grace Kim"
+            }
+        ],
+        "RSVP": false,
+        "currentRSVPed": 0,
+        "RSVPcapacity": 0
+    },
+    {
+        "id": 4,
+        "img": "https://www.inquirer.com/resizer/wQFB2OB2XVjuaaTtLYfoE81QAs0=/760x507/smart/cloudfront-us-east-1.images.arcpublishing.com/pmn/JM23LABIS5H25H3IK6E3UP2YPE.jpg",
+        "name": "Soccer",
+        "author": "Andrew Klotz",
+        "location": "Jefferson Park",
+        "coordinates": [34.0325, -118.3140],
+        "categories": ["Exercise", "Sports", "Outdoors"],
+        "rating": 2,
+        "reviews": [
+            {
+                "text": "Been playing soccer here for years, great field",
+                "rating": "5",
+                "author": "Matthew Leslie"
+            },
+            {
+                "text": "This guy that plays soccer there always beats me",
+                "rating": "2",
+                "author": "Rory Blonski"
+            },
+            {
+                "text": "The goalie that comes every day is too good, I never score",
+                "rating": "2",
+                "author": "Stephanie Yoshimoto"
+            }
+        ],
+        "RSVP": true,
+        "currentRSVPed": 12,
+        "RSVPcapacity": 22
+    },
+    {
+        "id": 5,
+        "img": "https://www.michigan.org/sites/default/files/teasers/allisonreadsdc_bookstore_Literati_CR_crop.jpg",
+        "name": "Bookstore",
+        "author": "Matthew Leslie",
+        "location": "Downtown",
+        "coordinates": [34.0407, -118.2468],
+        "categories": ["Books", "Shopping"],
+        "rating": 3,
+        "reviews": [
+            {
+                "text": "Nice bookstore. I'll come back again. ",
+                "rating": "5",
+                "author": "Andrew Klotz"
+            },
+            {
+                "text": "Great selection of books. ",
+                "rating": "5",
+                "author": "Rory Blonski"
+            },
+            {
+                "text": "I found a book there that I've been looking for forever!",
+                "rating": "5",
+                "author": "Grace Kim"
+            }
+        ],
+        "RSVP": false,
+        "currentRSVPed": 0,
+        "RSVPcapacity": 0
     }
 ]

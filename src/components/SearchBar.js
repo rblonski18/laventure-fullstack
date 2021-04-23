@@ -66,7 +66,7 @@ class SearchBar extends React.Component {
                     </div>
                     <div className="weatherbit-api-styling">
                         <img src={`https://www.weatherbit.io/static/img/icons/${this.state.weatherIcon}.png`} />
-                        <span>{this.state.weatherString} {this.state.temp} &#8457;</span>
+                        <span>{this.state.weatherString} {parseInt(this.state.temp)} &#8457;</span>
                      </div>
                 </form>
             </div>

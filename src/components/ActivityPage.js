@@ -26,6 +26,7 @@ const ActivityPage = ({ match }) => {
     const [ reviewRating, setReviewRating ] = useState(0);
     const [ userLoggedIn, setULI ] = useState(true);
     const [ rsvpButton, setRSVPButton] = useState(true);
+    const [ username, setUsername] = useState('');
 
     const buildRatingStars = (rating) => {
         const items = [];
@@ -38,14 +39,37 @@ const ActivityPage = ({ match }) => {
         return items;
     };
 
+    const getCookie = () => {
+        var name = "user=";
+        var decodedCookie = decodeURIComponent(document.cookie);
+        var ca = decodedCookie.split(';');
+        for(var i = 0; i <ca.length; i++) {
+          var c = ca[i];
+          while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+          }
+          if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+          }
+        }
+        return "";
+    }
+
     useEffect(() => {
 
         /*
         // request for activity with the id of activityid
-        fetch('LAVenture/ActivityServlet?isRSVP=false&activityid=${activityID}')
+        fetch(`LAVenture/ActivityServlet?isRSVP=false&activityid=${activityID}`)
 
         // request for all reviews associated with the activity with id of activityid
-        fetch(`LAVenture/ReviewsServlet?isRSVP=false&activityid=${activityID}`) */
+        fetch(`LAVenture/ReviewsServlet?isRSVP=false&activityid=${activityID}`)
+        
+        // check if user is RSVPed to this activity. 
+        fetch(`LAVenture/RSVPServlet?activityid=${activityID}&user=${username}&task=checkStatus`)
+        
+        let user = getCookie();
+        if(user.length > 0) setUsername(user);
+        */
 
         data.forEach((activity) => {
             if(activity.id == activityID) {
@@ -75,6 +99,7 @@ const ActivityPage = ({ match }) => {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
+                activityid: activityID,
                 user: username,
                 text: reviewText,
                 rating: reviewRating
@@ -82,33 +107,37 @@ const ActivityPage = ({ match }) => {
         })*/
     }
 
-    const handleLogout = () => {
+    const handleRSVP = (event) => {
 
-        // request to handle logout
-        /*
-        fetch('LAVenture/LogoutServlet', {
+        setCurrent(curr+1);
+        setPercentage(((curr+1)/cap)*100);
+        setRSVPButton(false);
+        /* fetch(`LAVenture/RSVPServlet, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
-                user: username
+                user: username,
+                activityid: activityID,
+                task: add
             })
-        })*/
-        setULI(false);
+        })
+             */
     }
 
-    const handleRSVP = (event) => {
-        setCurrent(curr+1);
-        setPercentage((curr/cap)*100);
-        setRSVPButton(false);
-        /* fetch('LAVenture/ActivityServlet', {
+    const handleCancelRSVP = (e) => {
+        setCurrent(curr-1);
+        setPercentage(((curr-1)/cap)*100);
+        setRSVPButton(true);
+        /* fetch(`LAVenture/RSVPServlet, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
-                isRSVP: true,
                 user: username,
-                activityid: activityID
+                activityid: activityID,
+                task: cancel
             })
-        }) */
+        })
+             */
     }
 
     return (
@@ -143,6 +172,9 @@ const ActivityPage = ({ match }) => {
                         </div>
                         { userLoggedIn && rsvpButton &&
                             <button className="btn btn-info RSVP-btn" onClick={(e) => handleRSVP(e)}>RSVP</button>
+                        }
+                        { userLoggedIn && !rsvpButton && 
+                            <button className="btn btn-danger RSVP-btn" onClick={(e) => handleCancelRSVP(e)}>Cancel</button>
                         }
                     </div>
                 }

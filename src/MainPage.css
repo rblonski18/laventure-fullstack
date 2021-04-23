@@ -7,6 +7,15 @@
     width: 33%;
 }
 
+body {
+    max-height: 100%;
+}
+
+.activities-sidebar {
+    overflow-y: scroll;
+    height: 45rem;
+}
+
 nav {
     background: rgb(152,215,194);
     background: linear-gradient(90deg, rgba(152,215,194,1) 0%, rgba(41,160,177,1) 35%, rgba(221,255,231,1) 100%);
