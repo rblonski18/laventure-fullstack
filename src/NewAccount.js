@@ -88,7 +88,8 @@ export default class NewAccount extends React.Component {
                 name: this.state.fname + ' ' + this.state.lname,
                 email: this.state.email,
                 username: this.state.username,
-                password: hashedPassword
+                password: hashedPassword,
+                type: 'normal'
             }
         })
             .then(response => response.json())
@@ -99,7 +100,7 @@ export default class NewAccount extends React.Component {
                     this.errorMsg();
                 }
             })
-            .catch(err => {
+            .catch(() => {
                 this.errorMsg();
             });
     }

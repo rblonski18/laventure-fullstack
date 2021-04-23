@@ -27,7 +27,7 @@ class SideBar extends React.Component {
             })
 
         // request for recently viewed activities of user w/ username specified
-        fetch(`LAVenture/ActivityListServlet?sortBy=recent&user=${this.state.username}`) 
+        fetch(`LAVenture/ActivityListServlet?sortBy=recent&user=${this.state.username}`)
             .then(res => res.json())
             .then((data) => {
                 this.setState({recentlyViewed: data})
@@ -51,7 +51,7 @@ class SideBar extends React.Component {
                     <div className="card">
                         <div id="dropdown-div" className="dropdown sidebar-dropdown">
                             <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                Search By: {this.state.sortBy}
+                                Sort By: {this.state.sortBy}
                             </button>
                             <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                 <li><a key="rating" className="dropdown-item" onClick={(e) => this.handleSort(e, "Rating")}>Rating</a></li>
@@ -66,10 +66,10 @@ class SideBar extends React.Component {
             { this.props.activityListing.map((activity) => {
                 const items = [];
                 for(var i = 0; i < activity.rating; i++) {
-                    items.push(<span key={activity.name+i} className="fa fa-star checked"></span>)
+                    items.push(<span key={activity.name+i} className="fa fa-star checked"/>)
                 }
                 for(var j = 0; j < 5-activity.rating; j++) {
-                    items.push(<span key={activity.name+(5-j)} className="fa fa-star"></span>)
+                    items.push(<span key={activity.name+(5-j)} className="fa fa-star"/>)
                 }
                 const imgString = activity.img;
                 return <div className="activity" key={ activity.name } >
@@ -82,7 +82,7 @@ class SideBar extends React.Component {
                             <p className="rating-stars">{ items }</p>
                             <div className="categories">
                                 { activity.categories.map((category) => {
-                                    return <span key={activity.name+category}className="badge badge-pill badge-info">{category}</span>
+                                    return <span key={activity.name+category} className="badge badge-pill badge-info">{category}</span>
                                 })}
                             </div>
                             <p className="card-text">{activity.location}</p>

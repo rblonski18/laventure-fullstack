@@ -7,6 +7,7 @@ import {Link, Redirect} from "react-router-dom";
 import {sha256} from "js-sha256";
 import GoogleLogin from 'react-google-login';
 import getCookie from "./components/Cookie";
+import {toast} from "react-toastify";
 
 export default class Login extends React.Component {
     state = {
@@ -18,12 +19,14 @@ export default class Login extends React.Component {
         redirect: "",
     };
 
-    // componentDidMount() {
-    //     const user = getCookie();
-    //     if (user.length > 1) { // if no user, getCookie should return empty string
-    //         this.setState({username: user, redirect: '/mainpage'});
-    //     }
-    // }
+    componentDidMount() {
+        toast.configure();
+
+        // const user = getCookie();
+        // if (user.length > 1) { // if no user, getCookie should return empty string
+        //     this.setState({username: user, redirect: '/mainpage'});
+        // }
+    }
 
     setUsername = (e) => {
         this.setState({username: e.target.value});
@@ -47,8 +50,7 @@ export default class Login extends React.Component {
     setCookie(user) {
         this.setState({redirect: '/mainpage'});
         const d = new Date();
-        // d.setTime(d.getTime() + (24*60*60*1000));
-        d.setTime(d.getTime() + 10000);
+        d.setTime(d.getTime() + (24*60*60*1000));
         const expires = "expires="+ d.toUTCString();
         document.cookie = "user=" + user + ";" + expires + ";path=/";
     }
@@ -56,7 +58,6 @@ export default class Login extends React.Component {
     handleSubmit = (event) => {
         event.preventDefault();
 
-        // this.setCookie(this.state.username);
         const hashedPassword = sha256(this.state.password);
         fetch('/LAVenture/LoginServlet', {
             method: 'POST',
@@ -76,14 +77,48 @@ export default class Login extends React.Component {
             });
     }
 
+    googleError() {
+        toast.info('The Google account could not be used to continue to LAVenture.',
+            {type: 'error', pauseOnHover: false});
+    }
+
     responseGoogle = (response) => {
-        // try login servlet, then sign up if not possible
-
-        console.log(response.tokenId);
-
-        // send: email, name
-
-        // email is the username
+        fetch('/LAVenture/LoginServlet', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: {email: response.profileObj.email, name: response.profileObj.name, type: 'other'}
+        })
+            .then(response => response.json())
+            .then(response => {
+                if (response.status === 200) {
+                    this.setCookie(response.profileObj.email);
+                } else {
+                    this.throwError();
+                }
+            })
+            .catch(() => {
+                // if login not successful, create new account
+                fetch('LAVenture/NewAccountServlet', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: {
+                        email: response.profileObj.email,
+                        name: response.profileObj.name,
+                        type: 'other'
+                    }
+                })
+                    .then(response => response.json())
+                    .then(response => {
+                        if (response.status === 200) {
+                            this.setCookie(response.profileObj.email);
+                        } else {
+                            this.googleError();
+                        }
+                    })
+                    .catch(() => {
+                        this.googleError();
+                    });
+            });
     }
 
     render() {

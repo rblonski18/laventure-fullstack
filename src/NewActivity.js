@@ -181,7 +181,7 @@ export default class NewActivity extends React.Component {
                         {type: 'success', pauseOnHover: false});
                 }
             })
-            .catch(err => {
+            .catch(() => {
                 this.toasterError();
             });
     }
