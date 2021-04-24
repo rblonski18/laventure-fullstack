@@ -1,0 +1,857 @@
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.sql.Blob;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.concurrent.locks.ReentrantLock;
+
+public class JDBCConnector {
+    private static ReentrantLock addRSVPLock = new ReentrantLock();
+
+    //Returns userID of added user. Returns -1 if username already exists.
+    public static int normalRegister(String email, String name, String username, String password)
+    {
+        Connection conn = null;
+        Statement st = null;
+        ResultSet rs = null;
+
+        int userID = -1;
+
+        MessageDigest digest;
+        String hashedPass;
+
+        try
+        {
+            digest = MessageDigest.getInstance("SHA-256");
+            hashedPass =  new String(digest.digest(password.getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
+            conn = DriverManager.getConnection("jdbc:mysql://localhost/CSCI201FinalProject?user=root&password=root");
+            st = conn.createStatement();
+            rs = st.executeQuery("SELECT * FROM Users WHERE Username='" + username + "'");
+            if (!rs.next())
+            {
+                rs.close();
+                st.execute("INSERT INTO Users (Email, Name, Username, Password, FacebookUser) VALUES ('" + email + "','" + name + "','" + username + "','" + hashedPass + "', FALSE)");
+                rs = st.executeQuery("SELECT LAST_INSERT_ID()");
+                rs.next();
+                userID = rs.getInt(1);
+            }
+        }
+        catch (SQLException e)
+        {
+            System.out.println("SQL Exception occured accessing database.");
+        }
+        catch (NoSuchAlgorithmException e)
+        {
+            System.out.println("Error occured attempting to hash.");
+        }
+        finally
+        {
+            try
+            {
+                if (rs != null)
+                {
+                    rs.close();
+                }
+                if (st != null)
+                {
+                    st.close();
+                }
+                if (conn != null)
+                {
+                    conn.close();
+                }
+            }
+            catch (SQLException e)
+            {
+                System.out.println("SQL Exception occured closing connection/statement/result set.");
+            }
+        }
+
+        return userID;
+    }
+
+    //Returns userID if user/password combination is valid. Returns -1 otherwise.
+    public static int normalLogin(String username, String password)
+    {
+        Connection conn = null;
+        Statement st = null;
+        ResultSet rs = null;
+
+        int userID = -1;
+
+        MessageDigest digest;
+        String hashedPass;
+
+        try
+        {
+            digest = MessageDigest.getInstance("SHA-256");
+            hashedPass =  new String(digest.digest(password.getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
+            conn = DriverManager.getConnection("jdbc:mysql://localhost/CSCI201FinalProject?user=root&password=root");
+            st = conn.createStatement();
+            rs = st.executeQuery("SELECT * FROM Users WHERE Username='" + username + "' AND Password='" + hashedPass + "' AND FacebookUser=FALSE");
+            if (rs.next())
+            {
+                userID = rs.getInt(1);
+            }
+        }
+        catch (SQLException e)
+        {
+            System.out.println("SQL Exception occured accessing database.");
+        }
+        catch (NoSuchAlgorithmException e)
+        {
+            System.out.println("Error occured attempting to hash.");
+        }
+        finally
+        {
+            try
+            {
+                if (rs != null)
+                {
+                    rs.close();
+                }
+                if (st != null)
+                {
+                    st.close();
+                }
+                if (conn != null)
+                {
+                    conn.close();
+                }
+            }
+            catch (SQLException e)
+            {
+                System.out.println("SQL Exception occured closing connection/statement/result set.");
+            }
+        }
+
+        return userID;
+    }
+
+    //Returns userID of added user. Use facebookLogin whenever a facebook user logs in and it will call this function if it is a new user.
+    private static int facebookRegister(String email, String name)
+    {
+        Connection conn = null;
+        Statement st = null;
+        ResultSet rs = null;
+
+        int userID = -1;
+
+        try
+        {
+            conn = DriverManager.getConnection("jdbc:mysql://localhost/CSCI201FinalProject?user=root&password=root");
+            st = conn.createStatement();
+            st.execute("INSERT INTO Users (Email, Name, Username, FacebookUser) VALUES ('" + email + "','" + name + "','" + email + "', TRUE)");
+            rs = st.executeQuery("SELECT LAST_INSERT_ID()");
+            rs.next();
+            userID = rs.getInt(1);
+        }
+        catch (SQLException e)
+        {
+            System.out.println("SQL Exception occured accessing database.");
+        }
+        finally
+        {
+            try
+            {
+                if (rs != null)
+                {
+                    rs.close();
+                }
+                if (st != null)
+                {
+                    st.close();
+                }
+                if (conn != null)
+                {
+                    conn.close();
+                }
+            }
+            catch (SQLException e)
+            {
+                System.out.println("SQL Exception occured closing connection/statement/result set.");
+            }
+        }
+
+        return userID;
+    }
+
+    //Returns userID of logged in user. Creates a new user if the user does not exist. Utilizes name for registering.
+    public static int facebookLogin(String email, String name)
+    {
+        Connection conn = null;
+        Statement st = null;
+        ResultSet rs = null;
+
+        int userID = -1;
+
+        try
+        {
+            conn = DriverManager.getConnection("jdbc:mysql://localhost/CSCI201FinalProject?user=root&password=root");
+            st = conn.createStatement();
+            rs = st.executeQuery("SELECT * FROM Users WHERE Email='" + email + "' AND FacebookUser=TRUE");
+            if (rs.next())
+            {
+                userID = rs.getInt(1);
+            }
+            else
+            {
+                userID = facebookRegister(email, name);
+            }
+        }
+        catch (SQLException e)
+        {
+            System.out.println("SQL Exception occured accessing database.");
+        }
+        finally
+        {
+            try
+            {
+                if (rs != null)
+                {
+                    rs.close();
+                }
+                if (st != null)
+                {
+                    st.close();
+                }
+                if (conn != null)
+                {
+                    conn.close();
+                }
+            }
+            catch (SQLException e)
+            {
+                System.out.println("SQL Exception occured closing connection/statement/result set.");
+            }
+        }
+
+        return userID;
+    }
+
+    public static ArrayList<Review> getReviews(int activityID)
+    {
+        Connection conn = null;
+        Statement st = null;
+        ResultSet rs = null;
+
+        int reviewNum;
+        int userId;
+        String username;
+        double ratingVal;
+        String reviewText;
+
+        ArrayList<Review> reviews = new ArrayList<Review>();
+
+        try
+        {
+            conn = DriverManager.getConnection("jdbc:mysql://localhost/CSCI201FinalProject?user=root&password=root");
+            st = conn.createStatement();
+            rs = st.executeQuery("SELECT * FROM Reviews r,Users u WHERE ActivityID=" + activityID + " AND r.UserID=u.UserID");
+            while (rs.next())
+            {
+                reviewNum = rs.getInt("ReviewNum");
+                userId = rs.getInt("UserId");
+                username = rs.getString("Username");
+                ratingVal = rs.getInt("RatingVal");
+                reviewText = rs.getString("ReviewText");
+                reviews.add(new Review(reviewNum, userId, username, ratingVal, reviewText));
+            }
+        }
+        catch (SQLException e)
+        {
+            System.out.println("SQL Exception occured accessing database.");
+        }
+        finally
+        {
+            try
+            {
+                if (rs != null)
+                {
+                    rs.close();
+                }
+                if (st != null)
+                {
+                    st.close();
+                }
+                if (conn != null)
+                {
+                    conn.close();
+                }
+            }
+            catch (SQLException e)
+            {
+                System.out.println("SQL Exception occured closing connection/statement/result set.");
+            }
+        }
+
+        return reviews;
+    }
+
+    public static ArrayList<Activity> getActivities()
+    {
+        Connection conn = null;
+        Statement st = null;
+        ResultSet rs = null;
+
+        int activityID;
+        String username;
+        String title;
+        String image;
+        String description;
+        double longitude;
+        double latitude;
+        String town;
+        double rating;
+        int ratingCount;
+        int RSVPCount;
+        int maxRSVPs;
+        String time;
+        boolean adventure;
+        boolean beach;
+        boolean books;
+        boolean entertainment;
+        boolean exercise;
+        boolean games;
+        boolean music;
+        boolean nightLife;
+        boolean outdoors;
+        boolean relax;
+        boolean shopping;
+        boolean sports;
+
+        ArrayList<Activity> activities = new ArrayList<Activity>();
+
+        try
+        {
+            conn = DriverManager.getConnection("jdbc:mysql://localhost/CSCI201FinalProject?user=root&password=root");
+            st = conn.createStatement();
+            rs = st.executeQuery("SELECT * FROM Activities");
+            while (rs.next())
+            {
+                activityID = rs.getInt("ActivityID");
+                username = rs.getString("Username");
+                title = rs.getString("Title");
+                Blob imageBlob = rs.getBlob("Image");
+                image = new String(imageBlob.getBytes(1, (int) imageBlob.length()));
+                description = rs.getString("Description");
+                longitude = rs.getDouble("Longitude");
+                latitude = rs.getDouble("Latitude");
+                town = rs.getString("Town");
+                rating = rs.getDouble("Rating");
+                ratingCount = rs.getInt("RatingCount");
+                RSVPCount = rs.getInt("RSVPCount");
+                maxRSVPs = rs.getInt("MaxRSVPs");
+                time = rs.getString("Time");
+                adventure = rs.getBoolean("Adventure");
+                beach = rs.getBoolean("Beach");
+                books = rs.getBoolean("Books");
+                entertainment = rs.getBoolean("Entertainment");
+                exercise = rs.getBoolean("Exercise");
+                games = rs.getBoolean("Games");
+                music = rs.getBoolean("Music");
+                nightLife = rs.getBoolean("NightLife");
+                outdoors = rs.getBoolean("Outdoors");
+                relax = rs.getBoolean("Relax");
+                shopping = rs.getBoolean("Shopping");
+                sports = rs.getBoolean("Sports");
+                activities.add(new Activity(activityID, username, title, image, description, longitude,
+                        latitude, town, rating, ratingCount, RSVPCount, maxRSVPs, time,
+                        adventure, beach, books, entertainment, exercise, games,
+                        music, nightLife, outdoors, relax, shopping, sports));
+            }
+        }
+        catch (SQLException e)
+        {
+            System.out.println("SQL Exception occured accessing database.");
+        }
+        finally
+        {
+            try
+            {
+                if (rs != null)
+                {
+                    rs.close();
+                }
+                if (st != null)
+                {
+                    st.close();
+                }
+                if (conn != null)
+                {
+                    conn.close();
+                }
+            }
+            catch (SQLException e)
+            {
+                System.out.println("SQL Exception occured closing connection/statement/result set.");
+            }
+        }
+
+        return activities;
+    }
+
+    //Returns activityID of added activity. Returns -1 if SQL error.
+    public static int addActivity(String username, String title, String image, String description, double longitude,
+                                  double latitude, String town, double rating, int ratingCount, int RSVPCount, int maxRSVPs, boolean adventure,
+                                  boolean beach, boolean books, boolean entertainment, boolean exercise, boolean games, boolean music, boolean nightLife,
+                                  boolean outdoors, boolean relax, boolean shopping, boolean sports, String time)
+    {
+        Connection conn = null;
+        Statement st = null;
+        ResultSet rs = null;
+
+        int activityID = -1;
+
+        try
+        {
+            conn = DriverManager.getConnection("jdbc:mysql://localhost/CSCI201FinalProject?user=root&password=root");
+            st = conn.createStatement();
+            Blob imageBlob = conn.createBlob();
+            imageBlob.setBytes(1, image.getBytes());
+            st.execute("INSERT INTO Activities (Username,Title,Image,Description,Longitude,Latitude,Town,Rating,RatingCount,RSVPCount,MaxRSVPs,Adventure,Beach,Books,Entertainment,Exercise,Games,Music,NightLife,Outdoors,Relax,Shopping,Sports,Time) VALUES ('" + username + "','" + title + "','" + imageBlob + "','" + description + "'," + longitude + "," + latitude + ",'" + town + "'," + rating + "," + ratingCount + "," + RSVPCount + "," + maxRSVPs + ",'"  + adventure + ","  + beach + ","  + books + ","  + entertainment + ","  + exercise + ","  + games + ","  + music + "," + nightLife + "," + outdoors + ","  + relax + ","  + shopping + "," + sports + ",'" + time + "')");
+            rs = st.executeQuery("SELECT LAST_INSERT_ID()");
+            rs.next();
+            activityID = rs.getInt(1);
+        }
+        catch (SQLException e)
+        {
+            System.out.println("SQL Exception occured accessing database.");
+        }
+        finally
+        {
+            try
+            {
+                if (rs != null)
+                {
+                    rs.close();
+                }
+                if (st != null)
+                {
+                    st.close();
+                }
+                if (conn != null)
+                {
+                    conn.close();
+                }
+            }
+            catch (SQLException e)
+            {
+                System.out.println("SQL Exception occured closing connection/statement/result set.");
+            }
+        }
+
+        return activityID;
+    }
+
+    public static ArrayList<User> getUsers()
+    {
+        Connection conn = null;
+        Statement st = null;
+        ResultSet rs = null;
+
+        int userID;
+        String email;
+        String name;
+        String username;
+        boolean facebookUser;
+        int activityID1;
+        int activityID2;
+        int activityID3;
+        int activityID4;
+        int activityID5;
+
+        ArrayList<User> users = new ArrayList<User>();
+
+        try
+        {
+            conn = DriverManager.getConnection("jdbc:mysql://localhost/CSCI201FinalProject?user=root&password=root");
+            st = conn.createStatement();
+            rs = st.executeQuery("SELECT * FROM Users");
+            while (rs.next())
+            {
+                userID = rs.getInt("UserID");
+                email = rs.getString("Email");
+                name = rs.getString("Name");
+                username = rs.getString("Username");
+                facebookUser = rs.getBoolean("FacebookUser");
+                activityID1 = rs.getInt("ActivityID1");
+                activityID2 = rs.getInt("ActivityID2");
+                activityID3 = rs.getInt("ActivityID3");
+                activityID4 = rs.getInt("ActivityID4");
+                activityID5 = rs.getInt("ActivityID5");
+                users.add(new User(userID, email, name, username, facebookUser, activityID1, activityID2,
+                        activityID3, activityID4, activityID5));
+            }
+        }
+        catch (SQLException e)
+        {
+            System.out.println("SQL Exception occured accessing database.");
+        }
+        finally
+        {
+            try
+            {
+                if (rs != null)
+                {
+                    rs.close();
+                }
+                if (st != null)
+                {
+                    st.close();
+                }
+                if (conn != null)
+                {
+                    conn.close();
+                }
+            }
+            catch (SQLException e)
+            {
+                System.out.println("SQL Exception occured closing connection/statement/result set.");
+            }
+        }
+
+        return users;
+    }
+
+    //Updates the users most recently viewed activity in just the database.
+    public static void visitActivity(int userID, int activityID)
+    {
+        Connection conn = null;
+        Statement st = null;
+        ResultSet rs = null;
+
+        int nextActivityID;
+        int nextActivityInd = 1;
+
+        MRUCache mru = new MRUCache(5);
+
+        try
+        {
+            conn = DriverManager.getConnection("jdbc:mysql://localhost/CSCI201FinalProject?user=root&password=root");
+            st = conn.createStatement();
+            rs = st.executeQuery("SELECT * FROM Users WHERE UserID='" + userID + "'");
+            rs.next();
+
+            do
+            {
+                nextActivityID = rs.getInt("ActivityID" + nextActivityInd);
+                nextActivityInd++;
+                if (nextActivityID != 0)
+                {
+                    mru.refer(nextActivityID);
+                }
+            } while(nextActivityID != 0 && nextActivityInd <= 5);
+            mru.refer(activityID);
+
+            int activityIDs[] = mru.getFiveVals();
+
+            st.execute("UPDATE Users SET ActivityID5=" + activityIDs[4] + ", ActivityID4=" + activityIDs[3] + ", ActivityID3=" + activityIDs[2] + ", ActivityID2=" + activityIDs[1] + ", ActivityID1=" + activityIDs[0] + " WHERE UserID=" + userID);
+        }
+        catch (SQLException e)
+        {
+            System.out.println("SQL Exception occured accessing database.");
+        }
+        finally
+        {
+            try
+            {
+                if (rs != null)
+                {
+                    rs.close();
+                }
+                if (st != null)
+                {
+                    st.close();
+                }
+                if (conn != null)
+                {
+                    conn.close();
+                }
+            }
+            catch (SQLException e)
+            {
+                System.out.println("SQL Exception occured closing connection/statement/result set.");
+            }
+        }
+    }
+
+    public static void addReview(int activityID, int userID, double ratingVal, String reviewText)
+    {
+        Connection conn = null;
+        Statement st = null;
+
+        try
+        {
+            conn = DriverManager.getConnection("jdbc:mysql://localhost/CSCI201FinalProject?user=root&password=root");
+            st = conn.createStatement();
+            st.execute("INSERT INTO Reviews (ActivityID,UserID,RatingVal,ReviewText) VALUES (" + activityID + "," + userID + "," + ratingVal + ",'" + reviewText + "')");
+            st.execute("UPDATE Activities SET Rating=((Rating*RatingCount)+" + ratingVal + ")/(RatingCount+1), RatingCount=RatingCount+1 WHERE ActivityID=" + activityID);
+        }
+        catch (SQLException e)
+        {
+            System.out.println("SQL Exception occured accessing database.");
+        }
+        finally
+        {
+            try
+            {
+                if (st != null)
+                {
+                    st.close();
+                }
+                if (conn != null)
+                {
+                    conn.close();
+                }
+            }
+            catch (SQLException e)
+            {
+                System.out.println("SQL Exception occured closing connection/statement/result set.");
+            }
+        }
+    }
+
+    //Returns queuePos of new RSVP. Return of -1 means not in queue. Return of -100 means SQL error occurred.
+    public static int addRSVP(int activityID, int userID)
+    {
+        Connection conn = null;
+        Statement st = null;
+        ResultSet rs = null;
+
+        int queuedCount = 0;
+        int highestQueuePos = -1;
+        int queuePos = -100;
+
+        int maxRSVPs = getMaxRSVPs(activityID);
+
+        try
+        {
+            conn = DriverManager.getConnection("jdbc:mysql://localhost/CSCI201FinalProject?user=root&password=root");
+            st = conn.createStatement();
+            addRSVPLock.lock();
+            rs = st.executeQuery("SELECT * FROM RSVPs WHERE ActivityID=" + activityID);
+            while(rs.next())
+            {
+                queuePos = rs.getInt("QueuePos");
+                if (queuePos > highestQueuePos)
+                {
+                    highestQueuePos = queuePos;
+                }
+                queuedCount++;
+            }
+
+            if (queuedCount < maxRSVPs)
+            {
+                queuePos = -1;
+            }
+            else
+            {
+                queuePos = highestQueuePos + 1;
+            }
+
+            System.out.println(queuePos + " " + highestQueuePos + " " + maxRSVPs);
+            st.execute("INSERT INTO RSVPs (ActivityID,UserID,QueuePos) VALUES (" + activityID + "," + userID + "," + queuePos + ")");
+            st.execute("UPDATE Activities SET RSVPCount=RSVPCount+1 WHERE ActivityID=" + activityID);
+        }
+        catch (SQLException e)
+        {
+            System.out.println("SQL Exception occured accessing database.");
+        }
+        finally
+        {
+            try
+            {
+                if (addRSVPLock.isHeldByCurrentThread())
+                {
+                    addRSVPLock.unlock();
+                }
+                if (rs != null)
+                {
+                    rs.close();
+                }
+                if (st != null)
+                {
+                    st.close();
+                }
+                if (conn != null)
+                {
+                    conn.close();
+                }
+            }
+            catch (SQLException e)
+            {
+                System.out.println("SQL Exception occured closing connection/statement/result set.");
+            }
+        }
+
+        return queuePos;
+    }
+
+    //Returns true if RSVP was removed. Returns false if no RSVP with RSVPID found.
+    public static boolean cancelRSVP(int RSVPID)
+    {
+        Connection conn = null;
+        Statement st = null;
+        ResultSet rs = null;
+
+        int activityID;
+        int queuePos;
+
+        boolean canceled = true;
+
+        try
+        {
+            conn = DriverManager.getConnection("jdbc:mysql://localhost/CSCI201FinalProject?user=root&password=root");
+            st = conn.createStatement();
+            rs = st.executeQuery("SELECT * FROM RSVPs WHERE RSVPID=" + RSVPID);
+            if (rs.next())
+            {
+                activityID = rs.getInt("ActivityID");
+                queuePos = rs.getInt("QueuePos");
+                st.execute("DELETE FROM RSVPs WHERE RSVPID=" + RSVPID);
+                st.execute("UPDATE RSVPs SET QueuePos=QueuePos-1 WHERE QueuePos>=" + queuePos + " AND QueuePos>=0 AND ActivityID=" + activityID);
+                st.execute("UPDATE Activities SET RSVPCount=RSVPCount-1 WHERE ActivityID=" + activityID);
+            }
+            else
+            {
+                canceled = false;
+            }
+        }
+        catch (SQLException e)
+        {
+            System.out.println("SQL Exception occured accessing database.");
+        }
+        finally
+        {
+            try
+            {
+                if (rs != null)
+                {
+                    rs.close();
+                }
+                if (st != null)
+                {
+                    st.close();
+                }
+                if (conn != null)
+                {
+                    conn.close();
+                }
+            }
+            catch (SQLException e)
+            {
+                System.out.println("SQL Exception occured closing connection/statement/result set.");
+            }
+        }
+
+        return canceled;
+    }
+
+    //Returns queuePos of user for activity. -1 means RSVPed and not queued, -2 means not RSVPed. Return of -100 means SQL error occurred.
+    public static int RSVPStatus(int activityID, int userID)
+    {
+        Connection conn = null;
+        Statement st = null;
+        ResultSet rs = null;
+
+        boolean isRSVPed = false;
+        int queuePos = -100;
+
+        try
+        {
+            conn = DriverManager.getConnection("jdbc:mysql://localhost/CSCI201FinalProject?user=root&password=root");
+            st = conn.createStatement();
+            rs = st.executeQuery("SELECT * FROM RSVPs WHERE ActivityID=" + activityID + " AND UserID=" + userID);
+            isRSVPed = rs.next();
+            if (isRSVPed)
+            {
+                queuePos = rs.getInt("QueuePos");
+            }
+            else
+            {
+                queuePos = -2;
+            }
+        }
+        catch (SQLException e)
+        {
+            System.out.println("SQL Exception occured accessing database.");
+        }
+        finally
+        {
+            try
+            {
+                if (rs != null)
+                {
+                    rs.close();
+                }
+                if (st != null)
+                {
+                    st.close();
+                }
+                if (conn != null)
+                {
+                    conn.close();
+                }
+            }
+            catch (SQLException e)
+            {
+                System.out.println("SQL Exception occured closing connection/statement/result set.");
+            }
+        }
+
+        return queuePos;
+    }
+
+    //Returns -1 if an error occurred.
+    public static int getMaxRSVPs(int activityID)
+    {
+        Connection conn = null;
+        Statement st = null;
+        ResultSet rs = null;
+
+        int maxRSVPs = -1;
+
+        try
+        {
+            conn = DriverManager.getConnection("jdbc:mysql://localhost/CSCI201FinalProject?user=root&password=root");
+            st = conn.createStatement();
+            rs = st.executeQuery("SELECT * FROM Activities WHERE ActivityID=" + activityID);
+            rs.next();
+            maxRSVPs = rs.getInt("MaxRSVPs");
+        }
+        catch (SQLException e)
+        {
+            System.out.println("SQL Exception occured accessing database.");
+        }
+        finally
+        {
+            try
+            {
+                if (rs != null)
+                {
+                    rs.close();
+                }
+                if (st != null)
+                {
+                    st.close();
+                }
+                if (conn != null)
+                {
+                    conn.close();
+                }
+            }
+            catch (SQLException e)
+            {
+                System.out.println("SQL Exception occured closing connection/statement/result set.");
+            }
+        }
+
+        return maxRSVPs;
+    }
+}
