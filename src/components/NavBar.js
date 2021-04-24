@@ -3,6 +3,7 @@ import {Link} from "react-router-dom";
 import getCookie from "./Cookie";
 
 class NavBar extends React.Component {
+    
     state = {
         guest: true
     };

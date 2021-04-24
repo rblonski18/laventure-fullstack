@@ -57,37 +57,41 @@ const ActivityPage = ({ match }) => {
 
     useEffect(() => {
 
-        /*
         // request for activity with the id of activityid
         fetch(`LAVenture/ActivityServlet?isRSVP=false&activityid=${activityID}`)
+            .then(res => res.json())
+            .then((data) => {
+                setActivityName(data.activity.name);
+                setActivityLocation(data.activity.location);
+                setActivityAuthor(data.activity.author);
+                setActivityRating(data.activity.rating);
+                setActivityCategory(data.activity.categories);
+                setActivityIMG(data.activity.img);
+                setRSVPBool(data.activity.RSVP);
+                if(data.activity.RSVP) {
+                    setCurrent(data.activity.currentRSVPed);
+                    setCapacity(data.activity.RSVPcapacity);
+                    setPercentage((data.activity.currentRSVPed/data.activity.RSVPcapacity)*100);
+                }
+
+            })
 
         // request for all reviews associated with the activity with id of activityid
         fetch(`LAVenture/ReviewsServlet?isRSVP=false&activityid=${activityID}`)
+            .then(res => res.json())
+            .then((data) => {
+                setActivityReviews(data)
+            })
         
         // check if user is RSVPed to this activity. 
         fetch(`LAVenture/RSVPServlet?activityid=${activityID}&user=${username}&task=checkStatus`)
+            .then(res => res.json())
+            .then((data) => {
+                setRSVPBool(!data.status)
+            })
         
         let user = getCookie();
         if(user.length > 0) setUsername(user);
-        */
-
-        data.forEach((activity) => {
-            if(activity.id == activityID) {
-                setActivityName(activity.name);
-                setActivityLocation(activity.location);
-                setActivityAuthor(activity.author);
-                setActivityRating(activity.rating);
-                setActivityCategory(activity.categories);
-                setActivityIMG(activity.img);
-                setActivityReviews(activity.reviews);
-                setRSVPBool(activity.RSVP);
-                if(activity.RSVP) {
-                    setCurrent(activity.currentRSVPed);
-                    setCapacity(activity.RSVPcapacity);
-                    setPercentage((activity.currentRSVPed/activity.RSVPcapacity)*100);
-                }
-            }
-        })
 
     }, []);
 
@@ -95,7 +99,7 @@ const ActivityPage = ({ match }) => {
 
         e.preventDefault();
 
-        /* fetch('LAVenture/ReviewsServlet', {
+        fetch('LAVenture/ReviewsServlet', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
@@ -104,7 +108,7 @@ const ActivityPage = ({ match }) => {
                 text: reviewText,
                 rating: reviewRating
             })
-        })*/
+        })
     }
 
     const handleRSVP = (event) => {
@@ -112,32 +116,30 @@ const ActivityPage = ({ match }) => {
         setCurrent(curr+1);
         setPercentage(((curr+1)/cap)*100);
         setRSVPButton(false);
-        /* fetch(`LAVenture/RSVPServlet, {
+        fetch(`LAVenture/RSVPServlet`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
                 user: username,
                 activityid: activityID,
-                task: add
+                task: "add"
             })
         })
-             */
     }
 
     const handleCancelRSVP = (e) => {
         setCurrent(curr-1);
         setPercentage(((curr-1)/cap)*100);
         setRSVPButton(true);
-        /* fetch(`LAVenture/RSVPServlet, {
+        fetch(`LAVenture/RSVPServlet`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
                 user: username,
                 activityid: activityID,
-                task: cancel
+                task: "cancel"
             })
         })
-             */
     }
 
     return (

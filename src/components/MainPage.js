@@ -9,8 +9,7 @@ const MainPage = (props) => {
 
     const [keyword, setKeyword] = useState('');
     const [activityList, setActivityList] = useState([]);
-    const [ratingList, setRatingList] = useState([]);
-    const [recentList, setRecentList] = useState([]);
+    const [noneList, setNoneList] = useState([]);
     const [wasFiltered, setWF] = useState(false);
     const [filterBy,setFilter] = useState('Title');
     const [ userLoggedIn, setULI ] = useState(false);
@@ -47,16 +46,22 @@ const MainPage = (props) => {
     }
 
     useEffect(() => {
-        setActivityList(data);
+
+        fetch(`LAVenture/ActivityListServlet?sortBy=none&user=${username}`)
+            .then(res => res.json())
+            .then((data) => {
+                setActivityList(data);
+            })
+    
         let user = getCookie();
         if(user.length > 0) {
             setUsername(user);
             setULI(true);
         }
-    }, [setActivityList])
+    }, [])
 
     const resetListing = (event) => {
-        setActivityList(data);
+        setActivityList(noneList);
         setWF(false)
     } 
 
@@ -66,11 +71,18 @@ const MainPage = (props) => {
         // render navbar
         <div className="content">
             <div>
-                <NavBar username={username} userLoggedIn={userLoggedIn} setULI={setULI} />
+                <NavBar 
+                    username={username} 
+                    userLoggedIn={userLoggedIn} 
+                    setULI={setULI} 
+                />
             </div>
             <div className="under">
                 <div className="sidebar">
-                    <SideBar username={username} activityListing={activityList} />
+                    <SideBar 
+                        username={username} 
+                        activityListing={activityList} 
+                    />
                 </div>
                 <div className="mp-right">
                     <div className="searchBar-div">
