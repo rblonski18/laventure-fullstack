@@ -5,6 +5,7 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -25,10 +26,10 @@ public class JDBCConnector {
     public static int normalRegister(String email, String name, String username, String password)
     {
         Connection conn = null;
-        Statement st = null;
+        PreparedStatement st = null;
         ResultSet rs = null;
 
-        int userID = -1;
+        Integer userID = -1;
 
         MessageDigest digest;
         String hashedPass;
@@ -40,15 +41,17 @@ public class JDBCConnector {
             hashedPass =  new String(digest.digest(password.getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
             conn = DriverManager.getConnection(jdbcUrl);
 
-            st = conn.createStatement();
-            rs = st.executeQuery("SELECT * FROM Users WHERE Username='" + username + "'");
+            st = conn.prepareStatement("SELECT * FROM Users WHERE Username='" + username + "'");
+            rs = st.executeQuery();
             if (!rs.next())
             {
-                rs.close();
-                st.execute("INSERT INTO Users (Email, Name, Username, Password, FacebookUser) VALUES ('" + email + "','" + name + "','" + username + "','" + hashedPass + "', FALSE)");
-                rs = st.executeQuery("SELECT LAST_INSERT_ID()");
-                rs.next();
-                userID = rs.getInt(1);
+                PreparedStatement st2 = conn.prepareStatement("INSERT INTO Users (Email, Name, Username, Password, FacebookUser) VALUES ('" + email + "','" + name + "','" + username + "','" + hashedPass + "', FALSE)");
+                st2.executeUpdate();
+                st2.close();
+                PreparedStatement st3 = conn.prepareStatement("SELECT UserID FROM Users WHERE Username = \"" + username + "\"");
+                ResultSet rs2 = st3.executeQuery();
+                rs2.next();
+                userID = rs2.getInt("UserID");
             }
             
         }
