@@ -1,5 +1,11 @@
+
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.lang.reflect.Type;
+import java.util.HashMap;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -8,37 +14,104 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
-
-import driver.JDBCConnector;
+import com.google.gson.reflect.TypeToken;
 
 @WebServlet("/NewAccountServlet")
 public class NewAccountServlet extends HttpServlet{
     private static final long serialVersionUID = 1L;
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    
+    
+	  @Override
+	  protected void doOptions(HttpServletRequest req, HttpServletResponse resp)
+	          throws ServletException, IOException {
+	      setAccessControlHeaders(resp);
+	      resp.setStatus(HttpServletResponse.SC_OK);
+	  }
 
+	  private void setAccessControlHeaders(HttpServletResponse resp) {
+	      resp.setHeader("Access-Control-Allow-Origin", "*");
+	      resp.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+	      resp.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+	  }
+
+	  
+	  
+	 public static String getBody(HttpServletRequest request) throws IOException {
+
+		    String body = null;
+		    StringBuilder stringBuilder = new StringBuilder();
+		    BufferedReader bufferedReader = null;
+
+		    try {
+		        InputStream inputStream = request.getInputStream();
+		        if (inputStream != null) {
+		            bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+		            char[] charBuffer = new char[128];
+		            int bytesRead = -1;
+		            while ((bytesRead = bufferedReader.read(charBuffer)) > 0) {
+		                stringBuilder.append(charBuffer, 0, bytesRead);
+		            }
+		        } else {
+		            stringBuilder.append("");
+		        }
+		    } catch (IOException ex) {
+		        throw ex;
+		    } finally {
+		        if (bufferedReader != null) {
+		            try {
+		                bufferedReader.close();
+		            } catch (IOException ex) {
+		                throw ex;
+		            }
+		        }
+		    }
+
+		    body = stringBuilder.toString();
+		    return body;
+	}
+	  
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        setAccessControlHeaders(response);
+        
+        
         PrintWriter pw = response.getWriter();
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
+        
+        
+        String payloadRequest = getBody(request);
+        
+        Type type = new TypeToken<HashMap<String, String>>(){}.getType();
+        HashMap<String, String> body = new Gson().fromJson(payloadRequest, type);
+       
+        String registrationType = body.get("type");
 
-        String registrationType = request.getParameter("type");
-
-        String email = request.getParameter("email");
-        String name = request.getParameter("name");
-
-        if(email == null || name == null || email.isBlank() || name.isBlank()) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        String email = body.get("email");
+        String name = body.get("name");
+        
+        if(email == null || name == null || email.equals("") || email.equals("")) {
+            response.setStatus(HttpServletResponse.SC_EXPECTATION_FAILED);
             String error = "Missing name or email field.";
             pw.write(new Gson().toJson(error));
             pw.flush();
+            return;
+        }
+        
+        if(registrationType == null) {
+        	response.setStatus(HttpServletResponse.SC_EXPECTATION_FAILED);
+            String error = "type is null.";
+            pw.write(new Gson().toJson(error));
+            pw.flush();
+            return;
         }
 
 
         if(registrationType.equals("normal")) {
-            String username = request.getParameter("username");
-            String password = request.getParameter("password");
+            String username = body.get("username");
+            String password = body.get("password");
 
             if(username == null || password == null || username.isBlank() || password.isBlank()) {
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                response.setStatus(HttpServletResponse.SC_PAYMENT_REQUIRED);
                 String error = "Missing username or password field.";
                 pw.write(new Gson().toJson(error));
                 pw.flush();

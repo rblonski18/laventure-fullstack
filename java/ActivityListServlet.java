@@ -1,15 +1,16 @@
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 
-import driver.*;
 
 //request for list of activities sorted in some way
 //fetch('LAVenture/ActivityListServlet', {
@@ -22,10 +23,30 @@ import driver.*;
 //})
 
 @WebServlet("/ActivityListServlet")
-public class ActivityListServlet {
-    private static final long serialVersionUID = 1L;
+public class ActivityListServlet extends HttpServlet{
+
+	  /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 
+	@Override
+	  protected void doOptions(HttpServletRequest req, HttpServletResponse resp)
+	          throws ServletException, IOException {
+	      setAccessControlHeaders(resp);
+	      resp.setStatus(HttpServletResponse.SC_OK);
+	  }
+
+	  private void setAccessControlHeaders(HttpServletResponse resp) {
+	      resp.setHeader("Access-Control-Allow-Origin", "*");
+	      resp.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+	      resp.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+	      
+	  }
+	  
+
+	
     //doGet handles the three different ways that the front-end wants to access all activities
     //"none" returns a list of all activities without regard to ordering
     //"rating" returns a list of all activities sorted by rating
@@ -35,7 +56,7 @@ public class ActivityListServlet {
     //	-NOTE: This section of code should still run, but it returns a placeholder JSON string and makes
     //			no attempt to access the database.
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        setAccessControlHeaders(response);
         PrintWriter pw = response.getWriter();
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");

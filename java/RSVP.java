@@ -1,3 +1,4 @@
+
 public class RSVP {
     private int RSVPID;
     private int queuePos; //queuePos of -1 means the RSVP is not in queue and is valid, 0 is the front of the queue.

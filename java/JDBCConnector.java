@@ -1,3 +1,4 @@
+
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -12,7 +13,13 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class JDBCConnector {
     private static ReentrantLock addRSVPLock = new ReentrantLock();
-
+    private static String dbName = "ebdb";
+    private static String userName = "dbuser";
+    private static String password = "marcopapa";
+    private static String hostname = "aa1bsd9i8xumf8s.ccwudqpljmzy.us-east-2.rds.amazonaws.com";
+    private static String port = "3306";
+    private static String jdbcUrl = "jdbc:postgresql://" + hostname + ":" + port + "/" + dbName + "?user=" + userName + "&password=" + password;
+    
     //Returns userID of added user. Returns -1 if username already exists.
     public static int normalRegister(String email, String name, String username, String password)
     {
@@ -29,7 +36,7 @@ public class JDBCConnector {
         {
             digest = MessageDigest.getInstance("SHA-256");
             hashedPass =  new String(digest.digest(password.getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
-            conn = DriverManager.getConnection("jdbc:mysql://localhost/CSCI201FinalProject?user=root&password=root");
+            conn = DriverManager.getConnection(jdbcUrl);
             st = conn.createStatement();
             rs = st.executeQuery("SELECT * FROM Users WHERE Username='" + username + "'");
             if (!rs.next())
@@ -91,7 +98,7 @@ public class JDBCConnector {
         {
             digest = MessageDigest.getInstance("SHA-256");
             hashedPass =  new String(digest.digest(password.getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
-            conn = DriverManager.getConnection("jdbc:mysql://localhost/CSCI201FinalProject?user=root&password=root");
+            conn = DriverManager.getConnection(jdbcUrl);
             st = conn.createStatement();
             rs = st.executeQuery("SELECT * FROM Users WHERE Username='" + username + "' AND Password='" + hashedPass + "' AND FacebookUser=FALSE");
             if (rs.next())
@@ -144,7 +151,7 @@ public class JDBCConnector {
 
         try
         {
-            conn = DriverManager.getConnection("jdbc:mysql://localhost/CSCI201FinalProject?user=root&password=root");
+            conn = DriverManager.getConnection(jdbcUrl);
             st = conn.createStatement();
             st.execute("INSERT INTO Users (Email, Name, Username, FacebookUser) VALUES ('" + email + "','" + name + "','" + email + "', TRUE)");
             rs = st.executeQuery("SELECT LAST_INSERT_ID()");
@@ -192,7 +199,7 @@ public class JDBCConnector {
 
         try
         {
-            conn = DriverManager.getConnection("jdbc:mysql://localhost/CSCI201FinalProject?user=root&password=root");
+            conn = DriverManager.getConnection(jdbcUrl);
             st = conn.createStatement();
             rs = st.executeQuery("SELECT * FROM Users WHERE Email='" + email + "' AND FacebookUser=TRUE");
             if (rs.next())
@@ -250,7 +257,7 @@ public class JDBCConnector {
 
         try
         {
-            conn = DriverManager.getConnection("jdbc:mysql://localhost/CSCI201FinalProject?user=root&password=root");
+            conn = DriverManager.getConnection(jdbcUrl);
             st = conn.createStatement();
             rs = st.executeQuery("SELECT * FROM Reviews r,Users u WHERE ActivityID=" + activityID + " AND r.UserID=u.UserID");
             while (rs.next())
@@ -329,7 +336,7 @@ public class JDBCConnector {
 
         try
         {
-            conn = DriverManager.getConnection("jdbc:mysql://localhost/CSCI201FinalProject?user=root&password=root");
+            conn = DriverManager.getConnection(jdbcUrl);
             st = conn.createStatement();
             rs = st.executeQuery("SELECT * FROM Activities");
             while (rs.next())
@@ -410,7 +417,7 @@ public class JDBCConnector {
 
         try
         {
-            conn = DriverManager.getConnection("jdbc:mysql://localhost/CSCI201FinalProject?user=root&password=root");
+            conn = DriverManager.getConnection(jdbcUrl);
             st = conn.createStatement();
             Blob imageBlob = conn.createBlob();
             imageBlob.setBytes(1, image.getBytes());
@@ -470,7 +477,7 @@ public class JDBCConnector {
 
         try
         {
-            conn = DriverManager.getConnection("jdbc:mysql://localhost/CSCI201FinalProject?user=root&password=root");
+            conn = DriverManager.getConnection(jdbcUrl);
             st = conn.createStatement();
             rs = st.executeQuery("SELECT * FROM Users");
             while (rs.next())
@@ -533,7 +540,7 @@ public class JDBCConnector {
 
         try
         {
-            conn = DriverManager.getConnection("jdbc:mysql://localhost/CSCI201FinalProject?user=root&password=root");
+            conn = DriverManager.getConnection(jdbcUrl);
             st = conn.createStatement();
             rs = st.executeQuery("SELECT * FROM Users WHERE UserID='" + userID + "'");
             rs.next();
@@ -588,7 +595,7 @@ public class JDBCConnector {
 
         try
         {
-            conn = DriverManager.getConnection("jdbc:mysql://localhost/CSCI201FinalProject?user=root&password=root");
+            conn = DriverManager.getConnection(jdbcUrl);
             st = conn.createStatement();
             st.execute("INSERT INTO Reviews (ActivityID,UserID,RatingVal,ReviewText) VALUES (" + activityID + "," + userID + "," + ratingVal + ",'" + reviewText + "')");
             st.execute("UPDATE Activities SET Rating=((Rating*RatingCount)+" + ratingVal + ")/(RatingCount+1), RatingCount=RatingCount+1 WHERE ActivityID=" + activityID);
@@ -632,7 +639,7 @@ public class JDBCConnector {
 
         try
         {
-            conn = DriverManager.getConnection("jdbc:mysql://localhost/CSCI201FinalProject?user=root&password=root");
+            conn = DriverManager.getConnection(jdbcUrl);
             st = conn.createStatement();
             addRSVPLock.lock();
             rs = st.executeQuery("SELECT * FROM RSVPs WHERE ActivityID=" + activityID);
@@ -707,8 +714,8 @@ public class JDBCConnector {
 
         try
         {
-            conn = DriverManager.getConnection("jdbc:mysql://localhost/CSCI201FinalProject?user=root&password=root");
-            st = conn.createStatement();
+            conn = DriverManager.getConnection(jdbcUrl);
+        	st = conn.createStatement();
             rs = st.executeQuery("SELECT * FROM RSVPs WHERE RSVPID=" + RSVPID);
             if (rs.next())
             {
@@ -765,7 +772,7 @@ public class JDBCConnector {
 
         try
         {
-            conn = DriverManager.getConnection("jdbc:mysql://localhost/CSCI201FinalProject?user=root&password=root");
+            conn = DriverManager.getConnection(jdbcUrl);
             st = conn.createStatement();
             rs = st.executeQuery("SELECT * FROM RSVPs WHERE ActivityID=" + activityID + " AND UserID=" + userID);
             isRSVPed = rs.next();
@@ -819,7 +826,7 @@ public class JDBCConnector {
 
         try
         {
-            conn = DriverManager.getConnection("jdbc:mysql://localhost/CSCI201FinalProject?user=root&password=root");
+            conn = DriverManager.getConnection(jdbcUrl);
             st = conn.createStatement();
             rs = st.executeQuery("SELECT * FROM Activities WHERE ActivityID=" + activityID);
             rs.next();

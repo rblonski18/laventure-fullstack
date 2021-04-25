@@ -1,3 +1,4 @@
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -13,9 +14,6 @@ import java.lang.reflect.Type;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import driver.*;
-
-
 //request for activity with the id of activityid
 //fetch('LAVenture/ActivityServlet', {
 //	method:'GET',
@@ -30,9 +28,22 @@ import driver.*;
 @WebServlet("/ActivityServlet")
 public class ActivityServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
+	  @Override
+	  protected void doOptions(HttpServletRequest req, HttpServletResponse resp)
+	          throws ServletException, IOException {
+	      setAccessControlHeaders(resp);
+	      resp.setStatus(HttpServletResponse.SC_OK);
+	  }
+
+	  private void setAccessControlHeaders(HttpServletResponse resp) {
+	      resp.setHeader("Access-Control-Allow-Origin", "*");
+	      resp.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+	      resp.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+	  }
+
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        setAccessControlHeaders(response);
         PrintWriter pw = response.getWriter();
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
@@ -103,7 +114,8 @@ public class ActivityServlet extends HttpServlet {
     //TODO: Handle categories list and date
     //Note: Current JDBCConnector function does not support these parameters--will need to modify both JDBCConnector and this servlet
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        PrintWriter pw = response.getWriter();
+        setAccessControlHeaders(response);
+    	PrintWriter pw = response.getWriter();
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
