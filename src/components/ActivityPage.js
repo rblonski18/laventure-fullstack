@@ -58,7 +58,7 @@ const ActivityPage = ({ match }) => {
     useEffect(() => {
 
         // request for activity with the id of activityid
-        fetch(`LAVenture/ActivityServlet?isRSVP=false&activityid=${activityID}`)
+        fetch(`https://api.laventure.click/ActivityServlet?isRSVP=false&activityid=${activityID}`)
             .then(res => res.json())
             .then((data) => {
                 setActivityName(data.activity.name);
@@ -77,7 +77,7 @@ const ActivityPage = ({ match }) => {
             })
 
         // request for all reviews associated with the activity with id of activityid
-        fetch(`LAVenture/ReviewsServlet?isRSVP=false&activityid=${activityID}`)
+        fetch(`https://api.laventure.click/ReviewsServlet?isRSVP=false&activityid=${activityID}`)
             .then(res => res.json())
             .then((data) => {
                 setActivityReviews(data)
@@ -99,7 +99,7 @@ const ActivityPage = ({ match }) => {
 
         e.preventDefault();
 
-        fetch('LAVenture/ReviewsServlet', {
+        fetch('https://api.laventure.click/ReviewsServlet', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
@@ -116,7 +116,7 @@ const ActivityPage = ({ match }) => {
         setCurrent(curr+1);
         setPercentage(((curr+1)/cap)*100);
         setRSVPButton(false);
-        fetch(`LAVenture/RSVPServlet`, {
+        fetch(`https://api.laventure.click/RSVPServlet`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
@@ -131,7 +131,7 @@ const ActivityPage = ({ match }) => {
         setCurrent(curr-1);
         setPercentage(((curr-1)/cap)*100);
         setRSVPButton(true);
-        fetch(`LAVenture/RSVPServlet`, {
+        fetch(`https://api.laventure.click/RSVPServlet`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({

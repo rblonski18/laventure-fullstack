@@ -20,14 +20,14 @@ class SideBar extends React.Component {
     componentDidMount() {
 
         // request for list of activities sorted by rating
-        fetch(`LAVenture/ActivityListServlet?sortBy=rating&user=${this.state.username}`)
+        fetch(`https://api.laventure.click/ActivityListServlet?sortBy=rating&user=${this.state.username}`)
             .then(res => res.json())
             .then((data) => {
                 this.setState({byRating: data})
             })
 
         // request for recently viewed activities of user w/ username specified
-        fetch(`LAVenture/ActivityListServlet?sortBy=recent&user=${this.state.username}`)
+        fetch(`https://api.laventure.click/ActivityListServlet?sortBy=recent&user=${this.state.username}`)
             .then(res => res.json())
             .then((data) => {
                 this.setState({recentlyViewed: data})

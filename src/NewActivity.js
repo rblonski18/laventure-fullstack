@@ -153,7 +153,7 @@ export default class NewActivity extends React.Component {
         }
 
         // enter data into database
-        fetch('LAVenture/ActivityServlet', {
+        fetch('https://api.laventure.click/ActivityServlet', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: {

@@ -47,7 +47,7 @@ const MainPage = (props) => {
 
     useEffect(() => {
 
-        fetch(`LAVenture/ActivityListServlet?sortBy=none&user=${username}`)
+        fetch(`https://api.laventure.click/ActivityListServlet?sortBy=none&user=${username}`)
             .then(res => res.json())
             .then((data) => {
                 setActivityList(data);

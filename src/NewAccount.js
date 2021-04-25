@@ -81,16 +81,16 @@ export default class NewAccount extends React.Component {
         }
 
         const hashedPassword = sha256(this.state.password);
-        fetch('LAVenture/NewAccountServlet', {
+        fetch('https://api.laventure.click/NewAccountServlet', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: {
+            body: JSON.stringify({
                 name: this.state.fname + ' ' + this.state.lname,
                 email: this.state.email,
                 username: this.state.username,
                 password: hashedPassword,
-                type: 'normal'
-            }
+                type: "normal"
+            })
         })
             .then(response => response.json())
             .then(response => {

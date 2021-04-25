@@ -59,7 +59,7 @@ export default class Login extends React.Component {
         event.preventDefault();
 
         const hashedPassword = sha256(this.state.password);
-        fetch('/LAVenture/LoginServlet', {
+        fetch('https://api.laventure.click/LoginServlet', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: {username: this.state.username, password: hashedPassword, type: 'normal'}
@@ -83,7 +83,7 @@ export default class Login extends React.Component {
     }
 
     responseGoogle = (response) => {
-        fetch('/LAVenture/LoginServlet', {
+        fetch('https://api.laventure.click/LoginServlet', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: {email: response.profileObj.email, name: response.profileObj.name, type: 'other'}
@@ -98,7 +98,7 @@ export default class Login extends React.Component {
             })
             .catch(() => {
                 // if login not successful, create new account
-                fetch('LAVenture/NewAccountServlet', {
+                fetch('https://api.laventure.click/NewAccountServlet', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: {
