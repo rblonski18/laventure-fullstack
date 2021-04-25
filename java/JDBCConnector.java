@@ -18,7 +18,8 @@ public class JDBCConnector {
     private static String password = "marcopapa";
     private static String hostname = "aa1bsd9i8xumf8s.ccwudqpljmzy.us-east-2.rds.amazonaws.com";
     private static String port = "3306";
-    private static String jdbcUrl = "jdbc:postgresql://" + hostname + ":" + port + "/" + dbName + "?user=" + userName + "&password=" + password;
+    private static String jdbcUrl = "jdbc:mysql://" + hostname + ":" + port + "/" + dbName + "?user=" + userName + "&password=" + password;
+    
     
     //Returns userID of added user. Returns -1 if username already exists.
     public static int normalRegister(String email, String name, String username, String password)
@@ -34,9 +35,11 @@ public class JDBCConnector {
 
         try
         {
+        	Class.forName("com.mysql.jdbc.Driver");
             digest = MessageDigest.getInstance("SHA-256");
             hashedPass =  new String(digest.digest(password.getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
             conn = DriverManager.getConnection(jdbcUrl);
+
             st = conn.createStatement();
             rs = st.executeQuery("SELECT * FROM Users WHERE Username='" + username + "'");
             if (!rs.next())
@@ -47,15 +50,21 @@ public class JDBCConnector {
                 rs.next();
                 userID = rs.getInt(1);
             }
+            
         }
         catch (SQLException e)
         {
             System.out.println("SQL Exception occured accessing database.");
         }
+        
         catch (NoSuchAlgorithmException e)
         {
             System.out.println("Error occured attempting to hash.");
         }
+        catch(ClassNotFoundException e) {
+        	System.out.println("could not load driver.");
+        }
+
         finally
         {
             try
@@ -96,6 +105,7 @@ public class JDBCConnector {
 
         try
         {
+        	Class.forName("com.mysql.jdbc.Driver");
             digest = MessageDigest.getInstance("SHA-256");
             hashedPass =  new String(digest.digest(password.getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
             conn = DriverManager.getConnection(jdbcUrl);
@@ -114,6 +124,10 @@ public class JDBCConnector {
         {
             System.out.println("Error occured attempting to hash.");
         }
+        catch(ClassNotFoundException e) {
+        	System.out.println("could not load driver.");
+        }
+
         finally
         {
             try
@@ -151,6 +165,7 @@ public class JDBCConnector {
 
         try
         {
+        	Class.forName("com.mysql.jdbc.Driver");
             conn = DriverManager.getConnection(jdbcUrl);
             st = conn.createStatement();
             st.execute("INSERT INTO Users (Email, Name, Username, FacebookUser) VALUES ('" + email + "','" + name + "','" + email + "', TRUE)");
@@ -162,6 +177,10 @@ public class JDBCConnector {
         {
             System.out.println("SQL Exception occured accessing database.");
         }
+        catch(ClassNotFoundException e) {
+        	System.out.println("could not load driver.");
+        }
+
         finally
         {
             try
@@ -199,6 +218,7 @@ public class JDBCConnector {
 
         try
         {
+        	Class.forName("com.mysql.jdbc.Driver");
             conn = DriverManager.getConnection(jdbcUrl);
             st = conn.createStatement();
             rs = st.executeQuery("SELECT * FROM Users WHERE Email='" + email + "' AND FacebookUser=TRUE");
@@ -215,6 +235,10 @@ public class JDBCConnector {
         {
             System.out.println("SQL Exception occured accessing database.");
         }
+        catch(ClassNotFoundException e) {
+        	System.out.println("could not load driver.");
+        }
+
         finally
         {
             try
@@ -257,6 +281,7 @@ public class JDBCConnector {
 
         try
         {
+        	Class.forName("com.mysql.jdbc.Driver");
             conn = DriverManager.getConnection(jdbcUrl);
             st = conn.createStatement();
             rs = st.executeQuery("SELECT * FROM Reviews r,Users u WHERE ActivityID=" + activityID + " AND r.UserID=u.UserID");
@@ -274,6 +299,10 @@ public class JDBCConnector {
         {
             System.out.println("SQL Exception occured accessing database.");
         }
+        catch(ClassNotFoundException e) {
+        	System.out.println("could not load driver.");
+        }
+
         finally
         {
             try
@@ -336,6 +365,7 @@ public class JDBCConnector {
 
         try
         {
+        	Class.forName("com.mysql.jdbc.Driver");
             conn = DriverManager.getConnection(jdbcUrl);
             st = conn.createStatement();
             rs = st.executeQuery("SELECT * FROM Activities");
@@ -373,6 +403,10 @@ public class JDBCConnector {
                         music, nightLife, outdoors, relax, shopping, sports));
             }
         }
+        catch(ClassNotFoundException e) {
+        	System.out.println("could not load driver.");
+        }
+
         catch (SQLException e)
         {
             System.out.println("SQL Exception occured accessing database.");
@@ -417,6 +451,7 @@ public class JDBCConnector {
 
         try
         {
+        	Class.forName("com.mysql.jdbc.Driver");
             conn = DriverManager.getConnection(jdbcUrl);
             st = conn.createStatement();
             Blob imageBlob = conn.createBlob();
@@ -430,6 +465,10 @@ public class JDBCConnector {
         {
             System.out.println("SQL Exception occured accessing database.");
         }
+        catch(ClassNotFoundException e) {
+        	System.out.println("could not load driver.");
+        }
+
         finally
         {
             try
@@ -477,6 +516,7 @@ public class JDBCConnector {
 
         try
         {
+        	Class.forName("com.mysql.jdbc.Driver");
             conn = DriverManager.getConnection(jdbcUrl);
             st = conn.createStatement();
             rs = st.executeQuery("SELECT * FROM Users");
@@ -500,6 +540,10 @@ public class JDBCConnector {
         {
             System.out.println("SQL Exception occured accessing database.");
         }
+        catch(ClassNotFoundException e) {
+        	System.out.println("could not load driver.");
+        }
+
         finally
         {
             try
@@ -540,6 +584,7 @@ public class JDBCConnector {
 
         try
         {
+        	Class.forName("com.mysql.jdbc.Driver");
             conn = DriverManager.getConnection(jdbcUrl);
             st = conn.createStatement();
             rs = st.executeQuery("SELECT * FROM Users WHERE UserID='" + userID + "'");
@@ -564,6 +609,10 @@ public class JDBCConnector {
         {
             System.out.println("SQL Exception occured accessing database.");
         }
+        catch(ClassNotFoundException e) {
+        	System.out.println("could not load driver.");
+        }
+
         finally
         {
             try
@@ -595,6 +644,7 @@ public class JDBCConnector {
 
         try
         {
+        	Class.forName("com.mysql.jdbc.Driver");
             conn = DriverManager.getConnection(jdbcUrl);
             st = conn.createStatement();
             st.execute("INSERT INTO Reviews (ActivityID,UserID,RatingVal,ReviewText) VALUES (" + activityID + "," + userID + "," + ratingVal + ",'" + reviewText + "')");
@@ -604,6 +654,10 @@ public class JDBCConnector {
         {
             System.out.println("SQL Exception occured accessing database.");
         }
+        catch(ClassNotFoundException e) {
+        	System.out.println("could not load driver.");
+        }
+
         finally
         {
             try
@@ -639,6 +693,7 @@ public class JDBCConnector {
 
         try
         {
+        	Class.forName("com.mysql.jdbc.Driver");
             conn = DriverManager.getConnection(jdbcUrl);
             st = conn.createStatement();
             addRSVPLock.lock();
@@ -670,6 +725,10 @@ public class JDBCConnector {
         {
             System.out.println("SQL Exception occured accessing database.");
         }
+        catch(ClassNotFoundException e) {
+        	System.out.println("could not load driver.");
+        }
+
         finally
         {
             try
@@ -714,6 +773,7 @@ public class JDBCConnector {
 
         try
         {
+        	Class.forName("com.mysql.jdbc.Driver");
             conn = DriverManager.getConnection(jdbcUrl);
         	st = conn.createStatement();
             rs = st.executeQuery("SELECT * FROM RSVPs WHERE RSVPID=" + RSVPID);
@@ -734,6 +794,10 @@ public class JDBCConnector {
         {
             System.out.println("SQL Exception occured accessing database.");
         }
+        catch(ClassNotFoundException e) {
+        	System.out.println("could not load driver.");
+        }
+
         finally
         {
             try
@@ -772,6 +836,7 @@ public class JDBCConnector {
 
         try
         {
+        	Class.forName("com.mysql.jdbc.Driver");
             conn = DriverManager.getConnection(jdbcUrl);
             st = conn.createStatement();
             rs = st.executeQuery("SELECT * FROM RSVPs WHERE ActivityID=" + activityID + " AND UserID=" + userID);
@@ -789,6 +854,10 @@ public class JDBCConnector {
         {
             System.out.println("SQL Exception occured accessing database.");
         }
+        catch(ClassNotFoundException e) {
+        	System.out.println("could not load driver.");
+        }
+
         finally
         {
             try
@@ -826,6 +895,7 @@ public class JDBCConnector {
 
         try
         {
+        	Class.forName("com.mysql.jdbc.Driver");
             conn = DriverManager.getConnection(jdbcUrl);
             st = conn.createStatement();
             rs = st.executeQuery("SELECT * FROM Activities WHERE ActivityID=" + activityID);
@@ -836,6 +906,10 @@ public class JDBCConnector {
         {
             System.out.println("SQL Exception occured accessing database.");
         }
+        catch(ClassNotFoundException e) {
+        	System.out.println("could not load driver.");
+        }
+
         finally
         {
             try

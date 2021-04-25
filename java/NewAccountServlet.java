@@ -44,6 +44,7 @@ public class NewAccountServlet extends HttpServlet{
         
         Type type = new TypeToken<HashMap<String, String>>(){}.getType();
         HashMap<String, String> body = new Gson().fromJson(payloadRequest, type);
+        
        
         String registrationType = body.get("type");
 
