@@ -70,7 +70,7 @@ export default class Login extends React.Component {
         })
             .then(response => response.json())
             .then(response => {
-                if (response.status === 200) {
+                if (response != -1) {
                     this.setCookie(this.state.username);
                 } else {
                      this.throwError();
