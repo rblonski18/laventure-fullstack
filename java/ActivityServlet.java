@@ -2,6 +2,7 @@
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -48,7 +49,13 @@ public class ActivityServlet extends HttpServlet {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
-        String id = request.getParameter("activityid");
+        String payloadRequest = BodyReader.getBody(request);
+        
+        Type type = new TypeToken<HashMap<String, String>>(){}.getType();
+        HashMap<String, String> body = new Gson().fromJson(payloadRequest, type);
+
+        
+        String id = body.get("activityid");
 
         int activityID = -1;
         try {
@@ -118,20 +125,25 @@ public class ActivityServlet extends HttpServlet {
     	PrintWriter pw = response.getWriter();
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
+        
+        String payloadRequest = BodyReader.getBody(request);
+        
+        Type type = new TypeToken<HashMap<String, String>>(){}.getType();
+        HashMap<String, String> body = new Gson().fromJson(payloadRequest, type);
 
-        String title = request.getParameter("title");
-        String desc = request.getParameter("description");
-        String location = request.getParameter("location");
-        String categories_str = request.getParameter("categories");
-        String latitude_str = request.getParameter("latitude");
-        String longitude_str = request.getParameter("longitude");
-        String image = request.getParameter("image");
-        String rating_str = request.getParameter("rating");
-        String time = request.getParameter("time");
-        String capacity_str = request.getParameter("capacity");
-        String attending_str = request.getParameter("attending");
+        String title = body.get("title");
+        String desc = body.get("description");
+        String location = body.get("location");
+        String categories_str = body.get("categories");
+        String latitude_str = body.get("latitude");
+        String longitude_str = body.get("longitude");
+        String image = body.get("image");
+        String rating_str = body.get("rating");
+        String time = body.get("time");
+        String capacity_str = body.get("capacity");
+        String attending_str = body.get("attending");
 
-        String username = request.getParameter("username");
+        String username = body.get("username");
 
         //error check non-optional parameters
         if(title == null || desc == null || location == null || categories_str == null ||

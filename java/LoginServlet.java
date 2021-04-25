@@ -1,6 +1,9 @@
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.Type;
+import java.util.HashMap;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -8,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 
 @WebServlet("/LoginServlet")
@@ -32,13 +36,20 @@ public class LoginServlet extends HttpServlet{
         PrintWriter pw = response.getWriter();
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
+        
+        
+        String payloadRequest = BodyReader.getBody(request);
+        
+        Type type = new TypeToken<HashMap<String, String>>(){}.getType();
+        HashMap<String, String> body = new Gson().fromJson(payloadRequest, type);
+       
 
-        String loginType = request.getParameter("type");
+        String loginType = body.get("type");
 
 
         if(loginType.equals("normal")) {
-            String username = request.getParameter("username");
-            String password = request.getParameter("password");
+            String username = body.get("username");
+            String password = body.get("password");
 
             if(username == null || password == null || username.isBlank() || password.isBlank()) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -61,8 +72,8 @@ public class LoginServlet extends HttpServlet{
 
         }
         else if(loginType.equals("other")) {
-            String email = request.getParameter("email");
-            String name = request.getParameter("name");
+            String email = body.get("email");
+            String name = body.get("name");
 
             if(email == null || name == null || email.isBlank() || name.isBlank()) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);

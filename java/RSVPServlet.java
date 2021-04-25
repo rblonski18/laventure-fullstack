@@ -1,6 +1,8 @@
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.Type;
+import java.util.HashMap;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -9,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 
 @WebServlet("/RSVPServlet")
@@ -60,8 +63,14 @@ public class RSVPServlet  extends HttpServlet {
         PrintWriter pw = response.getWriter();
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-
-        String id = request.getParameter("activityid");
+        
+        
+        String payloadRequest = BodyReader.getBody(request);
+        
+        Type type = new TypeToken<HashMap<String, String>>(){}.getType();
+        HashMap<String, String> body = new Gson().fromJson(payloadRequest, type);
+       
+        String id = body.get("activityid");
         int activityID = -1;
 
         try {
@@ -75,7 +84,7 @@ public class RSVPServlet  extends HttpServlet {
             return;
         }
 
-        String task = request.getParameter("task");
+        String task = body.get("task");
         if(task == null) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             String error = "No task specified.";
@@ -99,7 +108,7 @@ public class RSVPServlet  extends HttpServlet {
             }
         }
         else if(task.equals("checkStatus")) {
-            String uid = request.getParameter("userid");
+            String uid = body.get("userid");
             if(uid == null || uid.isBlank()) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 String error = "No user specified.";
@@ -185,7 +194,14 @@ public class RSVPServlet  extends HttpServlet {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
-        String task = request.getParameter("task");
+        
+        String payloadRequest = BodyReader.getBody(request);
+        
+        Type type = new TypeToken<HashMap<String, String>>(){}.getType();
+        HashMap<String, String> body = new Gson().fromJson(payloadRequest, type);
+       
+        
+        String task = body.get("task");
         if(task == null) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             String error = "No task specified.";
@@ -195,7 +211,7 @@ public class RSVPServlet  extends HttpServlet {
         }
 
         else if(task.equals("cancel")) {
-            String rsvp = request.getParameter("rsvpid");
+            String rsvp = body.get("rsvpid");
             if(rsvp == null || rsvp.isBlank()) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 String error = "No RSVPID specified.";
@@ -235,7 +251,7 @@ public class RSVPServlet  extends HttpServlet {
         }
 
         else if(task.equals("add")){
-            String id = request.getParameter("activityid");
+            String id = body.get("activityid");
             int activityID = -1;
 
             try {
@@ -249,7 +265,7 @@ public class RSVPServlet  extends HttpServlet {
                 return;
             }
 
-            String uid = request.getParameter("userid");
+            String uid = body.get("userid");
             if(uid == null || uid.isBlank()) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 String error = "No user specified.";

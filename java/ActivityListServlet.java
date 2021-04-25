@@ -1,7 +1,9 @@
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 
 //request for list of activities sorted in some way
@@ -45,8 +48,6 @@ public class ActivityListServlet extends HttpServlet{
 	      
 	  }
 	  
-
-	
     //doGet handles the three different ways that the front-end wants to access all activities
     //"none" returns a list of all activities without regard to ordering
     //"rating" returns a list of all activities sorted by rating
@@ -60,9 +61,17 @@ public class ActivityListServlet extends HttpServlet{
         PrintWriter pw = response.getWriter();
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
+        
+        
+        
+        String payloadRequest = BodyReader.getBody(request);
+        
+        Type type = new TypeToken<HashMap<String, String>>(){}.getType();
+        HashMap<String, String> body = new Gson().fromJson(payloadRequest, type);
+       
 
-        String sortBy = request.getParameter("sortBy");
-        String user = request.getParameter("user");
+        String sortBy = body.get("sortBy");
+        String user = body.get("user");
 
         if(sortBy == null) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);

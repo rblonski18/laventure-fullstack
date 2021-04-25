@@ -1,7 +1,9 @@
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 @WebServlet("/ReviewsServlet")
 public class ReviewsServlet  extends HttpServlet {
@@ -45,8 +48,16 @@ public class ReviewsServlet  extends HttpServlet {
         PrintWriter pw = response.getWriter();
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
+        
+        
+        
+        String payloadRequest = BodyReader.getBody(request);
+        
+        Type type = new TypeToken<HashMap<String, String>>(){}.getType();
+        HashMap<String, String> body = new Gson().fromJson(payloadRequest, type);
+       
 
-        String id = request.getParameter("activityid");
+        String id = body.get("activityid");
         if(id == null) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             String error = "Missing id parameter.";
@@ -95,10 +106,18 @@ public class ReviewsServlet  extends HttpServlet {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
-        String aID = request.getParameter("activityid");
-        String uID = request.getParameter("userid");
-        String reviewText = request.getParameter("reviewtext");
-        String rating = request.getParameter("rating");
+        
+        String payloadRequest = BodyReader.getBody(request);
+        
+        Type type = new TypeToken<HashMap<String, String>>(){}.getType();
+        HashMap<String, String> body = new Gson().fromJson(payloadRequest, type);
+       
+        
+        
+        String aID = body.get("activityid");
+        String uID = body.get("userid");
+        String reviewText = body.get("reviewtext");
+        String rating = body.get("rating");
 
         //Assuming for now that all the parameters are required
         //That may not be the case if we let a user leave a star rating with a blank review

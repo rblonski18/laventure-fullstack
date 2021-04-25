@@ -1,8 +1,5 @@
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -33,42 +30,6 @@ public class NewAccountServlet extends HttpServlet{
 	      resp.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
 	      resp.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 	  }
-
-	  
-	  
-	 public static String getBody(HttpServletRequest request) throws IOException {
-
-		    String body = null;
-		    StringBuilder stringBuilder = new StringBuilder();
-		    BufferedReader bufferedReader = null;
-
-		    try {
-		        InputStream inputStream = request.getInputStream();
-		        if (inputStream != null) {
-		            bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-		            char[] charBuffer = new char[128];
-		            int bytesRead = -1;
-		            while ((bytesRead = bufferedReader.read(charBuffer)) > 0) {
-		                stringBuilder.append(charBuffer, 0, bytesRead);
-		            }
-		        } else {
-		            stringBuilder.append("");
-		        }
-		    } catch (IOException ex) {
-		        throw ex;
-		    } finally {
-		        if (bufferedReader != null) {
-		            try {
-		                bufferedReader.close();
-		            } catch (IOException ex) {
-		                throw ex;
-		            }
-		        }
-		    }
-
-		    body = stringBuilder.toString();
-		    return body;
-	}
 	  
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         setAccessControlHeaders(response);
@@ -79,7 +40,7 @@ public class NewAccountServlet extends HttpServlet{
         response.setCharacterEncoding("UTF-8");
         
         
-        String payloadRequest = getBody(request);
+        String payloadRequest = BodyReader.getBody(request);
         
         Type type = new TypeToken<HashMap<String, String>>(){}.getType();
         HashMap<String, String> body = new Gson().fromJson(payloadRequest, type);
