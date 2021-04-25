@@ -94,7 +94,8 @@ export default class NewAccount extends React.Component {
         })
             .then(response => response.json())
             .then(response => {
-                if (response.status === 200) {
+                console.log(response);
+                if (response != -1) {
                     this.setCookie(this.state.username);
                 } else {
                     this.errorMsg();
