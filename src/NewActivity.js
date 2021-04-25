@@ -174,11 +174,12 @@ export default class NewActivity extends React.Component {
         })
             .then(response => response.json())
             .then(response => {
-                if (response.status !== 200) {
-                    this.toasterError();
-                } else {
+                if (response !== "Could not parse 1 or more parameters" && response !==
+                    "Missing one or more required parameters.") {
                     toast.info(this.state.title + ' successfully created.',
                         {type: 'success', pauseOnHover: false});
+                } else {
+                    this.toasterError();
                 }
             })
             .catch(() => {

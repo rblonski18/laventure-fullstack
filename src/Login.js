@@ -48,11 +48,11 @@ export default class Login extends React.Component {
     }
 
     setCookie(user) {
-        this.setState({redirect: '/mainpage'});
         const d = new Date();
         d.setTime(d.getTime() + (24*60*60*1000));
         const expires = "expires="+ d.toUTCString();
         document.cookie = "user=" + user + ";" + expires + ";path=/";
+        this.setState({redirect: '/mainpage'});
     }
 
     handleSubmit = (event) => {
@@ -70,10 +70,10 @@ export default class Login extends React.Component {
         })
             .then(response => response.json())
             .then(response => {
-                if (response != -1) {
+                if (response !== "Failed to log in user." && response !== "Missing username or password field.") {
                     this.setCookie(this.state.username);
                 } else {
-                     this.throwError();
+                    this.throwError();
                 }
             })
             .catch(err => {
@@ -98,7 +98,7 @@ export default class Login extends React.Component {
         })
             .then(response => response.json())
             .then(response => {
-                if (response.status === 200) {
+                if (response !== "Missing name or email field.") {
                     this.setCookie(response.profileObj.email);
                 } else {
                     this.throwError();
@@ -117,7 +117,7 @@ export default class Login extends React.Component {
                 })
                     .then(response => response.json())
                     .then(response => {
-                        if (response.status === 200) {
+                        if (response !== "Username already exists.") {
                             this.setCookie(response.profileObj.email);
                         } else {
                             this.googleError();

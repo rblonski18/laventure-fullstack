@@ -29,7 +29,7 @@ import com.google.gson.reflect.TypeToken;
 public class ActivityListServlet extends HttpServlet{
 
 	  /**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 
@@ -45,9 +45,9 @@ public class ActivityListServlet extends HttpServlet{
 	      resp.setHeader("Access-Control-Allow-Origin", "*");
 	      resp.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
 	      resp.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-	      
+
 	  }
-	  
+
     //doGet handles the three different ways that the front-end wants to access all activities
     //"none" returns a list of all activities without regard to ordering
     //"rating" returns a list of all activities sorted by rating
@@ -61,17 +61,9 @@ public class ActivityListServlet extends HttpServlet{
         PrintWriter pw = response.getWriter();
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        
-        
-        
-        String payloadRequest = BodyReader.getBody(request);
-        
-        Type type = new TypeToken<HashMap<String, String>>(){}.getType();
-        HashMap<String, String> body = new Gson().fromJson(payloadRequest, type);
-       
 
-        String sortBy = body.get("sortBy");
-        String user = body.get("user");
+        String sortBy = request.getParameter("sortBy");
+        String user = request.getParameter("user");
 
         if(sortBy == null) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);

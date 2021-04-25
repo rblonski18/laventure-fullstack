@@ -16,7 +16,7 @@ import com.google.gson.reflect.TypeToken;
 
 @WebServlet("/LoginServlet")
 public class LoginServlet extends HttpServlet{
-	
+
 	  @Override
 	  protected void doOptions(HttpServletRequest req, HttpServletResponse resp)
 	          throws ServletException, IOException {
@@ -36,20 +36,18 @@ public class LoginServlet extends HttpServlet{
         PrintWriter pw = response.getWriter();
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        
-        
-        String payloadRequest = BodyReader.getBody(request);
-        
-        Type type = new TypeToken<HashMap<String, String>>(){}.getType();
-        HashMap<String, String> body = new Gson().fromJson(payloadRequest, type);
-       
 
-        String loginType = body.get("type");
 
+//        String payloadRequest = BodyReader.getBody(request);
+//
+//        Type type = new TypeToken<HashMap<String, String>>(){}.getType();
+//        HashMap<String, String> body = new Gson().fromJson(payloadRequest, type);
+
+        String loginType = request.getParameter("type");
 
         if(loginType.equals("normal")) {
-            String username = body.get("username");
-            String password = body.get("password");
+            String username = request.getParameter("username");
+            String password = request.getParameter("password");
 
             if(username == null || password == null || username.isBlank() || password.isBlank()) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -72,8 +70,8 @@ public class LoginServlet extends HttpServlet{
 
         }
         else if(loginType.equals("other")) {
-            String email = body.get("email");
-            String name = body.get("name");
+            String email = request.getParameter("email");
+            String name = request.getParameter("name");
 
             if(email == null || name == null || email.isBlank() || name.isBlank()) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);

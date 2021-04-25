@@ -94,7 +94,7 @@ export default class NewAccount extends React.Component {
         })
             .then(response => response.json())
             .then(response => {
-                if (response != -1) {
+                if (response !== "Missing username or password field." && response !== "Username already exists.") {
                     this.setCookie(this.state.username);
                 } else {
                     this.errorMsg();
