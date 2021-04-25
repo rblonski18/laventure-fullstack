@@ -3,11 +3,6 @@ import {Link} from "react-router-dom";
 import getCookie from "./Cookie";
 
 class NavBar extends React.Component {
-    
-    state = {
-        guest: true
-    };
-
     constructor(props) {
         super(props);
     }
@@ -39,7 +34,7 @@ class NavBar extends React.Component {
                     </button>
                     <div className="collapse navbar-collapse" id="navbarNav">
                         <ul className="navbar-nav ms-auto">
-                            { !this.state.guest &&
+                            { this.props.userLoggedIn &&
                                 <li className="nav-item newActivity">
                                     <Link className="nav-link"
                                           to={{pathname: "/newactivity"}}
@@ -48,12 +43,12 @@ class NavBar extends React.Component {
                                     </Link>
                                 </li>
                             }
-                            { this.state.guest &&
+                            { !this.props.userLoggedIn &&
                                 <li className="nav-item login-nav">
                                     <Link className="nav-link" to="/">Login</Link>
                                 </li>
                             }
-                            { !this.state.guest &&
+                            { this.props.userLoggedIn &&
                                 <li className="nav-item logout-nav ms-auto">
                                     <a className="nav-link" onClick={this.handleLogout} >Logout</a>
                                 </li>
