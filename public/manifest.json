@@ -1,7 +1,12 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "LAVenture",
+  "name": "LAVenture Activity Finder",
   "icons": [
+    {
+      "src": "laventure_icon.png",
+      "type": "image/png",
+      "sizes": "90x92"
+    },
     {
       "src": "favicon.ico",
       "sizes": "64x64 32x32 24x24 16x16",

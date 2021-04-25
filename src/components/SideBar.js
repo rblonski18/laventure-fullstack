@@ -36,9 +36,9 @@ class SideBar extends React.Component {
     }
 
     handleSort = (event, val) => {
-        if(val == "Rating") {
+        if(val === "Rating") {
             this.setState({activities: this.state.byRating});
-        } else if(val == "Recently Viewed") {
+        } else if(val === "Recently Viewed") {
             this.setState({activities: this.state.recentlyViewed});
         }
     }

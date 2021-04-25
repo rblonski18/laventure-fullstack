@@ -62,7 +62,11 @@ export default class Login extends React.Component {
         fetch('https://api.laventure.click/LoginServlet', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: {username: this.state.username, password: hashedPassword, type: 'normal'}
+            body: JSON.stringify({
+                username: this.state.username,
+                password: hashedPassword,
+                type: 'normal'
+            })
         })
             .then(response => response.json())
             .then(response => {
@@ -86,7 +90,11 @@ export default class Login extends React.Component {
         fetch('https://api.laventure.click/LoginServlet', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: {email: response.profileObj.email, name: response.profileObj.name, type: 'other'}
+            body: JSON.stringify({
+                email: response.profileObj.email,
+                name: response.profileObj.name,
+                type: 'other'
+            })
         })
             .then(response => response.json())
             .then(response => {
@@ -101,11 +109,11 @@ export default class Login extends React.Component {
                 fetch('https://api.laventure.click/NewAccountServlet', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: {
+                    body: JSON.stringify({
                         email: response.profileObj.email,
                         name: response.profileObj.name,
                         type: 'other'
-                    }
+                    })
                 })
                     .then(response => response.json())
                     .then(response => {

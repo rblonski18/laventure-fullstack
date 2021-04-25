@@ -156,7 +156,7 @@ export default class NewActivity extends React.Component {
         fetch('https://api.laventure.click/ActivityServlet', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: {
+            body: JSON.stringify({
                 username: username,
                 title: this.state.title,
                 description: this.state.description,
@@ -170,7 +170,7 @@ export default class NewActivity extends React.Component {
                 time: this.state.time,
                 capacity: parseInt(this.state.capacity),
                 attending: (this.state.attending === 'true')
-            }
+            })
         })
             .then(response => response.json())
             .then(response => {

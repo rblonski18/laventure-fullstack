@@ -3,7 +3,7 @@ import data from "./demo.json"
 import "../styles/activitypage.css"
 import NavBar from "./NavBar";
 import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
+import getCookie from "./Cookie";
 
 const ActivityPage = ({ match }) => {
 
@@ -39,22 +39,6 @@ const ActivityPage = ({ match }) => {
         return items;
     };
 
-    const getCookie = () => {
-        var name = "user=";
-        var decodedCookie = decodeURIComponent(document.cookie);
-        var ca = decodedCookie.split(';');
-        for(var i = 0; i <ca.length; i++) {
-          var c = ca[i];
-          while (c.charAt(0) == ' ') {
-            c = c.substring(1);
-          }
-          if (c.indexOf(name) == 0) {
-            return c.substring(name.length, c.length);
-          }
-        }
-        return "";
-    }
-
     useEffect(() => {
 
         // request for activity with the id of activityid
@@ -82,14 +66,14 @@ const ActivityPage = ({ match }) => {
             .then((data) => {
                 setActivityReviews(data)
             })
-        
-        // check if user is RSVPed to this activity. 
+
+        // check if user is RSVPed to this activity.
         fetch(`LAVenture/RSVPServlet?activityid=${activityID}&user=${username}&task=checkStatus`)
             .then(res => res.json())
             .then((data) => {
                 setRSVPBool(!data.status)
             })
-        
+
         let user = getCookie();
         if(user.length > 0) setUsername(user);
 
@@ -175,7 +159,7 @@ const ActivityPage = ({ match }) => {
                         { userLoggedIn && rsvpButton &&
                             <button className="btn btn-info RSVP-btn" onClick={(e) => handleRSVP(e)}>RSVP</button>
                         }
-                        { userLoggedIn && !rsvpButton && 
+                        { userLoggedIn && !rsvpButton &&
                             <button className="btn btn-danger RSVP-btn" onClick={(e) => handleCancelRSVP(e)}>Cancel</button>
                         }
                     </div>
