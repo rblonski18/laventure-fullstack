@@ -49,13 +49,7 @@ public class ActivityServlet extends HttpServlet {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
-        String payloadRequest = BodyReader.getBody(request);
-        
-        Type type = new TypeToken<HashMap<String, String>>(){}.getType();
-        HashMap<String, String> body = new Gson().fromJson(payloadRequest, type);
-
-        
-        String id = body.get("activityid");
+        String id = request.getParameter("activityid");
 
         int activityID = -1;
         try {
@@ -166,55 +160,18 @@ public class ActivityServlet extends HttpServlet {
         Type categoryListType = new TypeToken<ArrayList<String>>(){}.getType();
         ArrayList<String> categories = gson.fromJson(categories_str, categoryListType);
 
-        boolean adventure = false;
-        boolean beach = false;
-        boolean books = false;
-        boolean entertainment = false;
-        boolean exercise = false;
-        boolean games = false;
-        boolean music = false;
-        boolean nightLife = false;
-        boolean outdoors = false;
-        boolean relax = false;
-        boolean shopping = false;
-        boolean sports = false;
-
-        if(categories.contains("Adventure")) {
-            adventure = true;
-        }
-        if(categories.contains("Beach")) {
-            beach = true;
-        }
-        if(categories.contains("Books")) {
-            books = true;
-        }
-        if(categories.contains("Entertainment")) {
-            entertainment = true;
-        }
-        if(categories.contains("Exercise")) {
-            exercise = true;
-        }
-        if(categories.contains("Games")) {
-            games = true;
-        }
-        if(categories.contains("Music")) {
-            music = true;
-        }
-        if(categories.contains("NightLife")) {
-            nightLife = true;
-        }
-        if(categories.contains("Outdoors")) {
-            outdoors = true;
-        }
-        if(categories.contains("Relax")) {
-            relax = true;
-        }
-        if(categories.contains("Shopping")) {
-            shopping = true;
-        }
-        if(categories.contains("Sports")) {
-            sports = true;
-        }
+        boolean adventure = categories.contains("Adventure");
+        boolean beach = categories.contains("Beach");
+        boolean books = categories.contains("Books");
+        boolean entertainment = categories.contains("Entertainment");
+        boolean exercise = categories.contains("Exercise");
+        boolean games = categories.contains("Games");
+        boolean music = categories.contains("Music");
+        boolean nightLife = categories.contains("NightLife");
+        boolean outdoors = categories.contains("Outdoors");
+        boolean relax = categories.contains("Relax");
+        boolean shopping = categories.contains("Shopping");
+        boolean sports = categories.contains("Sports");
 
         Double latitude = null;
         Double longitude = null;

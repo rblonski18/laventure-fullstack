@@ -49,15 +49,8 @@ public class ReviewsServlet  extends HttpServlet {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         
-        
-        
-        String payloadRequest = BodyReader.getBody(request);
-        
-        Type type = new TypeToken<HashMap<String, String>>(){}.getType();
-        HashMap<String, String> body = new Gson().fromJson(payloadRequest, type);
-       
 
-        String id = body.get("activityid");
+        String id = request.getParameter("activityid");
         if(id == null) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             String error = "Missing id parameter.";
