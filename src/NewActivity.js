@@ -162,7 +162,18 @@ export default class NewActivity extends React.Component {
                 location: this.state.location,
                 latitude: this.state.lat,
                 longitude: this.state.lng,
-                categories: this.state.categories,
+                adventure: this.state.categories.includes('Adventure'),
+                beach: this.state.categories.includes('Beach'),
+                books: this.state.categories.includes('Books'),
+                entertainment: this.state.categories.includes('Entertainment'),
+                exercise: this.state.categories.includes('Exercise'),
+                games: this.state.categories.includes('Games'),
+                music: this.state.categories.includes('Music'),
+                nightlife: this.state.categories.includes('Night Life'),
+                outdoors: this.state.categories.includes('Outdoors'),
+                relax: this.state.categories.includes('Relax'),
+                shopping: this.state.categories.includes('Shopping'),
+                sports: this.state.categories.includes('Sports'),
                 image: this.state.image,
                 rating: parseFloat(this.state.rating),
                 date: this.state.date,
@@ -207,11 +218,19 @@ export default class NewActivity extends React.Component {
         this.setState({categories: list});
     }
 
+    handleReaderLoaded = (event) => {
+        let binaryString = event.target.result;
+        this.setState({image: btoa(binaryString)})
+    }
+
     setImage = (e) => {
         const files = e.target.files;
         const validImageTypes = ['image/gif', 'image/jpeg', 'image/png'];
         if (validImageTypes.includes(files[0].type)) {
-            this.setState({image: files[0]});
+            const reader = new FileReader();
+            reader.onload = this.handleReaderLoaded.bind(this);
+            reader.readAsDataURL(files[0]);
+            // this.setState({image: files[0]});
             document.getElementById('image-label').innerText = 'Replace ' + files[0].name;
         } else {
             toast.info('ERROR! Image must end in .gif, .jpg, or .png.',
@@ -281,6 +300,7 @@ export default class NewActivity extends React.Component {
         } else {
             return (
                 <div className={'outer-div new-activity-outer-div'}>
+                    {/*<img src="data:image/png;base64, "/>*/}
                     <div className="NewActivity">
                         <h1 className="page-title">Create a New Activity</h1>
                         <Form onSubmit={this.handleSubmit}>
