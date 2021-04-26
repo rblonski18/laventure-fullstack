@@ -125,6 +125,7 @@ public class ActivityServlet extends HttpServlet {
         Type type = new TypeToken<HashMap<String, String>>(){}.getType();
         HashMap<String, String> body = new Gson().fromJson(payloadRequest, type);
 
+        
         String title = body.get("title");
         String desc = body.get("description");
         String location = body.get("location");
@@ -136,7 +137,33 @@ public class ActivityServlet extends HttpServlet {
         String time = body.get("time");
         String capacity_str = body.get("capacity");
         String attending_str = body.get("attending");
-
+        
+        String adventure_str = body.get("adventure");
+        String beach_str = body.get("beach");
+        String books_str = body.get("books");
+        String entertainment_str = body.get("entertainment");
+        String exercise_str = body.get("exercise");
+        String games_str = body.get("games");
+        String music_str = body.get("music");
+        String nightLife_str = body.get("nightlife");
+        String outdoors_str = body.get("outdoors");
+        String relax_str = body.get("relax");
+        String shopping_str = body.get("shopping");
+        String sports_str = body.get("sports");
+        
+        boolean adventure = Boolean.parseBoolean(adventure_str);
+        boolean beach = Boolean.parseBoolean(beach_str);
+        boolean books = Boolean.parseBoolean(books_str);
+        boolean entertainment = Boolean.parseBoolean(entertainment_str);
+        boolean exercise = Boolean.parseBoolean(exercise_str);
+        boolean games = Boolean.parseBoolean(games_str);
+        boolean music = Boolean.parseBoolean(music_str);
+        boolean nightLife = Boolean.parseBoolean(nightLife_str);
+        boolean outdoors = Boolean.parseBoolean(outdoors_str);
+        boolean relax = Boolean.parseBoolean(relax_str);
+        boolean shopping = Boolean.parseBoolean(shopping_str);
+        boolean sports = Boolean.parseBoolean(sports_str);
+        
         String username = body.get("username");
 
         //error check non-optional parameters
@@ -156,22 +183,6 @@ public class ActivityServlet extends HttpServlet {
 
         //parse list of categories
         //are categories booleans, strings, something else? Easy to change if so
-        Gson gson = new Gson();
-        Type categoryListType = new TypeToken<ArrayList<String>>(){}.getType();
-        ArrayList<String> categories = gson.fromJson(categories_str, categoryListType);
-
-        boolean adventure = categories.contains("Adventure");
-        boolean beach = categories.contains("Beach");
-        boolean books = categories.contains("Books");
-        boolean entertainment = categories.contains("Entertainment");
-        boolean exercise = categories.contains("Exercise");
-        boolean games = categories.contains("Games");
-        boolean music = categories.contains("Music");
-        boolean nightLife = categories.contains("NightLife");
-        boolean outdoors = categories.contains("Outdoors");
-        boolean relax = categories.contains("Relax");
-        boolean shopping = categories.contains("Shopping");
-        boolean sports = categories.contains("Sports");
 
         Double latitude = null;
         Double longitude = null;

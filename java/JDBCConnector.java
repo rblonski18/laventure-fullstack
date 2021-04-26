@@ -12,6 +12,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.concurrent.locks.ReentrantLock;
 
+import org.apache.tomcat.util.codec.binary.Base64;
+
 public class JDBCConnector {
     private static ReentrantLock addRSVPLock = new ReentrantLock();
     private static String dbName = "ebdb";
@@ -378,7 +380,7 @@ public class JDBCConnector {
                 username = rs.getString("Username");
                 title = rs.getString("Title");
                 Blob imageBlob = rs.getBlob("Image");
-                image = new String(imageBlob.getBytes(1, (int) imageBlob.length()));
+                image = Base64.encodeBase64String(imageBlob.getBytes(1,(int) imageBlob.length()));
                 description = rs.getString("Description");
                 longitude = rs.getDouble("Longitude");
                 latitude = rs.getDouble("Latitude");
@@ -458,7 +460,8 @@ public class JDBCConnector {
             conn = DriverManager.getConnection(jdbcUrl);
             st = conn.createStatement();
             Blob imageBlob = conn.createBlob();
-            imageBlob.setBytes(1, image.getBytes());
+            byte[] decodedBytes = Base64.decodeBase64(image);
+            imageBlob.setBytes(1, decodedBytes);
             st.execute("INSERT INTO Activities (Username,Title,Image,Description,Longitude,Latitude,Town,Rating,RatingCount,RSVPCount,MaxRSVPs,Adventure,Beach,Books,Entertainment,Exercise,Games,Music,NightLife,Outdoors,Relax,Shopping,Sports,Time) VALUES ('" + username + "','" + title + "','" + imageBlob + "','" + description + "'," + longitude + "," + latitude + ",'" + town + "'," + rating + "," + ratingCount + "," + RSVPCount + "," + maxRSVPs + ",'"  + adventure + ","  + beach + ","  + books + ","  + entertainment + ","  + exercise + ","  + games + ","  + music + "," + nightLife + "," + outdoors + ","  + relax + ","  + shopping + "," + sports + ",'" + time + "')");
             rs = st.executeQuery("SELECT LAST_INSERT_ID()");
             rs.next();
