@@ -64,6 +64,7 @@ class SideBar extends React.Component {
                 </div>
             <div className="activities-sidebar">
             { this.props.activityListing.map((activity) => {
+                console.log(activity);
                 const items = [];
                 for(var i = 0; i < activity.rating; i++) {
                     items.push(<span key={activity.title+i} className="fa fa-star checked"/>)
@@ -76,7 +77,7 @@ class SideBar extends React.Component {
                     <div className="card">
                         <div className="card-body">
                         <div className="thumbnail" style={{backgroundImage: "url('data:image/*;base64," + imgString +"')" }}><img src={"data:image/*;base64," + imgString} /> </div>
-                            <h5 className="card-title ct-limit"><a className="sidebar-titles" href={`/activity/${activity.id}`}>{activity.title}</a>
+                            <h5 className="card-title ct-limit"><a className="sidebar-titles" href={`/activity/${activity.activityID}`}>{activity.title}</a>
                             { activity.maxRSVPs > 0 && <span key={activity.title} className="badge badge-pill badge-primary rsvp">RSVP</span> }
                             </h5>
                             <p className="rating-stars">{ items }</p>

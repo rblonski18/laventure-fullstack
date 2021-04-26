@@ -44,18 +44,18 @@ const ActivityPage = ({ match }) => {
         // request for activity with the id of activityid
         fetch(`https://api.laventure.click/ActivityServlet?isRSVP=false&activityid=${activityID}`)
             .then(res => res.json())
-            .then((data) => {
-                setActivityName(data.activity.name);
-                setActivityLocation(data.activity.location);
-                setActivityAuthor(data.activity.author);
-                setActivityRating(data.activity.rating);
-                setActivityCategory(data.activity.categories);
-                setActivityIMG(data.activity.img);
-                setRSVPBool(data.activity.RSVP);
-                if(data.activity.RSVP) {
-                    setCurrent(data.activity.currentRSVPed);
-                    setCapacity(data.activity.RSVPcapacity);
-                    setPercentage((data.activity.currentRSVPed/data.activity.RSVPcapacity)*100);
+            .then((activity) => {
+                setActivityName(activity.title);
+                setActivityLocation(activity.town);
+                setActivityAuthor(activity.username);
+                setActivityRating(activity.rating);
+                //setActivityCategory(activity.categories);
+                setActivityIMG(activity.image);
+                setRSVPBool(activity.maxRSVPs > 0);
+                if(activity.maxRSVPs > 0) {
+                    setCurrent(activity.RSVPCount);
+                    setCapacity(activity.maxRSVPs);
+                    setPercentage((activity.RSVPCount/activity.maxRSVPs)*100);
                 }
 
             })
@@ -142,9 +142,9 @@ const ActivityPage = ({ match }) => {
                     </div>
                     <ul className="list-group list-group-flush">
                         <li key={"categories"} className="list-group-item text-muted">
-                            { activityCategories.map((category) => {
+                            { /* activityCategories.map((category) => {
                                 return <span key={category} className="badge badge-pill badge-info category-badges">{category}</span>
-                            })}
+                            }) */}
                         </li>
                         <li key={"author"} className="list-group-item">Submitted by: { activityAuthor }</li>
                         <li key={"rating"} className="list-group-item">{ buildRatingStars(activityRating) }</li>
@@ -221,7 +221,7 @@ const ActivityPage = ({ match }) => {
                     </div>
                 </div>
                 }
-                { activityReviews.map((review) => {
+                { /* activityReviews.map((review) => {
                     return <div className="card review-card">
                         <div className="card-body">
                             <p className="card-text">{ review.text }</p>
@@ -229,7 +229,7 @@ const ActivityPage = ({ match }) => {
                             <p>{ buildRatingStars(review.rating) }</p>
                         </div>
                     </div>
-                })}
+                }) */}
             </div>
         </div>
         </div>
