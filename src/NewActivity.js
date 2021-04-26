@@ -1,6 +1,5 @@
 import './accounts.css';
 import './NewActivity.css';
-import NavBar from "./components/NavBar";
 import getCookie from "./components/Cookie";
 
 import React from 'react';
@@ -282,9 +281,6 @@ export default class NewActivity extends React.Component {
         } else {
             return (
                 <div className={'outer-div new-activity-outer-div'}>
-                    <div>
-                        <NavBar/>
-                    </div>
                     <div className="NewActivity">
                         <h1 className="page-title">Create a New Activity</h1>
                         <Form onSubmit={this.handleSubmit}>

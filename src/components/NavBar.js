@@ -49,7 +49,7 @@ class NavBar extends React.Component {
                                 </li>
                             }
                             { this.props.userLoggedIn &&
-                                <li className="nav-item logout-nav ms-auto">
+                                <li className="nav-item logout-nav ms-auto" style={{cursor: 'pointer'}}>
                                     <a className="nav-link" onClick={this.handleLogout} >Logout</a>
                                 </li>
                             }
