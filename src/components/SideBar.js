@@ -66,26 +66,36 @@ class SideBar extends React.Component {
             { this.props.activityListing.map((activity) => {
                 const items = [];
                 for(var i = 0; i < activity.rating; i++) {
-                    items.push(<span key={activity.name+i} className="fa fa-star checked"/>)
+                    items.push(<span key={activity.title+i} className="fa fa-star checked"/>)
                 }
                 for(var j = 0; j < 5-activity.rating; j++) {
-                    items.push(<span key={activity.name+(5-j)} className="fa fa-star"/>)
+                    items.push(<span key={activity.title+(5-j)} className="fa fa-star"/>)
                 }
-                const imgString = activity.img;
-                return <div className="activity" key={ activity.name } >
+                const imgString = activity.image;
+                return <div className="activity" key={ activity.title } >
                     <div className="card">
                         <div className="card-body">
-                        <div className="thumbnail" style={{backgroundImage: "url(" + imgString +")" }}> </div>
-                            <h5 className="card-title ct-limit"><a className="sidebar-titles" href={`/activity/${activity.id}`}>{activity.name}</a>
-                            { activity.RSVP && <span key={activity.name} className="badge badge-pill badge-primary rsvp">RSVP</span> }
+                        <div className="thumbnail" style={{backgroundImage: "url('data:image/*;base64," + imgString +"')" }}><img src={"data:image/*;base64," + imgString} /> </div>
+                            <h5 className="card-title ct-limit"><a className="sidebar-titles" href={`/activity/${activity.id}`}>{activity.title}</a>
+                            { activity.maxRSVPs > 0 && <span key={activity.title} className="badge badge-pill badge-primary rsvp">RSVP</span> }
                             </h5>
                             <p className="rating-stars">{ items }</p>
                             <div className="categories">
-                                { activity.categories.map((category) => {
-                                    return <span key={activity.name+category} className="badge badge-pill badge-info">{category}</span>
-                                })}
+
+                                { activity.beach && <span key={activity.title+"beach"} className="badge badge-pill badge-info">Beach</span> }
+                                { activity.books && <span key={activity.title+"books"} className="badge badge-pill badge-info">Books</span> }
+                                { activity.entertainment && <span key={activity.title+"entertainment"} className="badge badge-pill badge-info">Entertainment</span> }
+                                { activity.exercise && <span key={activity.title+"exercise"} className="badge badge-pill badge-info">Exercise</span> }
+                                { activity.games && <span key={activity.title+"games"} className="badge badge-pill badge-info">Games</span> }
+                                { activity.music && <span key={activity.title+"music"} className="badge badge-pill badge-info">Music</span> }
+                                { activity.nightLife && <span key={activity.title+"nightLife"} className="badge badge-pill badge-info">Night Life</span> }
+                                { activity.outdoors && <span key={activity.title+"outdoors"} className="badge badge-pill badge-info">Outdoors</span> }
+                                { activity.relax && <span key={activity.title+"relax"} className="badge badge-pill badge-info">Relax</span> }
+                                { activity.shopping && <span key={activity.title+"shopping"} className="badge badge-pill badge-info">Shopping</span> }
+                                { activity.sports && <span key={activity.title+"sports"} className="badge badge-pill badge-info">Sports</span> }
+                                { activity.adventure && <span key={activity.title+"adventure"} className="badge badge-pill badge-info">Adventure</span> }
                             </div>
-                            <p className="card-text">{activity.location}</p>
+                            <p className="card-text">{activity.town}</p>
 
                         </div>
                     </div>

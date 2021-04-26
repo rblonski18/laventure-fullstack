@@ -17,8 +17,9 @@ class Map extends React.Component {
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
                 { this.props.activityList.map((activity, key) => {
+                    let coordinates = [activity.latitude, activity.longitude];
                     return (
-                        <Marker key={activity.coordinates} position={activity.coordinates}>
+                        <Marker key={coordinates} position={coordinates}>
                             <Popup>
                                 <a href={`/activity/${activity.id}`}>{activity.name}</a>
                             </Popup>
