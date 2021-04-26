@@ -380,7 +380,7 @@ public class JDBCConnector {
                 username = rs.getString("Username");
                 title = rs.getString("Title");
                 Blob imageBlob = rs.getBlob("Image");
-                image = new String(imageBlob.getBytes(1, (int) imageBlob.length()));
+                image = Base64.encodeBase64String(imageBlob.getBytes(1,(int) imageBlob.length()));
                 description = rs.getString("Description");
                 longitude = rs.getDouble("Longitude");
                 latitude = rs.getDouble("Latitude");
