@@ -19,14 +19,14 @@ const MainPage = (props) => {
         console.log(keyword + ", " + activityList + ", " + wasFiltered + ", " + filterBy + ", " + userLoggedIn);
         const filteredList = activityList.filter(activity => {
             if(filterBy === "Title") {
-                return activity.name.toString().toLowerCase().includes(input.toString().toLowerCase());
+                return activity.title.toString().toLowerCase().includes(input.toString().toLowerCase());
             } else {
-                return activity.location.toString().toLowerCase().includes(input.toString().toLowerCase());
+                return activity.town.toString().toLowerCase().includes(input.toString().toLowerCase());
             }
         })
-        
+
         setWF(true)
-        setActivityList(filteredList) 
+        setActivityList(filteredList)
     }
 
     const getCookie = () => {
@@ -52,7 +52,7 @@ const MainPage = (props) => {
             .then((data) => {
                 setActivityList(data);
             })
-    
+
         let user = getCookie();
         if(user.length > 0) {
             setUsername(user);
@@ -61,9 +61,9 @@ const MainPage = (props) => {
     }, [])
 
     const resetListing = (event) => {
-        setActivityList(noneList);
+        setActivityList([]);
         setWF(false)
-    } 
+    }
 
     // write function to fetch data from db upon search keyword change
 
@@ -71,17 +71,17 @@ const MainPage = (props) => {
         // render navbar
         <div className="content">
             <div>
-                <NavBar 
-                    username={username} 
-                    userLoggedIn={userLoggedIn} 
-                    setULI={setULI} 
+                <NavBar
+                    username={username}
+                    userLoggedIn={userLoggedIn}
+                    setULI={setULI}
                 />
             </div>
             <div className="under">
                 <div className="sidebar">
-                    <SideBar 
-                        username={username} 
-                        activityListing={activityList} 
+                    <SideBar
+                        username={username}
+                        activityListing={activityList}
                     />
                 </div>
                 <div className="mp-right">
