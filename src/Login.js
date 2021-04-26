@@ -88,6 +88,7 @@ export default class Login extends React.Component {
 
     responseGoogle = (response) => {
         const email = response.profileObj.email;
+        const name = response.profileObj.name;
         fetch('https://api.laventure.click/LoginServlet', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
@@ -111,15 +112,15 @@ export default class Login extends React.Component {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
-                        email: response.profileObj.email,
-                        name: response.profileObj.name,
+                        email: email,
+                        name: name,
                         type: 'other'
                     })
                 })
                     .then(response => response.json())
                     .then(response => {
                         if (response !== "Username already exists.") {
-                            this.setCookie(response.profileObj.email);
+                            this.setCookie(email);
                         } else {
                             this.googleError();
                         }
