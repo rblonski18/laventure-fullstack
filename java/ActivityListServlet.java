@@ -1,8 +1,6 @@
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+
 
 
 //request for list of activities sorted in some way
@@ -74,15 +72,8 @@ public class ActivityListServlet extends HttpServlet{
 
         ArrayList<Activity> activities = JDBCConnector.getActivities();
 
-        //return all activities in the database (default list)
-        if(sortBy.equals("none")) {
-            response.setStatus(HttpServletResponse.SC_OK);
-            String activitiesJSON = new Gson().toJson(activities);
-            pw.write(activitiesJSON);
-            pw.flush();
-        }
         //return a list of activities sorted by their rating
-        else if(sortBy.equals("rating")) {
+        if(sortBy.equals("rating")) {
             HeapSort.sort(activities, true);
             response.setStatus(HttpServletResponse.SC_OK);
             String activitiesJSON = new Gson().toJson(activities);
@@ -107,9 +98,9 @@ public class ActivityListServlet extends HttpServlet{
         }
         //OTHERWISE, invalid command
         else {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            String error = "Invalid sortBy parameter.";
-            pw.write(new Gson().toJson(error));
+            response.setStatus(HttpServletResponse.SC_OK);
+            String activitiesJSON = new Gson().toJson(activities);
+            pw.write(activitiesJSON);
             pw.flush();
         }
 

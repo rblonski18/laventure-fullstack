@@ -129,7 +129,6 @@ public class ActivityServlet extends HttpServlet {
         String title = body.get("title");
         String desc = body.get("description");
         String location = body.get("location");
-        String categories_str = body.get("categories");
         String latitude_str = body.get("latitude");
         String longitude_str = body.get("longitude");
         String image = body.get("image");
@@ -167,8 +166,7 @@ public class ActivityServlet extends HttpServlet {
         String username = body.get("username");
 
         //error check non-optional parameters
-        if(title == null || desc == null || location == null || categories_str == null ||
-                latitude_str == null || longitude_str == null || image == null || rating_str == null) {
+        if(title == null || desc == null || location == null || latitude_str == null || longitude_str == null || image == null || rating_str == null) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             String error = "Missing one or more required parameters.";
             pw.write(new Gson().toJson(error));
