@@ -68,7 +68,7 @@ const ActivityPage = ({ match }) => {
             })
 
         // check if user is RSVPed to this activity.
-        fetch(`LAVenture/RSVPServlet?activityid=${activityID}&user=${username}&task=checkStatus`)
+        fetch(`https://api.laventure.click/RSVPServlet?activityid=${activityID}&user=${username}&task=checkStatus`)
             .then(res => res.json())
             .then((data) => {
                 setRSVPBool(!data.status)
