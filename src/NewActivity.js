@@ -218,6 +218,7 @@ export default class NewActivity extends React.Component {
         this.setState({categories: list});
     }
 
+    // referenced https://medium.com/@blturner3527/storing-images-in-your-database-with-base64-react-682f5f3921c2
     handleReaderLoaded = (event) => {
         let binaryString = event.target.result;
         this.setState({image: btoa(binaryString)})
@@ -226,14 +227,14 @@ export default class NewActivity extends React.Component {
     setImage = (e) => {
         const files = e.target.files;
         const validImageTypes = ['image/gif', 'image/jpeg', 'image/png'];
-        if (validImageTypes.includes(files[0].type)) {
+        if (validImageTypes.includes(files[0].type) && files[0].size <= 45000) { // max 45 KB
             const reader = new FileReader();
             reader.onload = this.handleReaderLoaded.bind(this);
             reader.readAsDataURL(files[0]);
             // this.setState({image: files[0]});
             document.getElementById('image-label').innerText = 'Replace ' + files[0].name;
         } else {
-            toast.info('ERROR! Image must end in .gif, .jpg, or .png.',
+            toast.info('ERROR! Image must end in .gif, .jpg, or .png. and be at most 45 KB.',
                 {type: 'error', pauseOnHover: false});
         }
     }
@@ -300,7 +301,6 @@ export default class NewActivity extends React.Component {
         } else {
             return (
                 <div className={'outer-div new-activity-outer-div'}>
-                    {/*<img src="data:image/png;base64, "/>*/}
                     <div className="NewActivity">
                         <h1 className="page-title">Create a New Activity</h1>
                         <Form onSubmit={this.handleSubmit}>

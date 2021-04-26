@@ -22,10 +22,10 @@ export default class Login extends React.Component {
     componentDidMount() {
         toast.configure();
 
-        // const user = getCookie();
-        // if (user.length > 1) { // if no user, getCookie should return empty string
-        //     this.setState({username: user, redirect: '/mainpage'});
-        // }
+        const user = getCookie();
+        if (user.length > 1) { // if no user, getCookie should return empty string
+            this.setState({username: user, redirect: '/mainpage'});
+        }
     }
 
     setUsername = (e) => {
@@ -48,11 +48,11 @@ export default class Login extends React.Component {
     }
 
     setCookie(user) {
+        this.setState({redirect: '/mainpage'});
         const d = new Date();
         d.setTime(d.getTime() + (24*60*60*1000));
         const expires = "expires="+ d.toUTCString();
         document.cookie = "user=" + user + ";" + expires + ";path=/";
-        this.setState({redirect: '/mainpage'});
     }
 
     handleSubmit = (event) => {
@@ -87,6 +87,7 @@ export default class Login extends React.Component {
     }
 
     responseGoogle = (response) => {
+        const email = response.profileObj.email;
         fetch('https://api.laventure.click/LoginServlet', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
@@ -99,7 +100,7 @@ export default class Login extends React.Component {
             .then(response => response.json())
             .then(response => {
                 if (response !== "Missing name or email field.") {
-                    this.setCookie(response.profileObj.email);
+                    this.setCookie(email);
                 } else {
                     this.throwError();
                 }

@@ -1,16 +1,9 @@
 import React from "react"
 import {Link} from "react-router-dom";
-import getCookie from "./Cookie";
 
 class NavBar extends React.Component {
     constructor(props) {
         super(props);
-    }
-
-    componentDidMount() {
-        if (getCookie().length > 0) {
-            this.setState({guest: false});
-        }
     }
 
     deleteCookie = () => {
