@@ -2,7 +2,6 @@
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -11,8 +10,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.concurrent.locks.ReentrantLock;
-
-import org.apache.tomcat.util.codec.binary.Base64;
 
 public class JDBCConnector {
     private static ReentrantLock addRSVPLock = new ReentrantLock();
@@ -379,8 +376,7 @@ public class JDBCConnector {
                 activityID = rs.getInt("ActivityID");
                 username = rs.getString("Username");
                 title = rs.getString("Title");
-                Blob imageBlob = rs.getBlob("Image");
-                image = Base64.encodeBase64String(imageBlob.getBytes(1,(int) imageBlob.length()));
+                image = rs.getString("Image");
                 description = rs.getString("Description");
                 longitude = rs.getDouble("Longitude");
                 latitude = rs.getDouble("Latitude");
@@ -443,33 +439,33 @@ public class JDBCConnector {
     }
 
     //Returns activityID of added activity. Returns -1 if SQL error.
-    public static int addActivity(String username, String title, String image, String description, double longitude,
+    public static Boolean addActivity(String username, String title, String image, String description, double longitude,
                                   double latitude, String town, double rating, int ratingCount, int RSVPCount, int maxRSVPs, boolean adventure,
                                   boolean beach, boolean books, boolean entertainment, boolean exercise, boolean games, boolean music, boolean nightLife,
                                   boolean outdoors, boolean relax, boolean shopping, boolean sports, String time)
     {
         Connection conn = null;
-        Statement st = null;
+        PreparedStatement st = null;
         ResultSet rs = null;
 
+        Boolean added = false;
         int activityID = -1;
 
         try
         {
         	Class.forName("com.mysql.jdbc.Driver");
             conn = DriverManager.getConnection(jdbcUrl);
-            st = conn.createStatement();
-            Blob imageBlob = conn.createBlob();
-            byte[] decodedBytes = Base64.decodeBase64(image);
-            imageBlob.setBytes(1, decodedBytes);
-            st.execute("INSERT INTO Activities (Username,Title,Image,Description,Longitude,Latitude,Town,Rating,RatingCount,RSVPCount,MaxRSVPs,Adventure,Beach,Books,Entertainment,Exercise,Games,Music,NightLife,Outdoors,Relax,Shopping,Sports,Time) VALUES ('" + username + "','" + title + "','" + imageBlob + "','" + description + "'," + longitude + "," + latitude + ",'" + town + "'," + rating + "," + ratingCount + "," + RSVPCount + "," + maxRSVPs + ",'"  + adventure + ","  + beach + ","  + books + ","  + entertainment + ","  + exercise + ","  + games + ","  + music + "," + nightLife + "," + outdoors + ","  + relax + ","  + shopping + "," + sports + ",'" + time + "')");
-            rs = st.executeQuery("SELECT LAST_INSERT_ID()");
-            rs.next();
-            activityID = rs.getInt(1);
+            
+            st = conn.prepareStatement("INSERT INTO Activities (Username,Title,Image,Description,Longitude,Latitude,Town,Rating,RatingCount,RSVPCount,MaxRSVPs,Adventure,Beach,Books,Entertainment,Exercise,Games,Music,NightLife,Outdoors,Relax,Shopping,Sports,Time) VALUES ('" + username + "','" + title + "','" + image + "','" + description + "'," + longitude + "," + latitude + ",'" + town + "'," + rating + "," + ratingCount + "," + RSVPCount + "," + maxRSVPs + ","  + adventure + ","  + beach + ","  + books + ","  + entertainment + ","  + exercise + ","  + games + ","  + music + "," + nightLife + "," + outdoors + ","  + relax + ","  + shopping + "," + sports + ",'" + time + "')");
+            
+            st.executeUpdate();
+            added = true;
+            
         }
         catch (SQLException e)
         {
             System.out.println("SQL Exception occured accessing database.");
+            
         }
         catch(ClassNotFoundException e) {
         	System.out.println("could not load driver.");
@@ -498,7 +494,7 @@ public class JDBCConnector {
             }
         }
 
-        return activityID;
+        return added;
     }
 
     public static ArrayList<User> getUsers()

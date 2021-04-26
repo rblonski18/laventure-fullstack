@@ -216,13 +216,21 @@ public class ActivityServlet extends HttpServlet {
         //unfortunately Andrew may need to change the function signatures in the JDBCConnector class
         //to accept uppercase Doubles and Integers
         //this assumes that the image type is STring and not blob
-        int newID = JDBCConnector.addActivity(username, title, image, desc, longitude, latitude, location, rating, ratingCount, hostAttending, capacity, adventure, beach, books, entertainment, exercise, games, music, nightLife, outdoors, relax, shopping, sports, time);
+        Boolean added = JDBCConnector.addActivity(username, title, image, desc, longitude, latitude, location, rating, ratingCount, hostAttending, capacity, adventure, beach, books, entertainment, exercise, games, music, nightLife, outdoors, relax, shopping, sports, time);
 
-        //return the ID of the newly created activity
-        response.setStatus(HttpServletResponse.SC_OK);
-        String success = "New activity " + title + "added with activityID = " + newID;
-        pw.write(new Gson().toJson(success));
-        pw.flush();
+        if(added) {
+            response.setStatus(HttpServletResponse.SC_OK);
+            String success = "New activity added.";
+            pw.write(new Gson().toJson(added));
+            pw.flush();
+        }
+        else {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            String error = "Addition failed in JDBC.";
+            pw.write(new Gson().toJson(error));
+            pw.flush();
+            return;
+        }
 
     }
 }
