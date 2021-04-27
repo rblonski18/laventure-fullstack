@@ -94,7 +94,7 @@ public class ActivityListServlet extends HttpServlet{
             }
             else {
                 activities = JDBCConnector.getRecentlyViewed(user);
-                response.setStatus(HttpServletResponse.SC_ACCEPTED);
+                response.setStatus(HttpServletResponse.SC_OK);
                 pw.write(new Gson().toJson(activities));
                 pw.flush();
             }
@@ -113,7 +113,6 @@ public class ActivityListServlet extends HttpServlet{
         PrintWriter pw = response.getWriter();
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        
         
         String payloadRequest = BodyReader.getBody(request);
         
@@ -140,7 +139,12 @@ public class ActivityListServlet extends HttpServlet{
             pw.write(new Gson().toJson(error));
             pw.flush();
         }
+        
         JDBCConnector.visitActivity(user, aID);
+        response.setStatus(HttpServletResponse.SC_OK);
+        String success = "User visited activity " + aID;
+        pw.write(new Gson().toJson(success));
+        pw.flush();
     	
     }
 }
