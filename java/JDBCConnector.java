@@ -2,7 +2,6 @@
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -10,10 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.concurrent.locks.ReentrantLock;
-
-import javax.sql.rowset.serial.SerialBlob;
 
 public class JDBCConnector {
     private static ReentrantLock addRSVPLock = new ReentrantLock();
@@ -816,7 +812,7 @@ public class JDBCConnector {
 	         }
              else
              {
-            	 canceled = false
+            	 canceled = false;
              }
         }
         catch (SQLException e)

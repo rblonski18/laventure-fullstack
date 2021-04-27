@@ -221,7 +221,7 @@ public class ActivityServlet extends HttpServlet {
         if(added) {
             response.setStatus(HttpServletResponse.SC_OK);
             String success = "New activity added.";
-            pw.write(new Gson().toJson(added));
+            pw.write(new Gson().toJson(success));
             pw.flush();
         }
         else {
