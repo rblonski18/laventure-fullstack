@@ -16,17 +16,16 @@ const MainPage = (props) => {
     const [ username, setUsername ] = useState('');
 
     const handleSearch = (input) => {
-        console.log(keyword + ", " + activityList + ", " + wasFiltered + ", " + filterBy + ", " + userLoggedIn);
-        const filteredList = activityList.filter(activity => {
-            if(filterBy === "Title") {
+        const filteredList = noneList.filter(activity => {
+            if (filterBy === "Title") {
                 return activity.title.toString().toLowerCase().includes(input.toString().toLowerCase());
             } else {
                 return activity.town.toString().toLowerCase().includes(input.toString().toLowerCase());
             }
-        })
+        });
 
-        setWF(true)
-        setActivityList(filteredList)
+        setWF(true);
+        setActivityList(filteredList);
     }
 
     const getCookie = () => {
@@ -35,10 +34,10 @@ const MainPage = (props) => {
         var ca = decodedCookie.split(';');
         for(var i = 0; i <ca.length; i++) {
           var c = ca[i];
-          while (c.charAt(0) == ' ') {
+          while (c.charAt(0) === ' ') {
             c = c.substring(1);
           }
-          if (c.indexOf(name) == 0) {
+          if (c.indexOf(name) === 0) {
             return c.substring(name.length, c.length);
           }
         }
@@ -46,6 +45,7 @@ const MainPage = (props) => {
     }
 
     useEffect(() => {
+        // document.getElementById('search-bar-input').value = '';
 
         fetch(`https://api.laventure.click/ActivityListServlet?sortBy=none&user=${username}`)
             .then(res => res.json())
@@ -65,8 +65,6 @@ const MainPage = (props) => {
         setActivityList(noneList);
         setWF(false)
     }
-
-    // write function to fetch data from db upon search keyword change
 
     return(
         // render navbar

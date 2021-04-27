@@ -14,8 +14,10 @@ class SearchBar extends React.Component {
             weatherIcon: '',
         }
     }
-    
+
     componentDidMount = () => {
+        // document.getElementById('search-bar-input').value = '';
+
         fetch(`https://api.weatherbit.io/v2.0/current?key=4247ec7591994b7794e906958b50b6ad&city=Los%20Angeles`)
             .then(res => res.json())
             .then((json) => {
@@ -28,12 +30,17 @@ class SearchBar extends React.Component {
                 })
             })
 
-        
+
     };
 
     setKeyword = (event, val) => {
         this.setState({keyword: val})
-    } 
+    }
+
+    updateSearch = (e) => {
+        const searchKey = e.target.value.toLowerCase();
+        this.props.handleSearch(searchKey);
+    }
 
     updateBoth = (event, val) => {
         this.setState({filter: val});
@@ -52,11 +59,11 @@ class SearchBar extends React.Component {
                                 Search By: {this.state.filter}
                             </button>
                             <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                <li><a key="title" className="dropdown-item" onClick={(e) => this.updateBoth(e, "Title")}>Title</a></li>
-                                <li><a key="location" className="dropdown-item" onClick={(e) => this.updateBoth(e, "Location")}>Location</a></li>
+                                <li><button key="title" className="dropdown-item" onClick={(e) => this.updateBoth(e, "Title")}>Title</button></li>
+                                <li><button key="location" className="dropdown-item" onClick={(e) => this.updateBoth(e, "Location")}>Location</button></li>
                             </ul>
                         </div>
-                        <div className="td search-bar-btn"><input type="text" placeholder="Search" required  onChange={(e) => this.setKeyword(e, e.target.value)}/></div>
+                        <div className="td search-bar-btn"><input id={'search-bar-input'} type="text" placeholder="Search" required onChange={this.updateSearch}/></div>
                         <button className="search-bar-btn" onClick={(e) => {this.props.handleSearch(this.state.keyword); e.preventDefault()}}>
                             &#x1F50D;
                         </button>
@@ -65,7 +72,7 @@ class SearchBar extends React.Component {
                         }
                     </div>
                     <div className="weatherbit-api-styling">
-                        <img src={`https://www.weatherbit.io/static/img/icons/${this.state.weatherIcon}.png`} />
+                        <img src={`https://www.weatherbit.io/static/img/icons/${this.state.weatherIcon}.png`} alt={''}/>
                         <span>{this.state.weatherString} {parseInt(this.state.temp)} &#8457;</span>
                      </div>
                 </form>
