@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react"
 import data from "./demo.json"
 import "../styles/activitypage.css"
 import NavBar from "./NavBar";
+import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import getCookie from "./Cookie";
 
@@ -16,6 +17,18 @@ const ActivityPage = ({ match }) => {
     const [ activityAuthor, setActivityAuthor ] = useState('');
     const [ activityRating, setActivityRating ] = useState(0);
     const [ activityCategories, setActivityCategory ] = useState([]);
+    const [ beach, setBeach ] = useState(false);
+    const [ books, setBooks ] = useState(false);
+    const [ entertainment, setEntertainment ] = useState(false);
+    const [ exercise, setExercise ] = useState(false);
+    const [ games, setGames ] = useState(false);
+    const [ music, setMusic ] = useState(false);
+    const [ nightLife, setNightLife ] = useState(false);
+    const [ outdoors, setOutdoors ] = useState(false);
+    const [ relax, setRelax ] = useState(false);
+    const [ shopping, setShopping ] = useState(false);
+    const [ sports, setSports ] = useState(false);
+    const [ adventure, setAdventure ] = useState(false);
     const [ activityIMG, setActivityIMG ] = useState('');
     const [ activityReviews, setActivityReviews ] = useState([]);
     const [ rsvpBool, setRSVPBool ] = useState(false);
@@ -49,7 +62,18 @@ const ActivityPage = ({ match }) => {
                 setActivityLocation(activity.town);
                 setActivityAuthor(activity.username);
                 setActivityRating(activity.rating);
-                //setActivityCategory(activity.categories);
+                setBeach(activity.beach);
+                setBooks(activity.books);
+                setMusic(activity.music);
+                setEntertainment(activity.entertainment);
+                setExercise(activity.exercise);
+                setGames(activity.games);
+                setNightLife(activity.nightLife);
+                setOutdoors(activity.outdoors);
+                setRelax(activity.relax);
+                setShopping(activity.shopping);
+                setSports(activity.sports);
+                setAdventure(activity.adventure);
                 setActivityIMG(activity.image);
                 setRSVPBool(activity.maxRSVPs > 0);
                 if(activity.maxRSVPs > 0) {
@@ -75,7 +99,7 @@ const ActivityPage = ({ match }) => {
             })
 
         let user = getCookie();
-        if(user.length > 0) setUsername(user);
+        setUsername(user);
 
     }, []);
 
@@ -142,9 +166,18 @@ const ActivityPage = ({ match }) => {
                     </div>
                     <ul className="list-group list-group-flush">
                         <li key={"categories"} className="list-group-item text-muted">
-                            { /* activityCategories.map((category) => {
-                                return <span key={category} className="badge badge-pill badge-info category-badges">{category}</span>
-                            }) */}
+                            { beach && <span key={activityName+"beach"} className="category-badges badge badge-pill badge-info">Beach</span> }
+                            { books && <span key={activityName +"books"} className="category-badges badge badge-pill badge-info">Books</span> }
+                            { entertainment && <span key={activityName+"entertainment"} className="category-badges badge badge-pill badge-info">Entertainment</span> }
+                            { exercise && <span key={activityName+"exercise"} className="category-badges badge badge-pill badge-info">Exercise</span> }
+                            { games && <span key={activityName+"games"} className="category-badges badge badge-pill badge-info">Games</span> }
+                            { music && <span key={activityName+"music"} className="category-badges badge badge-pill badge-info">Music</span> }
+                            { nightLife && <span key={activityName+"nightLife"} className="category-badges badge badge-pill badge-info">Night Life</span> }
+                            { outdoors && <span key={activityName+"outdoors"} className="category-badges badge badge-pill badge-info">Outdoors</span> }
+                            { relax && <span key={activityName+"relax"} className="category-badges badge badge-pill badge-info">Relax</span> }
+                            { shopping && <span key={activityName+"shopping"} className="category-badges badge badge-pill badge-info">Shopping</span> }
+                            { sports && <span key={activityName+"sports"} className="category-badges badge badge-pill badge-info">Sports</span> }
+                            { adventure && <span key={activityName+"adventure"} className="category-badges badge badge-pill badge-info">Adventure</span> }
                         </li>
                         <li key={"author"} className="list-group-item">Submitted by: { activityAuthor }</li>
                         <li key={"rating"} className="list-group-item">{ buildRatingStars(activityRating) }</li>
@@ -182,9 +215,11 @@ const ActivityPage = ({ match }) => {
                                     required={true}
                                 />
                             </Form.Group>
+                            <br />
                             <Form.Group>
+                                <div className="rating-stars">
                                 <Form.Label>Leave a rating: </Form.Label>
-                                    <div class="rating">
+                                    <div className="rating">
                                         <label onClick={(e) => setReviewRating(1)}>
                                             <input type="radio" name="stars" value="1" />
                                             <span class="icon">★</span>
@@ -216,6 +251,11 @@ const ActivityPage = ({ match }) => {
                                             <span class="icon">★</span>
                                         </label>
                                         </div>
+                                    </div>
+                                </Form.Group>
+                                
+                                <Form.Group size="sm" controlId="btn">
+                                    <button className="btn btn-info review-button" type="submit">Submit</button>
                                 </Form.Group>
                         </Form>
                     </div>
