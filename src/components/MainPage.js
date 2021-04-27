@@ -71,7 +71,7 @@ const MainPage = (props) => {
                 <NavBar
                     username={username}
                     userLoggedIn={userLoggedIn}
-                    setUserLoggedIn={setULI}
+                    setULI={setULI}
                 />
             </div>
             <div className="under">
