@@ -88,6 +88,7 @@ const ActivityPage = ({ match }) => {
         fetch(`https://api.laventure.click/ReviewsServlet?isRSVP=false&activityid=${activityID}`)
             .then(res => res.json())
             .then((data) => {
+                console.log(data);
                 setActivityReviews(data)
             })
 
@@ -113,8 +114,8 @@ const ActivityPage = ({ match }) => {
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
                 activityid: activityID,
-                user: username,
-                text: reviewText,
+                username: username,
+                reviewtext: reviewText,
                 rating: reviewRating
             })
         })
@@ -265,15 +266,15 @@ const ActivityPage = ({ match }) => {
                     </div>
                 </div>
                 }
-                { /* activityReviews.map((review) => {
+                {  activityReviews.map((review) => {
                     return <div className="card review-card">
                         <div className="card-body">
-                            <p className="card-text">{ review.text }</p>
-                            <p><b>{ review.author }</b></p>
-                            <p>{ buildRatingStars(review.rating) }</p>
+                            <p className="card-text">{ review.reviewText }</p>
+                            <p><b>{ review.username }</b></p>
+                            <p>{ buildRatingStars(review.ratingVal) }</p>
                         </div>
                     </div>
-                }) */}
+                }) }
             </div>
         </div>
         </div>
