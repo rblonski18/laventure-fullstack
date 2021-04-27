@@ -8,26 +8,50 @@ class SideBar extends React.Component {
 
         this.state = {
             username: this.props.username,
-            uli: this.props.uli,
+            uli: this.props.userLoggedIn,
             sortBy: '',
             default: [this.props.activityListing],
-            activities: [this.props.activityListing],
+            activities: [],
             byRating: [],
             recentlyViewed: []
         }
     }
 
+    getCookie = () => {
+        var name = "user=";
+        var decodedCookie = decodeURIComponent(document.cookie);
+        var ca = decodedCookie.split(';');
+        for(var i = 0; i <ca.length; i++) {
+          var c = ca[i];
+          while (c.charAt(0) === ' ') {
+            c = c.substring(1);
+          }
+          if (c.indexOf(name) === 0) {
+            return c.substring(name.length, c.length);
+          }
+        }
+        return "";
+    }
+
     componentDidMount() {
 
+        let username = this.getCookie();
+
+        fetch(`https://api.laventure.click/ActivityListServlet?sortBy=none&user=${username}`)
+            .then(res => res.json())
+            .then((data) => {
+                this.setState({activities: data})
+            })
+
         // request for list of activities sorted by rating
-        fetch(`https://api.laventure.click/ActivityListServlet?sortBy=rating&user=${this.state.username}`)
+        fetch(`https://api.laventure.click/ActivityListServlet?sortBy=rating&user=${username}`)
             .then(res => res.json())
             .then((data) => {
                 this.setState({byRating: data})
             })
 
         // request for recently viewed activities of user w/ username specified
-        fetch(`https://api.laventure.click/ActivityListServlet?sortBy=recent&user=${this.state.username}`)
+        fetch(`https://api.laventure.click/ActivityListServlet?sortBy=recent&user=${username}`)
             .then(res => res.json())
             .then((data) => {
                 this.setState({recentlyViewed: data})
@@ -36,10 +60,14 @@ class SideBar extends React.Component {
     }
 
     handleSort = (event, val) => {
-        if(val === "Rating") {
+        if(val == "Rating") {
             this.setState({activities: this.state.byRating});
-        } else if(val === "Recently Viewed") {
+        } else if(val == "Recently Viewed") {
+            console.log(this.state.activities);
+            console.log(this.state.recentlyViewed);
             this.setState({activities: this.state.recentlyViewed});
+            console.log(this.state.activities);
+            console.log(this.state.recentlyViewed);
         }
     }
 
@@ -55,7 +83,7 @@ class SideBar extends React.Component {
                             </button>
                             <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                 <li><a key="rating" className="dropdown-item" onClick={(e) => this.handleSort(e, "Rating")}>Rating</a></li>
-                                { this.state.uli &&
+                                { this.props.userLoggedIn &&
                                     <li><a key="recent-viewed" className="dropdown-item" onClick={(e) => this.handleSort(e, "Recently Viewed")}>Recently Viewed</a></li>
                                 }
                             </ul>
@@ -64,7 +92,7 @@ class SideBar extends React.Component {
                 </div>
 
             <div className="activities-sidebar">
-            { this.props.activityListing.map((activity) => {
+            { this.state.activities.map((activity) => {
                 const items = [];
                 for(var i = 0; i < activity.rating; i++) {
                     items.push(<span key={activity.title+i} className="fa fa-star checked"/>)
