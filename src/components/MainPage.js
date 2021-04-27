@@ -45,8 +45,6 @@ const MainPage = (props) => {
     }
 
     useEffect(() => {
-        // document.getElementById('search-bar-input').value = '';
-
         fetch(`https://api.laventure.click/ActivityListServlet?sortBy=none&user=${username}`)
             .then(res => res.json())
             .then((data) => {

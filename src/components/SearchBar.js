@@ -16,8 +16,6 @@ class SearchBar extends React.Component {
     }
 
     componentDidMount = () => {
-        // document.getElementById('search-bar-input').value = '';
-
         fetch(`https://api.weatherbit.io/v2.0/current?key=4247ec7591994b7794e906958b50b6ad&city=Los%20Angeles`)
             .then(res => res.json())
             .then((json) => {
@@ -39,6 +37,7 @@ class SearchBar extends React.Component {
 
     updateSearch = (e) => {
         const searchKey = e.target.value.toLowerCase();
+        this.setState({keyword: searchKey});
         this.props.handleSearch(searchKey);
     }
 

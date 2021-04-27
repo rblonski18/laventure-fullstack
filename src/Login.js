@@ -192,7 +192,6 @@ export default class Login extends React.Component {
                             )}
                             clientId="333741736612-67il7uuvsssus89p7a1v7215go5ecvla.apps.googleusercontent.com"
                             onSuccess={(response) => this.responseGoogle(response)}
-                            // onFailure={console.log('Unable to sign in with Google.')}
                             cookiePolicy={'single_host_origin'}
                         />
                     </div>
