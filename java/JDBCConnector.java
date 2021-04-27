@@ -576,7 +576,7 @@ public class JDBCConnector {
     }
 
     //Updates the users most recently viewed activity in just the database.
-    public static void visitActivity(int userID, int activityID)
+    public static void visitActivity(String username, int activityID)
     {
         Connection conn = null;
         Statement st = null;
@@ -592,7 +592,7 @@ public class JDBCConnector {
         	Class.forName("com.mysql.jdbc.Driver");
             conn = DriverManager.getConnection(jdbcUrl);
             st = conn.createStatement();
-            rs = st.executeQuery("SELECT * FROM Users WHERE UserID='" + userID + "'");
+            rs = st.executeQuery("SELECT * FROM Users WHERE Username='" + username + "'");
             rs.next();
 
             do
@@ -608,7 +608,7 @@ public class JDBCConnector {
 
             int activityIDs[] = mru.getFiveVals();
 
-            st.execute("UPDATE Users SET ActivityID5=" + activityIDs[4] + ", ActivityID4=" + activityIDs[3] + ", ActivityID3=" + activityIDs[2] + ", ActivityID2=" + activityIDs[1] + ", ActivityID1=" + activityIDs[0] + " WHERE UserID=" + userID);
+            st.execute("UPDATE Users SET ActivityID5=" + activityIDs[4] + ", ActivityID4=" + activityIDs[3] + ", ActivityID3=" + activityIDs[2] + ", ActivityID2=" + activityIDs[1] + ", ActivityID1=" + activityIDs[0] + " WHERE Username='" + username + "'");
         }
         catch (SQLException e)
         {
@@ -642,18 +642,24 @@ public class JDBCConnector {
         }
     }
 
-    public static void addReview(int activityID, int userID, double ratingVal, String reviewText)
+    public static void addReview(int activityID, String username, double ratingVal, String reviewText)
     {
         Connection conn = null;
         Statement st = null;
+        ResultSet rs = null;
 
         try
         {
         	Class.forName("com.mysql.jdbc.Driver");
             conn = DriverManager.getConnection(jdbcUrl);
             st = conn.createStatement();
-            st.execute("INSERT INTO Reviews (ActivityID,UserID,RatingVal,ReviewText) VALUES (" + activityID + "," + userID + "," + ratingVal + ",'" + reviewText + "')");
-            st.execute("UPDATE Activities SET Rating=((Rating*RatingCount)+" + ratingVal + ")/(RatingCount+1), RatingCount=RatingCount+1 WHERE ActivityID=" + activityID);
+            rs = st.executeQuery("SELECT * FROM Users WHERE Username='" + username + "'");
+            if (rs.next())
+            {
+            	int userID = rs.getInt("UserID");
+            	st.execute("INSERT INTO Reviews (ActivityID,UserID,RatingVal,ReviewText) VALUES (" + activityID + "," + userID + "," + ratingVal + ",'" + reviewText + "')");
+            	st.execute("UPDATE Activities SET Rating=((Rating*RatingCount)+" + ratingVal + ")/(RatingCount+1), RatingCount=RatingCount+1 WHERE ActivityID=" + activityID);
+            }
         }
         catch (SQLException e)
         {
@@ -667,6 +673,10 @@ public class JDBCConnector {
         {
             try
             {
+            	if (rs != null)
+            	{
+            		rs.close();
+            	}
                 if (st != null)
                 {
                     st.close();
@@ -684,7 +694,7 @@ public class JDBCConnector {
     }
 
     //Returns queuePos of new RSVP. Return of -1 means not in queue. Return of -100 means SQL error occurred.
-    public static int addRSVP(int activityID, int userID)
+    public static int addRSVP(int activityID, String username)
     {
         Connection conn = null;
         Statement st = null;
@@ -701,30 +711,36 @@ public class JDBCConnector {
         	Class.forName("com.mysql.jdbc.Driver");
             conn = DriverManager.getConnection(jdbcUrl);
             st = conn.createStatement();
-            addRSVPLock.lock();
-            rs = st.executeQuery("SELECT * FROM RSVPs WHERE ActivityID=" + activityID);
-            while(rs.next())
+            rs = st.executeQuery("SELECT * FROM Users WHERE Username='" + username + "'");
+            if (rs.next())
             {
-                queuePos = rs.getInt("QueuePos");
-                if (queuePos > highestQueuePos)
-                {
-                    highestQueuePos = queuePos;
-                }
-                queuedCount++;
+            	int userID = rs.getInt("UserID");
+            	rs.close();
+	            addRSVPLock.lock();
+	            rs = st.executeQuery("SELECT * FROM RSVPs WHERE ActivityID=" + activityID);
+	            while(rs.next())
+	            {
+	                queuePos = rs.getInt("QueuePos");
+	                if (queuePos > highestQueuePos)
+	                {
+	                    highestQueuePos = queuePos;
+	                }
+	                queuedCount++;
+	            }
+	
+	            if (queuedCount < maxRSVPs)
+	            {
+	                queuePos = -1;
+	            }
+	            else
+	            {
+	                queuePos = highestQueuePos + 1;
+	            }
+	
+	            System.out.println(queuePos + " " + highestQueuePos + " " + maxRSVPs);
+	            st.execute("INSERT INTO RSVPs (ActivityID,UserID,QueuePos) VALUES (" + activityID + "," + userID + "," + queuePos + ")");
+	            st.execute("UPDATE Activities SET RSVPCount=RSVPCount+1 WHERE ActivityID=" + activityID);
             }
-
-            if (queuedCount < maxRSVPs)
-            {
-                queuePos = -1;
-            }
-            else
-            {
-                queuePos = highestQueuePos + 1;
-            }
-
-            System.out.println(queuePos + " " + highestQueuePos + " " + maxRSVPs);
-            st.execute("INSERT INTO RSVPs (ActivityID,UserID,QueuePos) VALUES (" + activityID + "," + userID + "," + queuePos + ")");
-            st.execute("UPDATE Activities SET RSVPCount=RSVPCount+1 WHERE ActivityID=" + activityID);
         }
         catch (SQLException e)
         {
@@ -765,13 +781,12 @@ public class JDBCConnector {
     }
 
     //Returns true if RSVP was removed. Returns false if no RSVP with RSVPID found.
-    public static boolean cancelRSVP(int RSVPID)
+    public static boolean cancelRSVP(int activityID, String username)
     {
         Connection conn = null;
         Statement st = null;
         ResultSet rs = null;
 
-        int activityID;
         int queuePos;
 
         boolean canceled = true;
@@ -781,19 +796,24 @@ public class JDBCConnector {
         	Class.forName("com.mysql.jdbc.Driver");
             conn = DriverManager.getConnection(jdbcUrl);
         	st = conn.createStatement();
-            rs = st.executeQuery("SELECT * FROM RSVPs WHERE RSVPID=" + RSVPID);
-            if (rs.next())
-            {
-                activityID = rs.getInt("ActivityID");
-                queuePos = rs.getInt("QueuePos");
-                st.execute("DELETE FROM RSVPs WHERE RSVPID=" + RSVPID);
-                st.execute("UPDATE RSVPs SET QueuePos=QueuePos-1 WHERE QueuePos>=" + queuePos + " AND QueuePos>=0 AND ActivityID=" + activityID);
-                st.execute("UPDATE Activities SET RSVPCount=RSVPCount-1 WHERE ActivityID=" + activityID);
-            }
-            else
-            {
-                canceled = false;
-            }
+        	 rs = st.executeQuery("SELECT * FROM Users WHERE Username='" + username + "'");
+             if (rs.next())
+             {
+             	int userID = rs.getInt("UserID");
+	            rs = st.executeQuery("SELECT * FROM RSVPs WHERE UserID=" + userID + " AND ActivityID=" + activityID);
+	            if (rs.next())
+	            {
+	                int RSVPID = rs.getInt("RSVPID");
+	                queuePos = rs.getInt("QueuePos");
+	                st.execute("DELETE FROM RSVPs WHERE RSVPID=" + RSVPID);
+	                st.execute("UPDATE RSVPs SET QueuePos=QueuePos-1 WHERE QueuePos>=" + queuePos + " AND QueuePos>=0 AND ActivityID=" + activityID);
+	                st.execute("UPDATE Activities SET RSVPCount=RSVPCount-1 WHERE ActivityID=" + activityID);
+	            }
+	            else
+	            {
+	                canceled = false;
+	            }
+	        }
         }
         catch (SQLException e)
         {
@@ -830,7 +850,7 @@ public class JDBCConnector {
     }
 
     //Returns queuePos of user for activity. -1 means RSVPed and not queued, -2 means not RSVPed. Return of -100 means SQL error occurred.
-    public static int RSVPStatus(int activityID, int userID)
+    public static int RSVPStatus(int activityID, String username)
     {
         Connection conn = null;
         Statement st = null;
@@ -844,15 +864,21 @@ public class JDBCConnector {
         	Class.forName("com.mysql.jdbc.Driver");
             conn = DriverManager.getConnection(jdbcUrl);
             st = conn.createStatement();
-            rs = st.executeQuery("SELECT * FROM RSVPs WHERE ActivityID=" + activityID + " AND UserID=" + userID);
-            isRSVPed = rs.next();
-            if (isRSVPed)
+            rs = st.executeQuery("SELECT * FROM Users WHERE Username='" + username + "'");
+            if (rs.next())
             {
-                queuePos = rs.getInt("QueuePos");
-            }
-            else
-            {
-                queuePos = -2;
+            	int userID = rs.getInt("UserID");
+            	rs.close();
+	            rs = st.executeQuery("SELECT * FROM RSVPs WHERE ActivityID=" + activityID + " AND UserID=" + userID);
+	            isRSVPed = rs.next();
+	            if (isRSVPed)
+	            {
+	                queuePos = rs.getInt("QueuePos");
+	            }
+	            else
+	            {
+	                queuePos = -2;
+	            }
             }
         }
         catch (SQLException e)
