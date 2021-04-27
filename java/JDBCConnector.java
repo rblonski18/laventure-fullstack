@@ -456,7 +456,7 @@ public class JDBCConnector {
             conn = DriverManager.getConnection(jdbcUrl);
 
             //TODO: fix apostrophes
-            st = conn.prepareStatement("INSERT INTO Activities (Username,Title,Image,Description,Longitude,Latitude,Town,Rating,RatingCount,RSVPCount,MaxRSVPs,Adventure,Beach,Books,Entertainment,Exercise,Games,Music,NightLife,Outdoors,Relax,Shopping,Sports,Time) VALUES ('" + username + "','" + title + "','" + image + "','" + description + "'," + longitude + "," + latitude + ",'" + town + "'," + rating + "," + ratingCount + "," + RSVPCount + "," + maxRSVPs + ","  + adventure + ","  + beach + ","  + books + ","  + entertainment + ","  + exercise + ","  + games + ","  + music + "," + nightLife + "," + outdoors + ","  + relax + ","  + shopping + "," + sports + ",'" + time + "')");
+            st = conn.prepareStatement("INSERT INTO Activities (Username,Title,Image,Description,Longitude,Latitude,Town,Rating,RatingCount,RSVPCount,MaxRSVPs,Adventure,Beach,Books,Entertainment,Exercise,Games,Music,NightLife,Outdoors,Relax,Shopping,Sports,Time) VALUES ('" + username + "','" + title + "','" + image + "',\"" + description + "\"," + longitude + "," + latitude + ",'" + town + "'," + rating + "," + ratingCount + "," + RSVPCount + "," + maxRSVPs + ","  + adventure + ","  + beach + ","  + books + ","  + entertainment + ","  + exercise + ","  + games + ","  + music + "," + nightLife + "," + outdoors + ","  + relax + ","  + shopping + "," + sports + ",'" + time + "')");
             
             st.executeUpdate();
             added = true;
