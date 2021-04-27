@@ -91,17 +91,21 @@ const ActivityPage = ({ match }) => {
                 console.log(data);
                 setActivityReviews(data)
             })
-
-        // check if user is RSVPed to this activity.
-        fetch(`https://api.laventure.click/RSVPServlet?activityid=${activityID}&user=${username}&task=checkStatus`)
-            .then(res => res.json())
-            .then((data) => {
-                setRSVPBool(!data.status)
-            })
-
+        
         let user = getCookie();
+        if(user.length > 0) {
+            // check if user is RSVPed to this activity.
+            fetch(`https://api.laventure.click/RSVPServlet?activityid=${activityID}&username=${user}&task=checkStatus`)
+                .then(res => res.json())
+                .then((data) => {
+                    if(data == "User is not RSVPed and not in queue.") setRSVPBool(true);
+                    else setRSVPButton(false);
+                })
+            setULI(true);
+        }
+
+
         setUsername(user);
-        if(user.length > 0) setULI(true);
 
     }, []);
 
@@ -130,7 +134,7 @@ const ActivityPage = ({ match }) => {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
-                user: username,
+                username: username,
                 activityid: activityID,
                 task: "add"
             })
