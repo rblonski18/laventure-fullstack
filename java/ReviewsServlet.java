@@ -108,13 +108,13 @@ public class ReviewsServlet  extends HttpServlet {
         
         
         String aID = body.get("activityid");
-        String uID = body.get("userid");
+        String username = body.get("username");
         String reviewText = body.get("reviewtext");
         String rating = body.get("rating");
 
         //Assuming for now that all the parameters are required
         //That may not be the case if we let a user leave a star rating with a blank review
-        if(aID == null || uID == null || reviewText == null || rating == null) {
+        if(aID == null || username == null || reviewText == null || rating == null) {
             String error = "Missing one or more parameters.";
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             pw.write(new Gson().toJson(error));
@@ -128,7 +128,6 @@ public class ReviewsServlet  extends HttpServlet {
 
         try {
             activityID = Integer.parseInt(aID);
-            userID = Integer.parseInt(uID);
             ratingVal = Double.parseDouble(rating);
         }
         catch(NumberFormatException nfe) {
@@ -139,7 +138,7 @@ public class ReviewsServlet  extends HttpServlet {
             return;
         }
 
-        JDBCConnector.addReview(activityID, userID, ratingVal, reviewText);
+        JDBCConnector.addReview(activityID, username, ratingVal, reviewText);
         String success = "Successfully added review to database";
         response.setStatus(HttpServletResponse.SC_OK);
         pw.write(new Gson().toJson(success));

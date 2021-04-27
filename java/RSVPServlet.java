@@ -102,8 +102,8 @@ public class RSVPServlet  extends HttpServlet {
             }
         }
         else if(task.equals("checkStatus")) {
-            String uid = request.getParameter("userid");
-            if(uid == null || uid.isBlank()) {
+            String username = request.getParameter("username");
+            if(username == null || username.equals("")) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 String error = "No user specified.";
                 pw.write(new Gson().toJson(error));
@@ -111,19 +111,7 @@ public class RSVPServlet  extends HttpServlet {
                 return;
             }
 
-            int userID = -1;
-            try {
-                userID = Integer.parseInt(uid);
-            }
-            catch(NumberFormatException nfe) {
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                String error = "Could not parse userid parameter.";
-                pw.write(new Gson().toJson(error));
-                pw.flush();
-                return;
-            }
-
-            Integer status = JDBCConnector.RSVPStatus(activityID, userID);
+            Integer status = JDBCConnector.RSVPStatus(activityID, username);
             if(status == -1) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 String error = "Could not find RSVP.";
@@ -259,8 +247,8 @@ public class RSVPServlet  extends HttpServlet {
                 return;
             }
 
-            String uid = body.get("userid");
-            if(uid == null || uid.isBlank()) {
+            String username = body.get("username");
+            if(username == null || username.isBlank()) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 String error = "No user specified.";
                 pw.write(new Gson().toJson(error));
@@ -268,19 +256,7 @@ public class RSVPServlet  extends HttpServlet {
                 return;
             }
 
-            int userID = -1;
-            try {
-                userID = Integer.parseInt(uid);
-            }
-            catch(NumberFormatException nfe) {
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                String error = "Could not parse userid parameter.";
-                pw.write(new Gson().toJson(error));
-                pw.flush();
-                return;
-            }
-
-            Integer status = JDBCConnector.addRSVP(activityID, userID);
+            Integer status = JDBCConnector.addRSVP(activityID, username);
             if(status == -1) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 String error = "User is RSVPed but not in queue.";
