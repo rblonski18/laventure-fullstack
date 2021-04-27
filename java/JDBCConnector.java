@@ -28,7 +28,7 @@ public class JDBCConnector {
         ResultSet rs = null;
         
         int activityID;
-        String username;
+        String activityUsername;
         String title;
         String image;
         String description;
@@ -66,19 +66,19 @@ public class JDBCConnector {
             rs = st.executeQuery();
             if (rs.next())
             {
-                if (rs.getInt("ActivityID1") != null)
+                if (rs.getInt("ActivityID1") != 0)
 				{
 					ActivityIDs.add(rs.getInt("ActivityID1"));
-					if (rs.getInt("ActivityID2") != null)
+					if (rs.getInt("ActivityID2") != 0)
 					{
 						ActivityIDs.add(rs.getInt("ActivityID2"));
-						if (rs.getInt("ActivityID3") != null)
+						if (rs.getInt("ActivityID3") != 0)
 						{
 							ActivityIDs.add(rs.getInt("ActivityID3"));
-							if (rs.getInt("ActivityID4") != null)
+							if (rs.getInt("ActivityID4") != 0)
 							{
 								ActivityIDs.add(rs.getInt("ActivityID4"));
-								if (rs.getInt("ActivityID5") != null)
+								if (rs.getInt("ActivityID5") != 0)
 								{
 									ActivityIDs.add(rs.getInt("ActivityID5"));
 								}
@@ -95,7 +95,7 @@ public class JDBCConnector {
 				if (rs.next())
 				{
 					activityID = rs.getInt("ActivityID");
-	                username = rs.getString("Username");
+					activityUsername = rs.getString("Username");
 	                title = rs.getString("Title");
 	                image = rs.getString("Image");
 	                description = rs.getString("Description");
@@ -119,7 +119,7 @@ public class JDBCConnector {
 	                relax = rs.getBoolean("Relax");
 	                shopping = rs.getBoolean("Shopping");
 	                sports = rs.getBoolean("Sports");
-	                activities.add(new Activity(activityID, username, title, image, description, longitude,
+	                activities.add(new Activity(activityID, activityUsername, title, image, description, longitude,
 	                        latitude, town, rating, ratingCount, RSVPCount, maxRSVPs, time,
 	                        adventure, beach, books, entertainment, exercise, games,
 	                        music, nightLife, outdoors, relax, shopping, sports));
