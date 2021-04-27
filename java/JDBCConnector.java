@@ -781,7 +781,7 @@ public class JDBCConnector {
     }
 
     //Returns true if RSVP was removed. Returns false if no RSVP with RSVPID found.
-    public static boolean cancelRSVP(int RSVPID)
+    public static boolean cancelRSVP(int activityID, String username)
     {
         Connection conn = null;
         Statement st = null;
@@ -797,19 +797,24 @@ public class JDBCConnector {
         	Class.forName("com.mysql.jdbc.Driver");
             conn = DriverManager.getConnection(jdbcUrl);
         	st = conn.createStatement();
-            rs = st.executeQuery("SELECT * FROM RSVPs WHERE RSVPID=" + RSVPID);
-            if (rs.next())
-            {
-                activityID = rs.getInt("ActivityID");
-                queuePos = rs.getInt("QueuePos");
-                st.execute("DELETE FROM RSVPs WHERE RSVPID=" + RSVPID);
-                st.execute("UPDATE RSVPs SET QueuePos=QueuePos-1 WHERE QueuePos>=" + queuePos + " AND QueuePos>=0 AND ActivityID=" + activityID);
-                st.execute("UPDATE Activities SET RSVPCount=RSVPCount-1 WHERE ActivityID=" + activityID);
-            }
-            else
-            {
-                canceled = false;
-            }
+        	 rs = st.executeQuery("SELECT * FROM Users WHERE Username='" + username + "'");
+             if (rs.next())
+             {
+             	int userID = rs.getInt("UserID");
+	            rs = st.executeQuery("SELECT * FROM RSVPs WHERE UserID=" + userID + " AND ActivityID=" + activityID);
+	            if (rs.next())
+	            {
+	                int RSVPID = rs.getInt("RSVPID");
+	                queuePos = rs.getInt("QueuePos");
+	                st.execute("DELETE FROM RSVPs WHERE RSVPID=" + RSVPID);
+	                st.execute("UPDATE RSVPs SET QueuePos=QueuePos-1 WHERE QueuePos>=" + queuePos + " AND QueuePos>=0 AND ActivityID=" + activityID);
+	                st.execute("UPDATE Activities SET RSVPCount=RSVPCount-1 WHERE ActivityID=" + activityID);
+	            }
+	            else
+	            {
+	                canceled = false;
+	            }
+	        }
         }
         catch (SQLException e)
         {
