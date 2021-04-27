@@ -123,7 +123,6 @@ public class ReviewsServlet  extends HttpServlet {
         }
 
         int activityID = -1;
-        int userID = -1;
         double ratingVal = -1.0;
 
         try {

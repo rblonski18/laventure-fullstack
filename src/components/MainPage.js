@@ -79,6 +79,7 @@ const MainPage = (props) => {
                     <SideBar
                         username={username}
                         activityListing={activityList}
+                        userLoggedIn={userLoggedIn}
                     />
                 </div>
                 <div className="mp-right">

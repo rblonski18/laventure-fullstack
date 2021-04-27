@@ -217,11 +217,10 @@ public class ActivityServlet extends HttpServlet {
         //to accept uppercase Doubles and Integers
         //this assumes that the image type is STring and not blob
         Boolean added = JDBCConnector.addActivity(username, title, image, desc, longitude, latitude, location, rating, ratingCount, hostAttending, capacity, adventure, beach, books, entertainment, exercise, games, music, nightLife, outdoors, relax, shopping, sports, time);
-
         if(added) {
             response.setStatus(HttpServletResponse.SC_OK);
             String success = "New activity added.";
-            pw.write(new Gson().toJson(added));
+            pw.write(new Gson().toJson(success));
             pw.flush();
         }
         else {

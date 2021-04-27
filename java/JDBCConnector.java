@@ -2,7 +2,6 @@
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -10,10 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.concurrent.locks.ReentrantLock;
-
-import javax.sql.rowset.serial.SerialBlob;
 
 public class JDBCConnector {
     private static ReentrantLock addRSVPLock = new ReentrantLock();
@@ -459,6 +455,7 @@ public class JDBCConnector {
         	Class.forName("com.mysql.jdbc.Driver");
             conn = DriverManager.getConnection(jdbcUrl);
 
+            //TODO: fix apostrophes
             st = conn.prepareStatement("INSERT INTO Activities (Username,Title,Image,Description,Longitude,Latitude,Town,Rating,RatingCount,RSVPCount,MaxRSVPs,Adventure,Beach,Books,Entertainment,Exercise,Games,Music,NightLife,Outdoors,Relax,Shopping,Sports,Time) VALUES ('" + username + "','" + title + "','" + image + "','" + description + "'," + longitude + "," + latitude + ",'" + town + "'," + rating + "," + ratingCount + "," + RSVPCount + "," + maxRSVPs + ","  + adventure + ","  + beach + ","  + books + ","  + entertainment + ","  + exercise + ","  + games + ","  + music + "," + nightLife + "," + outdoors + ","  + relax + ","  + shopping + "," + sports + ",'" + time + "')");
             
             st.executeUpdate();
@@ -586,6 +583,7 @@ public class JDBCConnector {
         int nextActivityInd = 1;
 
         MRUCache mru = new MRUCache(5);
+
 
         try
         {
@@ -816,7 +814,7 @@ public class JDBCConnector {
 	         }
              else
              {
-            	 canceled = false
+            	 canceled = false;
              }
         }
         catch (SQLException e)

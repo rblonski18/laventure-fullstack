@@ -1,6 +1,8 @@
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -9,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 
 
@@ -82,7 +85,7 @@ public class ActivityListServlet extends HttpServlet{
         }
         //TODO
         //return a list of activities that were recently viewed by the specified user
-        else if(sortBy.equals("recently viewed")) {
+        else if(sortBy.equals("recent")) {
             if(user == null) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 String error = "Missing user parameter.";
@@ -90,9 +93,9 @@ public class ActivityListServlet extends HttpServlet{
                 pw.flush();
             }
             else {
-                String placeholder = "Recently viewed sorting not implemented yet!";
-                response.setStatus(HttpServletResponse.SC_ACCEPTED);
-                pw.write(new Gson().toJson(placeholder));
+                activities = JDBCConnector.getRecentlyViewed(user);
+                response.setStatus(HttpServletResponse.SC_OK);
+                pw.write(new Gson().toJson(activities));
                 pw.flush();
             }
         }
@@ -104,5 +107,44 @@ public class ActivityListServlet extends HttpServlet{
             pw.flush();
         }
 
+    }
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        setAccessControlHeaders(response);
+        PrintWriter pw = response.getWriter();
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        
+        String payloadRequest = BodyReader.getBody(request);
+        
+        Type type = new TypeToken<HashMap<String, String>>(){}.getType();
+        HashMap<String, String> body = new Gson().fromJson(payloadRequest, type);
+
+        String user = body.get("username");
+        String activityid = body.get("activityid");
+        
+        Integer aID = null;
+        try {
+        	aID = Integer.parseInt(activityid);
+        }
+        catch(NumberFormatException nfe) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            String error = "Could not parse activityid.";
+            pw.write(new Gson().toJson(error));
+            pw.flush();
+        }
+        
+        if(user == null || user.equals("")) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            String error = "Username is null or blank.";
+            pw.write(new Gson().toJson(error));
+            pw.flush();
+        }
+        
+        JDBCConnector.visitActivity(user, aID);
+        response.setStatus(HttpServletResponse.SC_OK);
+        String success = "User visited activity " + aID;
+        pw.write(new Gson().toJson(success));
+        pw.flush();
+    	
     }
 }

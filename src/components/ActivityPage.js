@@ -102,6 +102,16 @@ const ActivityPage = ({ match }) => {
                     else setRSVPButton(false);
                 })
             setULI(true);
+            
+            fetch('https://api.laventure.click/ActivityListServlet', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    activityid: activityID,
+                    username: user,
+                })
+            })
+
         }
 
 
