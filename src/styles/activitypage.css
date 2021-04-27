@@ -60,9 +60,10 @@
         width: 100% !important;
     }
 
+}
 
-
-
+.rating-stars {
+  float: left;
 }
 
 .rating {
