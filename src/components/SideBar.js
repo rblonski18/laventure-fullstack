@@ -60,9 +60,19 @@ class SideBar extends React.Component {
     }
 
     handleSort = (event, val) => {
-        if(val == "Rating") {
+        if(val === "Rating") {
             this.setState({activities: this.state.byRating});
-        } else if(val == "Recently Viewed") {
+        } else if(val === "Recently Viewed") {
+
+            // request for recently viewed activities of user w/ username specified
+            const username = this.getCookie();
+            fetch(`https://api.laventure.click/ActivityListServlet?sortBy=recent&user=${username}`)
+                .then(res => res.json())
+                .then((data) => {
+                    // this.setState({recentlyViewed: data})
+                    this.setState({activities: data});
+                })
+
             console.log(this.state.activities);
             console.log(this.state.recentlyViewed);
             this.setState({activities: this.state.recentlyViewed});
