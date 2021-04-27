@@ -443,7 +443,7 @@ public class JDBCConnector {
     public static Boolean addActivity(String username, String title, String image, String description, double longitude,
                                   double latitude, String town, double rating, int ratingCount, int RSVPCount, int maxRSVPs, boolean adventure,
                                   boolean beach, boolean books, boolean entertainment, boolean exercise, boolean games, boolean music, boolean nightLife,
-                                  boolean outdoors, boolean relax, boolean shopping, boolean sports, String time)
+                                  boolean outdoors, boolean relax, boolean shopping, boolean sports, String time, String date)
     {
         Connection conn = null;
         PreparedStatement st = null;
@@ -455,8 +455,7 @@ public class JDBCConnector {
         	Class.forName("com.mysql.jdbc.Driver");
             conn = DriverManager.getConnection(jdbcUrl);
 
-            //TODO: fix apostrophes
-            st = conn.prepareStatement("INSERT INTO Activities (Username,Title,Image,Description,Longitude,Latitude,Town,Rating,RatingCount,RSVPCount,MaxRSVPs,Adventure,Beach,Books,Entertainment,Exercise,Games,Music,NightLife,Outdoors,Relax,Shopping,Sports,Time) VALUES ('" + username + "','" + title + "','" + image + "',\"" + description + "\"," + longitude + "," + latitude + ",'" + town + "'," + rating + "," + ratingCount + "," + RSVPCount + "," + maxRSVPs + ","  + adventure + ","  + beach + ","  + books + ","  + entertainment + ","  + exercise + ","  + games + ","  + music + "," + nightLife + "," + outdoors + ","  + relax + ","  + shopping + "," + sports + ",'" + time + "')");
+            st = conn.prepareStatement("INSERT INTO Activities (Username,Title,Image,Description,Longitude,Latitude,Town,Rating,RatingCount,RSVPCount,MaxRSVPs,Adventure,Beach,Books,Entertainment,Exercise,Games,Music,NightLife,Outdoors,Relax,Shopping,Sports,Time,Date) VALUES ('" + username + "','" + title + "','" + image + "',\"" + description + "\"," + longitude + "," + latitude + ",'" + town + "'," + rating + "," + ratingCount + "," + RSVPCount + "," + maxRSVPs + ","  + adventure + ","  + beach + ","  + books + ","  + entertainment + ","  + exercise + ","  + games + ","  + music + "," + nightLife + "," + outdoors + ","  + relax + ","  + shopping + "," + sports + ",'" + time + "','" + date + "')");
             
             st.executeUpdate();
             added = true;

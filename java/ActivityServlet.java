@@ -134,6 +134,7 @@ public class ActivityServlet extends HttpServlet {
         String image = body.get("image");
         String rating_str = body.get("rating");
         String time = body.get("time");
+        String date = body.get("date");
         String capacity_str = body.get("capacity");
         String attending_str = body.get("attending");
         
@@ -216,7 +217,7 @@ public class ActivityServlet extends HttpServlet {
         //unfortunately Andrew may need to change the function signatures in the JDBCConnector class
         //to accept uppercase Doubles and Integers
         //this assumes that the image type is STring and not blob
-        Boolean added = JDBCConnector.addActivity(username, title, image, desc, longitude, latitude, location, rating, ratingCount, hostAttending, capacity, adventure, beach, books, entertainment, exercise, games, music, nightLife, outdoors, relax, shopping, sports, time);
+        Boolean added = JDBCConnector.addActivity(username, title, image, desc, longitude, latitude, location, rating, ratingCount, hostAttending, capacity, adventure, beach, books, entertainment, exercise, games, music, nightLife, outdoors, relax, shopping, sports, time, date);
         if(added) {
             response.setStatus(HttpServletResponse.SC_OK);
             String success = "New activity added.";
