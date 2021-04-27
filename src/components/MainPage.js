@@ -50,6 +50,7 @@ const MainPage = (props) => {
         fetch(`https://api.laventure.click/ActivityListServlet?sortBy=none&user=${username}`)
             .then(res => res.json())
             .then((data) => {
+                setNoneList(data);
                 setActivityList(data);
             })
 
@@ -61,7 +62,7 @@ const MainPage = (props) => {
     }, [])
 
     const resetListing = (event) => {
-        setActivityList([]);
+        setActivityList(noneList);
         setWF(false)
     }
 
