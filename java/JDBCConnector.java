@@ -813,7 +813,11 @@ public class JDBCConnector {
 	            {
 	                canceled = false;
 	            }
-	        }
+	         }
+             else
+             {
+            	 canceled = false
+             }
         }
         catch (SQLException e)
         {
