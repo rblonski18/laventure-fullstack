@@ -113,14 +113,14 @@ public class RSVPServlet  extends HttpServlet {
 
             Integer status = JDBCConnector.RSVPStatus(activityID, username);
             if(status == -1) {
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                response.setStatus(HttpServletResponse.SC_NO_CONTENT);
                 String error = "Could not find RSVP.";
                 pw.write(new Gson().toJson(error));
                 pw.flush();
                 return;
             }
             else if(status == -2) {
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                response.setStatus(HttpServletResponse.SC_NO_CONTENT);
                 String error = "User is not RSVPed and not in queue.";
                 pw.write(new Gson().toJson(error));
                 pw.flush();
