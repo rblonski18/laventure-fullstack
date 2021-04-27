@@ -787,7 +787,6 @@ public class JDBCConnector {
         Statement st = null;
         ResultSet rs = null;
 
-        int activityID;
         int queuePos;
 
         boolean canceled = true;

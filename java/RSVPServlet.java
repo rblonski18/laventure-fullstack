@@ -193,27 +193,29 @@ public class RSVPServlet  extends HttpServlet {
         }
 
         else if(task.equals("cancel")) {
-            String rsvp = body.get("rsvpid");
-            if(rsvp == null || rsvp.isBlank()) {
+            String username = body.get("user");
+            String activityid = body.get("activityid");
+            
+            if(username == null || username.equals("")) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                String error = "No RSVPID specified.";
+                String error = "Missing username parameter.";
                 pw.write(new Gson().toJson(error));
                 pw.flush();
                 return;
             }
-            Integer RSVPID = null;
+            Integer aID = null;
             try {
-                RSVPID = Integer.parseInt(rsvp);
+                aID = Integer.parseInt(activityid);
             }
             catch(NumberFormatException nfe) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                String error = "Invalid RSVPID.";
+                String error = "Invalid activityID.";
                 pw.write(new Gson().toJson(error));
                 pw.flush();
                 return;
             }
 
-            boolean removed = JDBCConnector.cancelRSVP(RSVPID);
+            boolean removed = JDBCConnector.cancelRSVP(aID, username);
             if(!removed) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 String error = "Error removing RSVPID.";
