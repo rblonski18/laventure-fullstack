@@ -218,20 +218,34 @@ export default class NewActivity extends React.Component {
         this.setState({categories: list});
     }
 
-    // referenced https://medium.com/@blturner3527/storing-images-in-your-database-with-base64-react-682f5f3921c2
+    // referenced https://stackoverflow.com/questions/32833797/convert-local-image-to-base64-string-in-javascript
     handleReaderLoaded = (event) => {
-        let binaryString = event.target.result;
-        this.setState({image: btoa(binaryString)})
+        // let binaryString = event.target.result;
+        // this.setState({image: btoa(binaryString)})
+
+        const res = event.target.result;
+        this.setState({image: res});
     }
 
     setImage = (e) => {
         const files = e.target.files;
         const validImageTypes = ['image/gif', 'image/jpeg', 'image/png'];
         if (validImageTypes.includes(files[0].type) && files[0].size <= 45000) { // max 45 KB
-            const reader = new FileReader();
+
+            var reader = new FileReader();
+            // reader.onload = function(event) {
+            //     var res = event.target.result;
+            //     console.log(res)
+            //     // image = res;
+            // }
+
             reader.onload = this.handleReaderLoaded.bind(this);
-            reader.readAsDataURL(files[0]);
-            // this.setState({image: files[0]});
+            // reader.readAsDataURL(files[0]);
+            // // this.setState({image: files[0]});
+
+            var file = this.response;
+            reader.readAsDataURL(files[0])
+
             document.getElementById('image-label').innerText = 'Replace ' + files[0].name;
         } else {
             toast.info('ERROR! Image must end in .gif, .jpg, or .png. and be at most 45 KB.',
