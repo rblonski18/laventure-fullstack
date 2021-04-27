@@ -67,6 +67,14 @@ nav {
     text-decoration: none;
 }
 
+.card-text {
+    text-align:start;
+}
+
+.right {
+    margin-left: 10rem;
+}
+
 .review-button {
     float: right;
 }
