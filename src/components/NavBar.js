@@ -5,10 +5,6 @@ import {MainPage} from "./MainPage";
 class NavBar extends React.Component {
     constructor(props) {
         super(props);
-        this.handleLogout = this.handleLogout.bind(this);
-        this.state = {
-            userLoggedIn: this.props.userLoggedIn
-        }
     }
 
     deleteCookie = () => {
@@ -17,7 +13,7 @@ class NavBar extends React.Component {
 
     handleLogout = () => {
         this.deleteCookie();
-        this.setState({userLoggedIn: false})
+        this.props.setULI(false);
     }
 
     render() {
@@ -32,7 +28,7 @@ class NavBar extends React.Component {
                     </button>
                     <div className="collapse navbar-collapse" id="navbarNav">
                         <ul className="navbar-nav ms-auto">
-                            { this.state.userLoggedIn &&
+                            { this.props.userLoggedIn &&
                                 <li className="nav-item newActivity">
                                     <Link className="nav-link"
                                           to={{pathname: "/newactivity"}}
@@ -41,12 +37,12 @@ class NavBar extends React.Component {
                                     </Link>
                                 </li>
                             }
-                            { !this.state.userLoggedIn &&
+                            { !this.props.userLoggedIn &&
                                 <li className="nav-item login-nav">
                                     <Link className="nav-link" to="/">Login</Link>
                                 </li>
                             }
-                            { this.state.userLoggedIn &&
+                            { this.props.userLoggedIn &&
                                 <li className="nav-item logout-nav ms-auto" style={{cursor: 'pointer'}}>
                                     <a className="nav-link" onClick={this.handleLogout} >Logout</a>
                                 </li>

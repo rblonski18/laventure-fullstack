@@ -37,7 +37,7 @@ const ActivityPage = ({ match }) => {
     const [ perc, setPercentage] = useState(0);
     const [ reviewText, setReviewText ] = useState('');
     const [ reviewRating, setReviewRating ] = useState(0);
-    const [ userLoggedIn, setULI ] = useState(true);
+    const [ userLoggedIn, setULI ] = useState(getCookie().length > 0);
     const [ rsvpButton, setRSVPButton] = useState(true);
     const [ username, setUsername] = useState('');
 
@@ -100,6 +100,7 @@ const ActivityPage = ({ match }) => {
 
         let user = getCookie();
         setUsername(user);
+        if(user.length > 0) setULI(true);
 
     }, []);
 
@@ -152,7 +153,10 @@ const ActivityPage = ({ match }) => {
 
     return (
         <div>
-        <NavBar userLoggedIn={userLoggedIn} />
+        <NavBar 
+            userLoggedIn={userLoggedIn} 
+            setULI={setULI}
+        />
         <div className="container mt-4 activity-page">
 
             <div className="col-6 activity-card">
@@ -217,7 +221,7 @@ const ActivityPage = ({ match }) => {
                             </Form.Group>
                             <br />
                             <Form.Group>
-                                <div className="rating-stars">
+                                <div className="rating-stars-ap">
                                 <Form.Label>Leave a rating: </Form.Label>
                                     <div className="rating">
                                         <label onClick={(e) => setReviewRating(1)}>

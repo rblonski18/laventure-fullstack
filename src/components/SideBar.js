@@ -64,7 +64,6 @@ class SideBar extends React.Component {
                 </div>
             <div className="activities-sidebar">
             { this.props.activityListing.map((activity) => {
-                console.log(activity);
                 const items = [];
                 for(var i = 0; i < activity.rating; i++) {
                     items.push(<span key={activity.title+i} className="fa fa-star checked"/>)
