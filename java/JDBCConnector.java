@@ -19,6 +19,150 @@ public class JDBCConnector {
     private static String hostname = "aa1bsd9i8xumf8s.ccwudqpljmzy.us-east-2.rds.amazonaws.com";
     private static String port = "3306";
     private static String jdbcUrl = "jdbc:mysql://" + hostname + ":" + port + "/" + dbName + "?user=" + userName + "&password=" + password;
+	
+	
+	public static ArrayList<Activity> getRecentlyViewed(String username)
+    {
+        Connection conn = null;
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        
+        int activityID;
+        String username;
+        String title;
+        String image;
+        String description;
+        double longitude;
+        double latitude;
+        String town;
+        double rating;
+        int ratingCount;
+        int RSVPCount;
+        int maxRSVPs;
+        String time;
+        boolean adventure;
+        boolean beach;
+        boolean books;
+        boolean entertainment;
+        boolean exercise;
+        boolean games;
+        boolean music;
+        boolean nightLife;
+        boolean outdoors;
+        boolean relax;
+        boolean shopping;
+        boolean sports;
+
+        ArrayList<Activity> activities = new ArrayList<Activity>();
+		
+		ArrayList<Integer> ActivityIDs = new ArrayList<Integer>();
+
+        try
+        {
+        	Class.forName("com.mysql.jdbc.Driver");
+            conn = DriverManager.getConnection(jdbcUrl);
+
+            st = conn.prepareStatement("SELECT * FROM Users WHERE Username='" + username + "'");
+            rs = st.executeQuery();
+            if (rs.next())
+            {
+                if (rs.getInt("ActivityID1") != null)
+				{
+					ActivityIDs.add(rs.getInt("ActivityID1"));
+					if (rs.getInt("ActivityID2") != null)
+					{
+						ActivityIDs.add(rs.getInt("ActivityID2"));
+						if (rs.getInt("ActivityID3") != null)
+						{
+							ActivityIDs.add(rs.getInt("ActivityID3"));
+							if (rs.getInt("ActivityID4") != null)
+							{
+								ActivityIDs.add(rs.getInt("ActivityID4"));
+								if (rs.getInt("ActivityID5") != null)
+								{
+									ActivityIDs.add(rs.getInt("ActivityID5"));
+								}
+							}
+						}
+					}
+				}
+            }
+			rs.close();
+			for (int ind = 0; ind < ActivityIDs.size(); ind++)
+			{
+				st = conn.prepareStatement("SELECT * FROM Activities WHERE ActivityID=" + ActivityIDs.get(ind));
+				rs = st.executeQuery();
+				if (rs.next())
+				{
+					activityID = rs.getInt("ActivityID");
+	                username = rs.getString("Username");
+	                title = rs.getString("Title");
+	                image = rs.getString("Image");
+	                description = rs.getString("Description");
+	                longitude = rs.getDouble("Longitude");
+	                latitude = rs.getDouble("Latitude");
+	                town = rs.getString("Town");
+	                rating = rs.getDouble("Rating");
+	                ratingCount = rs.getInt("RatingCount");
+	                RSVPCount = rs.getInt("RSVPCount");
+	                maxRSVPs = rs.getInt("MaxRSVPs");
+	                time = rs.getString("Time");
+	                adventure = rs.getBoolean("Adventure");
+	                beach = rs.getBoolean("Beach");
+	                books = rs.getBoolean("Books");
+	                entertainment = rs.getBoolean("Entertainment");
+	                exercise = rs.getBoolean("Exercise");
+	                games = rs.getBoolean("Games");
+	                music = rs.getBoolean("Music");
+	                nightLife = rs.getBoolean("NightLife");
+	                outdoors = rs.getBoolean("Outdoors");
+	                relax = rs.getBoolean("Relax");
+	                shopping = rs.getBoolean("Shopping");
+	                sports = rs.getBoolean("Sports");
+	                activities.add(new Activity(activityID, username, title, image, description, longitude,
+	                        latitude, town, rating, ratingCount, RSVPCount, maxRSVPs, time,
+	                        adventure, beach, books, entertainment, exercise, games,
+	                        music, nightLife, outdoors, relax, shopping, sports));
+				}
+				if (rs != null)
+				{
+					rs.close();
+				}
+			}
+        }
+        catch (SQLException e)
+        {
+            System.out.println("SQL Exception occured accessing database.");
+        }
+        catch(ClassNotFoundException e) {
+        	System.out.println("could not load driver.");
+        }
+
+        finally
+        {
+            try
+            {
+                if (rs != null)
+                {
+                    rs.close();
+                }
+                if (st != null)
+                {
+                    st.close();
+                }
+                if (conn != null)
+                {
+                    conn.close();
+                }
+            }
+            catch (SQLException e)
+            {
+                System.out.println("SQL Exception occured closing connection/statement/result set.");
+            }
+        }
+
+        return activities;
+    }
     
     
     //Returns userID of added user. Returns -1 if username already exists.
