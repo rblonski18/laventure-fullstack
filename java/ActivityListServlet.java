@@ -90,9 +90,9 @@ public class ActivityListServlet extends HttpServlet{
                 pw.flush();
             }
             else {
-                String placeholder = "Recently viewed sorting not implemented yet!";
-                response.setStatus(HttpServletResponse.SC_ACCEPTED);
-                pw.write(new Gson().toJson(placeholder));
+                activities = JDBCConnector.getRecentlyViewed(user);
+                response.setStatus(HttpServletResponse.SC_OK);
+                pw.write(new Gson().toJson(activities));
                 pw.flush();
             }
         }
