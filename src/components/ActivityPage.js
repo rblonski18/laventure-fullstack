@@ -109,11 +109,11 @@ const ActivityPage = ({ match }) => {
 
     }, []);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
 
         e.preventDefault();
 
-        fetch('https://api.laventure.click/ReviewsServlet', {
+        await fetch('https://api.laventure.click/ReviewsServlet', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
@@ -123,6 +123,13 @@ const ActivityPage = ({ match }) => {
                 rating: reviewRating
             })
         })
+
+        fetch(`https://api.laventure.click/ReviewsServlet?isRSVP=false&activityid=${activityID}`)
+            .then(res => res.json())
+            .then((data) => {
+                console.log(data);
+                setActivityReviews(data)
+            })
     }
 
     const handleRSVP = (event) => {
