@@ -66,6 +66,10 @@
   float: left;
 }
 
+.description {
+  font-weight: 400;
+}
+
 .rating {
     display: inline-block;
     position: relative;

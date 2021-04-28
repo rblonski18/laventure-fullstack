@@ -15,16 +15,6 @@ import java.lang.reflect.Type;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-//request for activity with the id of activityid
-//fetch('LAVenture/ActivityServlet', {
-//	method:'GET',
-//	headers: {'Content-Type': 'application/json'},
-//	body: JSON.stringify({
-//		isRSVP: false,
-//		activityid: activityID
-//	})
-//})
-
 
 @WebServlet("/ActivityServlet")
 public class ActivityServlet extends HttpServlet {
@@ -91,29 +81,7 @@ public class ActivityServlet extends HttpServlet {
         }
     }
 
-    //Absorbed functionality from proposed NewActivityServlet (relevant for Stephanie)
-    //	fetch('LAVenture/ActivityServlet', {
-    //		method:'POST',
-    //		headers: {'Content-Type': 'application/json'},
-    //		body: JSON.stringify({
-    //			title: this.state.title, //string
-    //			description: this.state.description, //string
-    //			location: this.state.location, // string
-    //			categories: this.state.categories, //(list)
-    //			latitude: this.state.latitude //double
-    //			longitude: this.state.longitude //double
-    //			image: this.state.image, //to be stored as BLOB type
-    //			rating: this.state.rating, //int between 1 and 5
-    //(OPT)		date: this.state.date, //string
-    //(OPT)		time: this.state.time, //string
-    //(OPT)		capacity: this.state.capacity, //int
-    //(OPT)		attending: this.state.attending //boolean if this user will/will not attend
-    //		})
-    //	})
-    //
 
-    //TODO: Handle categories list and date
-    //Note: Current JDBCConnector function does not support these parameters--will need to modify both JDBCConnector and this servlet
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         setAccessControlHeaders(response);
     	PrintWriter pw = response.getWriter();
@@ -180,9 +148,6 @@ public class ActivityServlet extends HttpServlet {
             ratingCount = 1;
         }
 
-        //parse list of categories
-        //are categories booleans, strings, something else? Easy to change if so
-
         Double latitude = null;
         Double longitude = null;
         Double rating = null;
@@ -214,9 +179,6 @@ public class ActivityServlet extends HttpServlet {
             hostAttending = 1;
         }
 
-        //unfortunately Andrew may need to change the function signatures in the JDBCConnector class
-        //to accept uppercase Doubles and Integers
-        //this assumes that the image type is STring and not blob
         Boolean added = JDBCConnector.addActivity(username, title, image, desc, longitude, latitude, location, rating, ratingCount, hostAttending, capacity, adventure, beach, books, entertainment, exercise, games, music, nightLife, outdoors, relax, shopping, sports, time, date);
         if(added) {
             response.setStatus(HttpServletResponse.SC_OK);

@@ -90,10 +90,5 @@ public class LoginServlet extends HttpServlet{
             pw.write(new Gson().toJson(error));
             pw.flush();
         }
-
-
-
-
     }
-
 }

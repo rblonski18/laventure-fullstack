@@ -17,6 +17,7 @@ const ActivityPage = ({ match }) => {
     const [ activityAuthor, setActivityAuthor ] = useState('');
     const [ activityRating, setActivityRating ] = useState(0);
     const [ activityCategories, setActivityCategory ] = useState([]);
+    const [ activityDescription, setActivityDescription ] = useState('');
     const [ beach, setBeach ] = useState(false);
     const [ books, setBooks ] = useState(false);
     const [ entertainment, setEntertainment ] = useState(false);
@@ -62,6 +63,7 @@ const ActivityPage = ({ match }) => {
                 setActivityLocation(activity.town);
                 setActivityAuthor(activity.username);
                 setActivityRating(activity.rating);
+                setActivityDescription(activity.description);
                 setBeach(activity.beach);
                 setBooks(activity.books);
                 setMusic(activity.music);
@@ -88,7 +90,6 @@ const ActivityPage = ({ match }) => {
         fetch(`https://api.laventure.click/ReviewsServlet?isRSVP=false&activityid=${activityID}`)
             .then(res => res.json())
             .then((data) => {
-                console.log(data);
                 setActivityReviews(data)
             })
         
@@ -96,11 +97,15 @@ const ActivityPage = ({ match }) => {
         if(user.length > 0) {
             // check if user is RSVPed to this activity.
             fetch(`https://api.laventure.click/RSVPServlet?activityid=${activityID}&username=${user}&task=checkStatus`)
-                .then(res => res.json())
-                .then((data) => {
-                    if(data == "User is not RSVPed and not in queue.") setRSVPBool(true);
+                .then(res => {
+                    if(res.status == 202) setRSVPButton(true);
                     else setRSVPButton(false);
+                    res.json();
                 })
+                .then((data) => {
+                    
+                })
+
             setULI(true);
             
             fetch('https://api.laventure.click/ActivityListServlet', {
@@ -176,6 +181,7 @@ const ActivityPage = ({ match }) => {
     return (
         <div>
         <NavBar 
+            username={username}
             userLoggedIn={userLoggedIn} 
             setULI={setULI}
         />
@@ -188,6 +194,7 @@ const ActivityPage = ({ match }) => {
                 <div className="card mb-3">
                     <div className="card-body">
                         <h5 className="card-title"><b>{ activityName }</b></h5>
+                        <p className="card-text description">{ activityDescription }</p>
                         <p className="card-text">{ activityLocation }</p>
                     </div>
                     <ul className="list-group list-group-flush">

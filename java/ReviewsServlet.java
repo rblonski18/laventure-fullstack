@@ -33,16 +33,6 @@ public class ReviewsServlet  extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
-    //request for all reviews associated with activityid
-    //		fetch('LAVenture/ReviewsServlet', {
-    //			method: 'GET',
-    //			headers: {'Content-Type': 'application/json'},
-    //			body: JSON.stringify({
-    //				isRSVP: false,
-    //				activityid: activityID
-    //			})
-    //		})
-
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         setAccessControlHeaders(response);
         PrintWriter pw = response.getWriter();
@@ -70,9 +60,6 @@ public class ReviewsServlet  extends HttpServlet {
                 pw.flush();
                 return;
             }
-            //the JDBC getReviews function doesn't check if the ID actually exists in the database
-            //(which may not be a problem depending on how the front-end works), so this servlet
-            //should just return an empty ArrayList if the ID is invalid
             ArrayList<Review> reviews = JDBCConnector.getReviews(activityID);
             response.setStatus(HttpServletResponse.SC_OK);
             String reviewsJSON = new Gson().toJson(reviews);
@@ -80,19 +67,7 @@ public class ReviewsServlet  extends HttpServlet {
             pw.flush();
         }
     }
-
-
-    //request to add new review
-    //fetch('LAVenture/ReviewsServlet'),{
-    //		method:'POST',
-    //		headers:{'Content=Type': 'application/json'},
-    //		body: JSON.stringify({
-    //			activityid: activityID
-    //			reviewtext: reviewText
-    //			rating:	rating
-    //			userid: userID
-    //		})
-    //}
+    
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         setAccessControlHeaders(response);
     	PrintWriter pw = response.getWriter();
@@ -112,8 +87,6 @@ public class ReviewsServlet  extends HttpServlet {
         String reviewText = body.get("reviewtext");
         String rating = body.get("rating");
 
-        //Assuming for now that all the parameters are required
-        //That may not be the case if we let a user leave a star rating with a blank review
         if(aID == null || username == null || reviewText == null || rating == null) {
             String error = "Missing one or more parameters.";
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
