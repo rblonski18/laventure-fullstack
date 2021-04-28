@@ -7,10 +7,6 @@
     width: 33%;
 }
 
-body {
-    max-height: 100%;
-}
-
 .activities-sidebar {
     overflow-y: scroll;
     height: 45rem;

@@ -60,9 +60,10 @@ class SideBar extends React.Component {
     }
 
     handleSort = (event, val) => {
-        if(val === "Rating") {
-            this.setState({activities: this.state.byRating});
-        } else if(val === "Recently Viewed") {
+        if (val === "Rating") {
+            this.setState({sortBy: 'Rating', activities: this.state.byRating});
+            this.props.onChange('Rating', this.state.activities);
+        } else if (val === "Recently Viewed") {
 
             // request for recently viewed activities of user w/ username specified
             const username = this.getCookie();
@@ -70,7 +71,7 @@ class SideBar extends React.Component {
                 .then(res => res.json())
                 .then((data) => {
                     // this.setState({recentlyViewed: data})
-                    this.setState({activities: data});
+                    this.setState({sortBy: 'Recently Viewed', activities: data});
                 })
 
             console.log(this.state.activities);
@@ -78,10 +79,20 @@ class SideBar extends React.Component {
             this.setState({activities: this.state.recentlyViewed});
             console.log(this.state.activities);
             console.log(this.state.recentlyViewed);
+            this.props.onChange('Recently Viewed', this.state.activities);
+        } else if (val === "None") {
+            this.setState({sortBy: '', activities: this.state.default});
+            this.props.onChange('', this.state.default);
         }
     }
 
     render() {
+        let list;
+        if (this.state.sortBy === '') {
+            list = this.props.activityListing;
+        } else {
+            list = this.state.activities;
+        }
 
         return (
             <div>
@@ -92,6 +103,7 @@ class SideBar extends React.Component {
                                 Sort By: {this.state.sortBy}
                             </button>
                             <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                <li><a key="none" className="dropdown-item" onClick={(e) => this.handleSort(e, "None")}>None</a></li>
                                 <li><a key="rating" className="dropdown-item" onClick={(e) => this.handleSort(e, "Rating")}>Rating</a></li>
                                 { this.props.userLoggedIn &&
                                     <li><a key="recent-viewed" className="dropdown-item" onClick={(e) => this.handleSort(e, "Recently Viewed")}>Recently Viewed</a></li>
@@ -102,7 +114,7 @@ class SideBar extends React.Component {
                 </div>
 
             <div className="activities-sidebar">
-            { this.state.activities.map((activity) => {
+            {   this.state.activities.map((activity) => {
                 const items = [];
                 for(var i = 0; i < activity.rating; i++) {
                     items.push(<span key={activity.title+i} className="fa fa-star checked"/>)
@@ -111,37 +123,35 @@ class SideBar extends React.Component {
                     items.push(<span key={activity.title+(5-j)} className="fa fa-star"/>)
                 }
                 const imgString = activity.image;
-                return <div className="activity" key={ activity.title } >
-                    <div className="card">
-                        <div className="card-body">
-
-                            <img className="thumbnail" src={imgString} alt={"Image not found."}/>
-                            {/*<img className="thumbnail" src={"data:image/*;base64," + imgString} alt={"Image not found."}/>*/}
-                            <div className="right">
-                                <h5 className="card-title ct-limit"><a className="sidebar-titles" href={`/activity/${activity.activityID}`}>{activity.title}</a>
-                                { activity.maxRSVPs > 0 && <span key={activity.title} className="badge badge-pill badge-primary rsvp">RSVP</span> }
-                                </h5>
-                                <p className="rating-stars">{ items }</p>
-                                <div className="categories">
-
-                                    { activity.beach && <span key={activity.title+"beach"} className="badge badge-pill badge-info">Beach</span> }
-                                    { activity.books && <span key={activity.title+"books"} className="badge badge-pill badge-info">Books</span> }
-                                    { activity.entertainment && <span key={activity.title+"entertainment"} className="badge badge-pill badge-info">Entertainment</span> }
-                                    { activity.exercise && <span key={activity.title+"exercise"} className="badge badge-pill badge-info">Exercise</span> }
-                                    { activity.games && <span key={activity.title+"games"} className="badge badge-pill badge-info">Games</span> }
-                                    { activity.music && <span key={activity.title+"music"} className="badge badge-pill badge-info">Music</span> }
-                                    { activity.nightLife && <span key={activity.title+"nightLife"} className="badge badge-pill badge-info">Night Life</span> }
-                                    { activity.outdoors && <span key={activity.title+"outdoors"} className="badge badge-pill badge-info">Outdoors</span> }
-                                    { activity.relax && <span key={activity.title+"relax"} className="badge badge-pill badge-info">Relax</span> }
-                                    { activity.shopping && <span key={activity.title+"shopping"} className="badge badge-pill badge-info">Shopping</span> }
-                                    { activity.sports && <span key={activity.title+"sports"} className="badge badge-pill badge-info">Sports</span> }
-                                    { activity.adventure && <span key={activity.title+"adventure"} className="badge badge-pill badge-info">Adventure</span> }
-                                </div>
-                                <p className="card-text">{activity.town}</p>
+                return (
+                    <div className="activity" key={ activity.title } >
+                        <div className="card">
+                            <div className="card-body">
+                                <img className="thumbnail" src={imgString} alt={"Image not found."}/>
+                                <div className="right">
+                                    <h5 className="card-title ct-limit"><a className="sidebar-titles" href={`/activity/${activity.activityID}`}>{activity.title}</a>
+                                    { activity.maxRSVPs > 0 && <span key={activity.title} className="badge badge-pill badge-primary rsvp">RSVP</span> }
+                                    </h5>
+                                    <p className="rating-stars">{ items }</p>
+                                        <div className="categories">
+                                            { activity.beach && <span key={activity.title+"beach"} className="badge badge-pill badge-info">Beach</span> }
+                                            { activity.books && <span key={activity.title+"books"} className="badge badge-pill badge-info">Books</span> }
+                                            { activity.entertainment && <span key={activity.title+"entertainment"} className="badge badge-pill badge-info">Entertainment</span> }
+                                            { activity.exercise && <span key={activity.title+"exercise"} className="badge badge-pill badge-info">Exercise</span> }
+                                            { activity.games && <span key={activity.title+"games"} className="badge badge-pill badge-info">Games</span> }
+                                            { activity.music && <span key={activity.title+"music"} className="badge badge-pill badge-info">Music</span> }
+                                            { activity.nightLife && <span key={activity.title+"nightLife"} className="badge badge-pill badge-info">Night Life</span> }
+                                            { activity.outdoors && <span key={activity.title+"outdoors"} className="badge badge-pill badge-info">Outdoors</span> }
+                                            { activity.relax && <span key={activity.title+"relax"} className="badge badge-pill badge-info">Relax</span> }
+                                            { activity.shopping && <span key={activity.title+"shopping"} className="badge badge-pill badge-info">Shopping</span> }
+                                            { activity.sports && <span key={activity.title+"sports"} className="badge badge-pill badge-info">Sports</span> }
+                                            { activity.adventure && <span key={activity.title+"adventure"} className="badge badge-pill badge-info">Adventure</span> }
+                                        </div>
+                                    <p className="card-text">{activity.town}</p>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div>)
                 })}
                 </div>
             </div>

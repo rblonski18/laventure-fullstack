@@ -7,6 +7,8 @@ import Map from "./Map"
 
 const MainPage = (props) => {
 
+    const [sortBy, setSortBy] = useState('');
+    const [sortBySearchList, setSortBySearchList] = useState([]);
     const [keyword, setKeyword] = useState('');
     const [activityList, setActivityList] = useState([]);
     const [noneList, setNoneList] = useState([]);
@@ -16,16 +18,33 @@ const MainPage = (props) => {
     const [ username, setUsername ] = useState('');
 
     const handleSearch = (input) => {
-        const filteredList = noneList.filter(activity => {
-            if (filterBy === "Title") {
-                return activity.title.toString().toLowerCase().includes(input.toString().toLowerCase());
-            } else {
-                return activity.town.toString().toLowerCase().includes(input.toString().toLowerCase());
-            }
-        });
+        let filteredList;
+        console.log(sortBy);
+        if (sortBy === '') {
+            filteredList = noneList.filter(activity => {
+                if (filterBy === "Title") {
+                    return activity.title.toString().toLowerCase().includes(input.toString().toLowerCase());
+                } else {
+                    return activity.town.toString().toLowerCase().includes(input.toString().toLowerCase());
+                }
+            });
+        } else {
+            filteredList = sortBySearchList.filter(activity => {
+                if (filterBy === "Title") {
+                    return activity.title.toString().toLowerCase().includes(input.toString().toLowerCase());
+                } else {
+                    return activity.town.toString().toLowerCase().includes(input.toString().toLowerCase());
+                }
+            });
+        }
 
         setWF(true);
         setActivityList(filteredList);
+    }
+
+    const sortedSearch = (sortBy, list) => {
+        setSortBy(sortBy);
+        setSortBySearchList(list);
     }
 
     const getCookie = () => {
@@ -80,6 +99,7 @@ const MainPage = (props) => {
                         username={username}
                         activityListing={activityList}
                         userLoggedIn={userLoggedIn}
+                        onChange={sortedSearch}
                     />
                 </div>
                 <div className="mp-right">
