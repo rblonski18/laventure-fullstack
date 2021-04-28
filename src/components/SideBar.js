@@ -72,14 +72,8 @@ class SideBar extends React.Component {
                 .then((data) => {
                     // this.setState({recentlyViewed: data})
                     this.setState({sortBy: 'Recently Viewed', activities: data});
+                    this.props.onChange('Recently Viewed', data);
                 })
-
-            console.log(this.state.activities);
-            console.log(this.state.recentlyViewed);
-            this.setState({activities: this.state.recentlyViewed});
-            console.log(this.state.activities);
-            console.log(this.state.recentlyViewed);
-            this.props.onChange('Recently Viewed', this.state.activities);
         } else if (val === "None") {
             this.setState({sortBy: '', activities: this.state.default});
             this.props.onChange('', this.state.default);
@@ -88,7 +82,7 @@ class SideBar extends React.Component {
 
     render() {
         let list;
-        if (this.state.sortBy === '') {
+        if (this.state.sortBy === '' || document.getElementById('search-bar-input').value !== '') {
             list = this.props.activityListing;
         } else {
             list = this.state.activities;
@@ -114,7 +108,7 @@ class SideBar extends React.Component {
                 </div>
 
             <div className="activities-sidebar">
-            {   this.state.activities.map((activity) => {
+            {   list.map((activity) => {
                 const items = [];
                 for(var i = 0; i < activity.rating; i++) {
                     items.push(<span key={activity.title+i} className="fa fa-star checked"/>)
