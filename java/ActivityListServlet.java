@@ -77,7 +77,7 @@ public class ActivityListServlet extends HttpServlet{
 
         //return a list of activities sorted by their rating
         if(sortBy.equals("rating")) {
-            HeapSort.sort(activities, true);
+            HeapSort.sort(activities, false);
             response.setStatus(HttpServletResponse.SC_OK);
             String activitiesJSON = new Gson().toJson(activities);
             pw.write(activitiesJSON);
