@@ -143,10 +143,7 @@ public class ActivityServlet extends HttpServlet {
             return;
         }
 
-        int ratingCount = 0;
-        if(rating_str.equals("")) {
-            ratingCount = 1;
-        }
+        int ratingCount = 1;
 
         Double latitude = null;
         Double longitude = null;
