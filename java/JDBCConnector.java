@@ -22,8 +22,7 @@ public class JDBCConnector {
     
     
     //Returns userID of added user. Returns -1 if username already exists.
-    public static int normalRegister(String email, String name, String username, String password)
-    {
+    public static int normalRegister(String email, String name, String username, String password){
         Connection conn = null;
         PreparedStatement st = null;
         ResultSet rs = null;
@@ -33,8 +32,7 @@ public class JDBCConnector {
         MessageDigest digest;
         String hashedPass;
 
-        try
-        {
+        try{
         	Class.forName("com.mysql.jdbc.Driver");
             digest = MessageDigest.getInstance("SHA-256");
             hashedPass =  new String(digest.digest(password.getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
@@ -42,8 +40,7 @@ public class JDBCConnector {
 
             st = conn.prepareStatement("SELECT * FROM Users WHERE Username='" + username + "'");
             rs = st.executeQuery();
-            if (!rs.next())
-            {
+            if (!rs.next()){
                 PreparedStatement st2 = conn.prepareStatement("INSERT INTO Users (Email, Name, Username, Password, FacebookUser) VALUES ('" + email + "','" + name + "','" + username + "','" + hashedPass + "', FALSE)");
                 st2.executeUpdate();
                 st2.close();
@@ -54,48 +51,26 @@ public class JDBCConnector {
             }
             
         }
-        catch (SQLException e)
-        {
+        catch (SQLException e){
             System.out.println("SQL Exception occured accessing database.");
         }
         
-        catch (NoSuchAlgorithmException e)
-        {
+        catch (NoSuchAlgorithmException e){
             System.out.println("Error occured attempting to hash.");
         }
         catch(ClassNotFoundException e) {
         	System.out.println("could not load driver.");
         }
 
-        finally
-        {
-            try
-            {
-                if (rs != null)
-                {
-                    rs.close();
-                }
-                if (st != null)
-                {
-                    st.close();
-                }
-                if (conn != null)
-                {
-                    conn.close();
-                }
-            }
-            catch (SQLException e)
-            {
-                System.out.println("SQL Exception occured closing connection/statement/result set.");
-            }
+        finally{
+            closeConnection(conn, st, rs);
         }
 
         return userID;
     }
 
     //Returns userID if user/password combination is valid. Returns -1 otherwise.
-    public static int normalLogin(String username, String password)
-    {
+    public static int normalLogin(String username, String password){
         Connection conn = null;
         Statement st = null;
         ResultSet rs = null;
@@ -105,8 +80,7 @@ public class JDBCConnector {
         MessageDigest digest;
         String hashedPass;
 
-        try
-        {
+        try{
         	Class.forName("com.mysql.jdbc.Driver");
             digest = MessageDigest.getInstance("SHA-256");
             hashedPass =  new String(digest.digest(password.getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
@@ -118,55 +92,32 @@ public class JDBCConnector {
                 userID = rs.getInt(1);
             }
         }
-        catch (SQLException e)
-        {
+        catch (SQLException e){
             System.out.println("SQL Exception occured accessing database.");
         }
-        catch (NoSuchAlgorithmException e)
-        {
+        catch (NoSuchAlgorithmException e){
             System.out.println("Error occured attempting to hash.");
         }
         catch(ClassNotFoundException e) {
         	System.out.println("could not load driver.");
         }
 
-        finally
-        {
-            try
-            {
-                if (rs != null)
-                {
-                    rs.close();
-                }
-                if (st != null)
-                {
-                    st.close();
-                }
-                if (conn != null)
-                {
-                    conn.close();
-                }
-            }
-            catch (SQLException e)
-            {
-                System.out.println("SQL Exception occured closing connection/statement/result set.");
-            }
+        finally{
+            closeConnection(conn, st, rs);
         }
 
         return userID;
     }
 
     //Returns userID of added user. Use facebookLogin whenever a facebook user logs in and it will call this function if it is a new user.
-    private static int facebookRegister(String email, String name)
-    {
+    private static int facebookRegister(String email, String name){
         Connection conn = null;
         Statement st = null;
         ResultSet rs = null;
 
         int userID = -1;
 
-        try
-        {
+        try{
         	Class.forName("com.mysql.jdbc.Driver");
             conn = DriverManager.getConnection(jdbcUrl);
             st = conn.createStatement();
@@ -175,51 +126,29 @@ public class JDBCConnector {
             rs.next();
             userID = rs.getInt(1);
         }
-        catch (SQLException e)
-        {
+        catch (SQLException e){
             System.out.println("SQL Exception occured accessing database.");
         }
         catch(ClassNotFoundException e) {
         	System.out.println("could not load driver.");
         }
 
-        finally
-        {
-            try
-            {
-                if (rs != null)
-                {
-                    rs.close();
-                }
-                if (st != null)
-                {
-                    st.close();
-                }
-                if (conn != null)
-                {
-                    conn.close();
-                }
-            }
-            catch (SQLException e)
-            {
-                System.out.println("SQL Exception occured closing connection/statement/result set.");
-            }
+        finally{
+            closeConnection(conn, st, rs);
         }
 
         return userID;
     }
 
     //Returns userID of logged in user. Creates a new user if the user does not exist. Utilizes name for registering.
-    public static int facebookLogin(String email, String name)
-    {
+    public static int facebookLogin(String email, String name){
         Connection conn = null;
         Statement st = null;
         ResultSet rs = null;
 
         int userID = -1;
 
-        try
-        {
+        try{
         	Class.forName("com.mysql.jdbc.Driver");
             conn = DriverManager.getConnection(jdbcUrl);
             st = conn.createStatement();
@@ -233,42 +162,21 @@ public class JDBCConnector {
                 userID = facebookRegister(email, name);
             }
         }
-        catch (SQLException e)
-        {
+        catch (SQLException e){
             System.out.println("SQL Exception occured accessing database.");
         }
         catch(ClassNotFoundException e) {
         	System.out.println("could not load driver.");
         }
 
-        finally
-        {
-            try
-            {
-                if (rs != null)
-                {
-                    rs.close();
-                }
-                if (st != null)
-                {
-                    st.close();
-                }
-                if (conn != null)
-                {
-                    conn.close();
-                }
-            }
-            catch (SQLException e)
-            {
-                System.out.println("SQL Exception occured closing connection/statement/result set.");
-            }
+        finally{
+            closeConnection(conn, st, rs);
         }
 
         return userID;
     }
 
-    public static ArrayList<Review> getReviews(int activityID)
-    {
+    public static ArrayList<Review> getReviews(int activityID){
         Connection conn = null;
         Statement st = null;
         ResultSet rs = null;
@@ -281,14 +189,12 @@ public class JDBCConnector {
 
         ArrayList<Review> reviews = new ArrayList<Review>();
 
-        try
-        {
+        try{
         	Class.forName("com.mysql.jdbc.Driver");
             conn = DriverManager.getConnection(jdbcUrl);
             st = conn.createStatement();
             rs = st.executeQuery("SELECT * FROM Reviews r,Users u WHERE ActivityID=" + activityID + " AND r.UserID=u.UserID");
-            while (rs.next())
-            {
+            while (rs.next()){
                 reviewNum = rs.getInt("ReviewNum");
                 userId = rs.getInt("UserId");
                 username = rs.getString("Username");
@@ -297,43 +203,22 @@ public class JDBCConnector {
                 reviews.add(new Review(reviewNum, userId, username, ratingVal, reviewText));
             }
         }
-        catch (SQLException e)
-        {
+        catch (SQLException e){
             System.out.println("SQL Exception occured accessing database.");
         }
         catch(ClassNotFoundException e) {
         	System.out.println("could not load driver.");
         }
 
-        finally
-        {
-            try
-            {
-                if (rs != null)
-                {
-                    rs.close();
-                }
-                if (st != null)
-                {
-                    st.close();
-                }
-                if (conn != null)
-                {
-                    conn.close();
-                }
-            }
-            catch (SQLException e)
-            {
-                System.out.println("SQL Exception occured closing connection/statement/result set.");
-            }
+        finally{
+            closeConnection(conn, st, rs);
         }
 
         return reviews;
     }
 
     
-    public static ArrayList<Activity> getActivities()
-    {
+    public static ArrayList<Activity> getActivities(){
         Connection conn = null;
         Statement st = null;
         ResultSet rs = null;
@@ -366,14 +251,12 @@ public class JDBCConnector {
 
         ArrayList<Activity> activities = new ArrayList<Activity>();
 
-        try
-        {
+        try{
         	Class.forName("com.mysql.jdbc.Driver");
             conn = DriverManager.getConnection(jdbcUrl);
             st = conn.createStatement();
             rs = st.executeQuery("SELECT * FROM Activities");
-            while (rs.next())
-            {
+            while (rs.next()){
                 activityID = rs.getInt("ActivityID");
                 username = rs.getString("Username");
                 title = rs.getString("Title");
@@ -409,31 +292,11 @@ public class JDBCConnector {
         	System.out.println("could not load driver.");
         }
 
-        catch (SQLException e)
-        {
+        catch (SQLException e){
             System.out.println("SQL Exception occured accessing database.");
         }
-        finally
-        {
-            try
-            {
-                if (rs != null)
-                {
-                    rs.close();
-                }
-                if (st != null)
-                {
-                    st.close();
-                }
-                if (conn != null)
-                {
-                    conn.close();
-                }
-            }
-            catch (SQLException e)
-            {
-                System.out.println("SQL Exception occured closing connection/statement/result set.");
-            }
+        finally{
+            closeConnection(conn, st, rs);
         }
 
         return activities;
@@ -450,8 +313,7 @@ public class JDBCConnector {
         ResultSet rs = null;
 
         Boolean added = false;
-        try
-        {
+        try{
         	Class.forName("com.mysql.jdbc.Driver");
             conn = DriverManager.getConnection(jdbcUrl);
 
@@ -461,8 +323,7 @@ public class JDBCConnector {
             added = true;
             
         }
-        catch (SQLException e)
-        {
+        catch (SQLException e){
             System.out.println("SQL Exception occured accessing database.");
             
         }
@@ -470,27 +331,8 @@ public class JDBCConnector {
         	System.out.println("could not load driver.");
         }
 
-        finally
-        {
-            try
-            {
-                if (rs != null)
-                {
-                    rs.close();
-                }
-                if (st != null)
-                {
-                    st.close();
-                }
-                if (conn != null)
-                {
-                    conn.close();
-                }
-            }
-            catch (SQLException e)
-            {
-                System.out.println("SQL Exception occured closing connection/statement/result set.");
-            }
+        finally{
+            closeConnection(conn, st, rs);
         }
 
         return added;
@@ -515,8 +357,7 @@ public class JDBCConnector {
 
         ArrayList<User> users = new ArrayList<User>();
 
-        try
-        {
+        try{
         	Class.forName("com.mysql.jdbc.Driver");
             conn = DriverManager.getConnection(jdbcUrl);
             st = conn.createStatement();
@@ -537,35 +378,15 @@ public class JDBCConnector {
                         activityID3, activityID4, activityID5));
             }
         }
-        catch (SQLException e)
-        {
+        catch (SQLException e){
             System.out.println("SQL Exception occured accessing database.");
         }
         catch(ClassNotFoundException e) {
         	System.out.println("could not load driver.");
         }
 
-        finally
-        {
-            try
-            {
-                if (rs != null)
-                {
-                    rs.close();
-                }
-                if (st != null)
-                {
-                    st.close();
-                }
-                if (conn != null)
-                {
-                    conn.close();
-                }
-            }
-            catch (SQLException e)
-            {
-                System.out.println("SQL Exception occured closing connection/statement/result set.");
-            }
+        finally{
+            closeConnection(conn, st, rs);
         }
 
         return users;
@@ -584,20 +405,17 @@ public class JDBCConnector {
         MRUCache mru = new MRUCache(5);
 
 
-        try
-        {
+        try{
         	Class.forName("com.mysql.jdbc.Driver");
             conn = DriverManager.getConnection(jdbcUrl);
             st = conn.createStatement();
             rs = st.executeQuery("SELECT * FROM Users WHERE Username='" + username + "'");
             rs.next();
 
-            do
-            {
+            do{
                 nextActivityID = rs.getInt("ActivityID" + nextActivityInd);
                 nextActivityInd++;
-                if (nextActivityID != 0)
-                {
+                if (nextActivityID != 0){
                     mru.refer(nextActivityID);
                 }
             } while(nextActivityID != 0 && nextActivityInd <= 5);
@@ -607,35 +425,15 @@ public class JDBCConnector {
 
             st.execute("UPDATE Users SET ActivityID5=" + activityIDs[4] + ", ActivityID4=" + activityIDs[3] + ", ActivityID3=" + activityIDs[2] + ", ActivityID2=" + activityIDs[1] + ", ActivityID1=" + activityIDs[0] + " WHERE Username='" + username + "'");
         }
-        catch (SQLException e)
-        {
+        catch (SQLException e){
             System.out.println("SQL Exception occured accessing database.");
         }
         catch(ClassNotFoundException e) {
         	System.out.println("could not load driver.");
         }
 
-        finally
-        {
-            try
-            {
-                if (rs != null)
-                {
-                    rs.close();
-                }
-                if (st != null)
-                {
-                    st.close();
-                }
-                if (conn != null)
-                {
-                    conn.close();
-                }
-            }
-            catch (SQLException e)
-            {
-                System.out.println("SQL Exception occured closing connection/statement/result set.");
-            }
+        finally{
+            closeConnection(conn, st, rs);
         }
     }
 
@@ -645,48 +443,26 @@ public class JDBCConnector {
         Statement st = null;
         ResultSet rs = null;
 
-        try
-        {
+        try{
         	Class.forName("com.mysql.jdbc.Driver");
             conn = DriverManager.getConnection(jdbcUrl);
             st = conn.createStatement();
             rs = st.executeQuery("SELECT * FROM Users WHERE Username='" + username + "'");
-            if (rs.next())
-            {
+            if (rs.next()){
             	int userID = rs.getInt("UserID");
             	st.execute("INSERT INTO Reviews (ActivityID,UserID,RatingVal,ReviewText) VALUES (" + activityID + "," + userID + "," + ratingVal + ",'" + reviewText + "')");
             	st.execute("UPDATE Activities SET Rating=((Rating*RatingCount)+" + ratingVal + ")/(RatingCount+1), RatingCount=RatingCount+1 WHERE ActivityID=" + activityID);
             }
         }
-        catch (SQLException e)
-        {
+        catch (SQLException e){
             System.out.println("SQL Exception occured accessing database.");
         }
         catch(ClassNotFoundException e) {
         	System.out.println("could not load driver.");
         }
 
-        finally
-        {
-            try
-            {
-            	if (rs != null)
-            	{
-            		rs.close();
-            	}
-                if (st != null)
-                {
-                    st.close();
-                }
-                if (conn != null)
-                {
-                    conn.close();
-                }
-            }
-            catch (SQLException e)
-            {
-                System.out.println("SQL Exception occured closing connection/statement/result set.");
-            }
+        finally{
+            closeConnection(conn, st, rs);
         }
     }
 
@@ -703,34 +479,28 @@ public class JDBCConnector {
 
         int maxRSVPs = getMaxRSVPs(activityID);
 
-        try
-        {
+        try{
         	Class.forName("com.mysql.jdbc.Driver");
             conn = DriverManager.getConnection(jdbcUrl);
             st = conn.createStatement();
             rs = st.executeQuery("SELECT * FROM Users WHERE Username='" + username + "'");
-            if (rs.next())
-            {
+            if (rs.next()){
             	int userID = rs.getInt("UserID");
             	rs.close();
 	            addRSVPLock.lock();
 	            rs = st.executeQuery("SELECT * FROM RSVPs WHERE ActivityID=" + activityID);
-	            while(rs.next())
-	            {
+	            while(rs.next()){
 	                queuePos = rs.getInt("QueuePos");
-	                if (queuePos > highestQueuePos)
-	                {
+	                if (queuePos > highestQueuePos){
 	                    highestQueuePos = queuePos;
 	                }
 	                queuedCount++;
 	            }
 	
-	            if (queuedCount < maxRSVPs)
-	            {
+	            if (queuedCount < maxRSVPs){
 	                queuePos = -1;
 	            }
-	            else
-	            {
+	            else{
 	                queuePos = highestQueuePos + 1;
 	            }
 	
@@ -739,39 +509,18 @@ public class JDBCConnector {
 	            st.execute("UPDATE Activities SET RSVPCount=RSVPCount+1 WHERE ActivityID=" + activityID);
             }
         }
-        catch (SQLException e)
-        {
+        catch (SQLException e){
             System.out.println("SQL Exception occured accessing database.");
         }
         catch(ClassNotFoundException e) {
         	System.out.println("could not load driver.");
         }
 
-        finally
-        {
-            try
-            {
-                if (addRSVPLock.isHeldByCurrentThread())
-                {
-                    addRSVPLock.unlock();
-                }
-                if (rs != null)
-                {
-                    rs.close();
-                }
-                if (st != null)
-                {
-                    st.close();
-                }
-                if (conn != null)
-                {
-                    conn.close();
-                }
+        finally{
+        	if (addRSVPLock.isHeldByCurrentThread()){
+        		addRSVPLock.unlock();
             }
-            catch (SQLException e)
-            {
-                System.out.println("SQL Exception occured closing connection/statement/result set.");
-            }
+            closeConnection(conn, st, rs);
         }
 
         return queuePos;
@@ -816,35 +565,15 @@ public class JDBCConnector {
             	 canceled = false;
              }
         }
-        catch (SQLException e)
-        {
+        catch (SQLException e){
             System.out.println("SQL Exception occured accessing database.");
         }
         catch(ClassNotFoundException e) {
         	System.out.println("could not load driver.");
         }
 
-        finally
-        {
-            try
-            {
-                if (rs != null)
-                {
-                    rs.close();
-                }
-                if (st != null)
-                {
-                    st.close();
-                }
-                if (conn != null)
-                {
-                    conn.close();
-                }
-            }
-            catch (SQLException e)
-            {
-                System.out.println("SQL Exception occured closing connection/statement/result set.");
-            }
+        finally{
+        	closeConnection(conn, st, rs);
         }
 
         return canceled;
@@ -882,35 +611,15 @@ public class JDBCConnector {
 	            }
             }
         }
-        catch (SQLException e)
-        {
+        catch (SQLException e){
             System.out.println("SQL Exception occured accessing database.");
         }
         catch(ClassNotFoundException e) {
         	System.out.println("could not load driver.");
         }
 
-        finally
-        {
-            try
-            {
-                if (rs != null)
-                {
-                    rs.close();
-                }
-                if (st != null)
-                {
-                    st.close();
-                }
-                if (conn != null)
-                {
-                    conn.close();
-                }
-            }
-            catch (SQLException e)
-            {
-                System.out.println("SQL Exception occured closing connection/statement/result set.");
-            }
+        finally{
+        	closeConnection(conn, st, rs);
         }
 
         return queuePos;
@@ -934,35 +643,15 @@ public class JDBCConnector {
             rs.next();
             maxRSVPs = rs.getInt("MaxRSVPs");
         }
-        catch (SQLException e)
-        {
+        catch (SQLException e){
             System.out.println("SQL Exception occured accessing database.");
         }
         catch(ClassNotFoundException e) {
         	System.out.println("could not load driver.");
         }
 
-        finally
-        {
-            try
-            {
-                if (rs != null)
-                {
-                    rs.close();
-                }
-                if (st != null)
-                {
-                    st.close();
-                }
-                if (conn != null)
-                {
-                    conn.close();
-                }
-            }
-            catch (SQLException e)
-            {
-                System.out.println("SQL Exception occured closing connection/statement/result set.");
-            }
+        finally{
+        	closeConnection(conn, st, rs);
         }
 
         return maxRSVPs;
@@ -1077,38 +766,36 @@ public class JDBCConnector {
 				}
 			}
         }
-        catch (SQLException e)
-        {
+        catch (SQLException e){
             System.out.println("SQL Exception occured accessing database.");
         }
         catch(ClassNotFoundException e) {
         	System.out.println("could not load driver.");
         }
 
-        finally
-        {
-            try
-            {
-                if (rs != null)
-                {
-                    rs.close();
-                }
-                if (st != null)
-                {
-                    st.close();
-                }
-                if (conn != null)
-                {
-                    conn.close();
-                }
-            }
-            catch (SQLException e)
-            {
-                System.out.println("SQL Exception occured closing connection/statement/result set.");
-            }
+        finally{
+        	closeConnection(conn, st, rs);
         }
 
         return activities;
     }
+	
+	
+	public static void closeConnection(Connection conn, Statement st, ResultSet rs) {
+		try{
+			if (rs != null){
+				rs.close();
+			}
+			if (st != null){
+				st.close();
+			}
+			if (conn != null){
+				conn.close();
+			}
+		}
+		catch (SQLException e){
+			System.out.println("Error closing connection.");
+		}
+	}
 
 }
