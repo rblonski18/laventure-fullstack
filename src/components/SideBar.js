@@ -40,6 +40,7 @@ class SideBar extends React.Component {
         fetch(`https://api.laventure.click/ActivityListServlet?sortBy=none&user=${username}`)
             .then(res => res.json())
             .then((data) => {
+                console.log(data);
                 this.setState({activities: data})
             })
 
@@ -54,6 +55,7 @@ class SideBar extends React.Component {
         fetch(`https://api.laventure.click/ActivityListServlet?sortBy=recent&user=${username}`)
             .then(res => res.json())
             .then((data) => {
+                console.log(data);
                 this.setState({recentlyViewed: data})
             })
 
@@ -110,10 +112,11 @@ class SideBar extends React.Component {
             <div className="activities-sidebar">
             {   list.map((activity) => {
                 const items = [];
-                for(var i = 0; i < activity.rating; i++) {
+                const rating = Math.floor(activity.rating);
+                for(var i = 0; i < rating; i++) {
                     items.push(<span key={activity.title+i} className="fa fa-star checked"/>)
                 }
-                for(var j = 0; j < 5-activity.rating; j++) {
+                for(var j = 0; j < 5-rating; j++) {
                     items.push(<span key={activity.title+(5-j)} className="fa fa-star"/>)
                 }
                 const imgString = activity.image;

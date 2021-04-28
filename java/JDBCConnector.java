@@ -400,7 +400,7 @@ public class JDBCConnector {
         ResultSet rs = null;
 
         int nextActivityID;
-        int nextActivityInd = 1;
+        int nextActivityInd = 5;
 
         MRUCache mru = new MRUCache(5);
 
@@ -414,11 +414,11 @@ public class JDBCConnector {
 
             do{
                 nextActivityID = rs.getInt("ActivityID" + nextActivityInd);
-                nextActivityInd++;
+                nextActivityInd--;
                 if (nextActivityID != 0){
                     mru.refer(nextActivityID);
                 }
-            } while(nextActivityID != 0 && nextActivityInd <= 5);
+            } while(nextActivityInd > 0);
             mru.refer(activityID);
 
             int activityIDs[] = mru.getFiveVals();
