@@ -13,18 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-
-
-//request for list of activities sorted in some way
-//fetch('LAVenture/ActivityListServlet', {
-//	method: 'GET',
-//	headers: {'Content-Type': 'application/json'},
-//	body: JSON.stringify({
-//		sortBy: none/rating/recently viewed,
-//		user: username
-//	})
-//})
-
 @WebServlet("/ActivityListServlet")
 public class ActivityListServlet extends HttpServlet{
 
@@ -51,11 +39,7 @@ public class ActivityListServlet extends HttpServlet{
     //doGet handles the three different ways that the front-end wants to access all activities
     //"none" returns a list of all activities without regard to ordering
     //"rating" returns a list of all activities sorted by rating
-    //	-TODO: Need to make sure that HeapSort is being called correctly and returning in the right order
-    //"recently viewed" will return a list of recently viewed activities for the specified user
-    //	-TODO: Need a database function
-    //	-NOTE: This section of code should still run, but it returns a placeholder JSON string and makes
-    //			no attempt to access the database.
+    //"recent" will return a list of recently viewed activities for the specified user
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         setAccessControlHeaders(response);
         PrintWriter pw = response.getWriter();

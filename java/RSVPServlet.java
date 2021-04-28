@@ -32,31 +32,6 @@ public class RSVPServlet  extends HttpServlet {
 	      resp.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 	      
 	  }
-
-
-    //request for capacity associated with activityid
-    //		fetch('LAVenture/RSVPServlet', {
-    //			method: 'GET',
-    //			headers: {'Content-Type': 'application/json'},
-    //			body: JSON.stringify({
-    //				activityid: activityID
-    //				userid: userID (optional)
-    //				task: getCapacity
-    //			})
-    //		})
-
-    //request for RSVP status for a user
-    //		fetch('LAVenture/RSVPServlet', {
-    //			method: 'GET',
-    //			headers: {'Content-Type': 'application/json'},
-    //			body: JSON.stringify({
-    //				activityid: activityID
-    //				userid: userID
-    //				task: checkStatus
-    //			})
-    //		})
-
-
     //Check RSVP status and check capacity of activity
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         setAccessControlHeaders(response);
@@ -113,14 +88,16 @@ public class RSVPServlet  extends HttpServlet {
 
             Integer status = JDBCConnector.RSVPStatus(activityID, username);
             if(status == -1) {
+            	// -1 means RSVPed and not queued
                 response.setStatus(HttpServletResponse.SC_NO_CONTENT);
                 String error = "Could not find RSVP.";
                 pw.write(new Gson().toJson(error));
                 pw.flush();
                 return;
             }
+            // -2 means not RSVPed
             else if(status == -2) {
-                response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+                response.setStatus(HttpServletResponse.SC_ACCEPTED);
                 String error = "User is not RSVPed and not in queue.";
                 pw.write(new Gson().toJson(error));
                 pw.flush();
@@ -147,29 +124,6 @@ public class RSVPServlet  extends HttpServlet {
     }
 
     //Add/Cancel RSVP
-
-    //add RSVP for a user
-    //		fetch('LAVenture/RSVPServlet', {
-    //			method: 'POST',
-    //			headers: {'Content-Type': 'application/json'},
-    //			body: JSON.stringify({
-    //				activityid: activityID
-    //				userid: userID
-    //				task: add
-    //			})
-    //		})
-
-
-    //cancel RSVP for a user
-    //		fetch('LAVenture/RSVPServlet', {
-    //			method: 'POST',
-    //			headers: {'Content-Type': 'application/json'},
-    //			body: JSON.stringify({
-    //				rsvpid: RSVPID
-    //				task: cancel
-    //			})
-    //		})
-
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         setAccessControlHeaders(response);
     	PrintWriter pw = response.getWriter();

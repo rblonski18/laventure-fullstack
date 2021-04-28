@@ -33,19 +33,16 @@ public class NewAccountServlet extends HttpServlet{
 	  
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         setAccessControlHeaders(response);
-        
-        
+
         PrintWriter pw = response.getWriter();
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        
         
         String payloadRequest = BodyReader.getBody(request);
         
         Type type = new TypeToken<HashMap<String, String>>(){}.getType();
         HashMap<String, String> body = new Gson().fromJson(payloadRequest, type);
         
-       
         String registrationType = body.get("type");
 
         String email = body.get("email");
@@ -66,7 +63,6 @@ public class NewAccountServlet extends HttpServlet{
             pw.flush();
             return;
         }
-
 
         if(registrationType.equals("normal")) {
             String username = body.get("username");
