@@ -44,6 +44,7 @@ const ActivityPage = ({ match }) => {
 
     const buildRatingStars = (rating) => {
         const items = [];
+        rating = Math.floor(rating);
         for(var i = 0; i < rating; i++) {
             items.push(<span key={i} className="fa fa-star checked"></span>)
         }
